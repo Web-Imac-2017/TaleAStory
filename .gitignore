@@ -1,13 +1,3 @@
 node_modules/
 node_modules/*
-gulp/tasks/html.js
-
-gulp/tasks/html.js
-
-gulp/tasks/images.js
-
-gulp/tasks/javascript.js
-
-gulp/tasks/php.js
-
-gulp/tasks/sass.js
+gulp/tasks/*
