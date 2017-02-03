@@ -13,7 +13,7 @@ var mapError     = require('../error');
 
 var configSass = {
   srcPath    : './src/scss/',         // Les fichiers à watch
-  outputDir : '../www/RangerPower/assets/css',     // Le dossier ou le build sera généré
+  outputDir : '../Sites/RangerPower/assets/css',     // Le dossier ou le build sera généré
 };
 
 // La tache pour générer le build scss.

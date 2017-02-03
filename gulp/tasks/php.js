@@ -11,7 +11,7 @@ var mapError     = require('../error');
 
 var configPhp = {
   srcPath    : './src/php/',         // Les fichiers à watch
-  outputDir : '../www/RangerPower/php',     // Le dossier ou le build sera généré
+  outputDir : '../Sites/RangerPower/php',     // Le dossier ou le build sera généré
 };
 
 // La tache pour générer le build scss.

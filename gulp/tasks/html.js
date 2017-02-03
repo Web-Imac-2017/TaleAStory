@@ -11,7 +11,7 @@ var mapError     = require('../error');
 
 var configHtml = {
   srcPath    : './pages/',         // Les fichiers à watch
-  outputDir : '../www/RangerPower/',     // Le dossier ou le build sera généré
+  outputDir : '../Sites/RangerPower/',     // Le dossier ou le build sera généré
 };
 
 // La tache pour générer le build scss.

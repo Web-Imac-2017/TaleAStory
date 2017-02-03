@@ -22,7 +22,7 @@ var mapError   = require('../error');
 // On centralise la config, vous pouvez changer librement les valeurs selon vos besoins / envies
 var configJS = {
   srcPath      : './src/js/',  // Fichier principal à build
-  outputDir : '../www/RangerPower/assets/js', // Chemin ou va être généré le build
+  outputDir : '../Sites/RangerPower/assets/js', // Chemin ou va être généré le build
 };
 
 gulp.task('jsAll', function() {

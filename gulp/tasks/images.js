@@ -9,7 +9,7 @@ var mapError     = require('../error');
 
 var configImage = {
   srcPath    : './images/',         // Les fichiers à watch
-  outputDir : '../www/RangerPower/assets/images',     // Le dossier ou le build sera généré
+  outputDir : '../Sites/RangerPower/assets/images',     // Le dossier ou le build sera généré
 };
 
 // La tache pour générer le build scss.
