@@ -10,10 +10,11 @@ var sass         = require('gulp-sass');         // Used to build sass files
 var sourcemaps   = require('gulp-sourcemaps');   // Provide external sourcemap files
 
 var mapError     = require('../error');
+var config       = require('../config');
 
 var configSass = {
   srcPath    : './src/scss/',         // Les fichiers à watch
-  outputDir : '../Sites/RangerPower/assets/css',     // Le dossier ou le build sera généré
+  outputDir : config.outputDir + '/assets/css',     // Le dossier ou le build sera généré
 };
 
 // La tache pour générer le build scss.

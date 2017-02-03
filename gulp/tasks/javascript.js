@@ -18,11 +18,12 @@ var transform = require('vinyl-transform');
 var watchify   = require('watchify');            // Watchify for source changes
 var glob = require("glob");
 var mapError   = require('../error');
+var config       = require('../config');
 
 // On centralise la config, vous pouvez changer librement les valeurs selon vos besoins / envies
 var configJS = {
   srcPath      : './src/js/',  // Fichier principal à build
-  outputDir : '../Sites/RangerPower/assets/js', // Chemin ou va être généré le build
+  outputDir : config.outputDir + '/assets/js', // Chemin ou va être généré le build
 };
 
 gulp.task('jsAll', function() {

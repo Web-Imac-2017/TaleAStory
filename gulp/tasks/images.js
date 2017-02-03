@@ -6,10 +6,11 @@ var sourcemaps   = require('gulp-sourcemaps');   // Provide external sourcemap f
 var rename     = require('gulp-rename');         // Rename sources
 
 var mapError     = require('../error');
+var config       = require('../config');
 
 var configImage = {
   srcPath    : './images/',         // Les fichiers à watch
-  outputDir : '../Sites/RangerPower/assets/images',     // Le dossier ou le build sera généré
+  outputDir : config.outputDir + '/assets/images',     // Le dossier ou le build sera généré
 };
 
 // La tache pour générer le build scss.

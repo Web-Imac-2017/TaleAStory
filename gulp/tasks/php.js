@@ -8,10 +8,11 @@ var rename       = require('gulp-rename');       // Rename sources
 var sourcemaps   = require('gulp-sourcemaps');   // Provide external sourcemap files
 
 var mapError     = require('../error');
+var config       = require('../config');
 
 var configPhp = {
   srcPath    : './src/php/',         // Les fichiers à watch
-  outputDir : '../Sites/RangerPower/php',     // Le dossier ou le build sera généré
+  outputDir : config.outputDir + '/php',     // Le dossier ou le build sera généré
 };
 
 // La tache pour générer le build scss.
