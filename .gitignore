@@ -1,4 +1,4 @@
 node_modules/
 node_modules/*
-gulp/tasks/*
+gulp/config.js
 .tern-project
