@@ -7,12 +7,14 @@ class Database {
   protected $dbName;
   protected $options;
 
-  public function __construct(){
-    //info login depuis un fichier à implémenter
-    $this->server = 'localhost';
-    $this->userName = 'root';
-    $this->password = 'root';
-    $this->dbName = 'fauves';
+  public function __construct($path){
+    //$path = "../../../TaleAStory/src/php/database_config.json"
+    $config_json = file_get_contents($path);
+    $config_data = json_decode($config_json, TRUE);
+    $this->server = $config_data[database][server];
+    $this->userName = $config_data[database][user];
+    $this->password = $config_data[database][password];
+    $this->dbName = $config_data[database][name];
     $this->options = array(
       PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
     );
