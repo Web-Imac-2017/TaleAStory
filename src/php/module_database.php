@@ -43,19 +43,63 @@ class Database {
 
   /*
   Construit la requete, vérifie la validité du contenu entré grace à la fct check entry
-  param : table de la bdd dans laquelle on cherche
-  param : tableau asociant champs et entrées de l'utilisateur
+  param : array : table de la bdd dans laquelle on cherche
+  param : array : associant champs et entrées de l'utilisateur
   retour : query mysql
   */
-  public function buildQuery( $table, $entries){
+  public function buildQuery( /*$table, $entries*/){
+    /*
+    query test :
+    table : tableaux
+    champs : titre, artiste
+    recherche date = 1904
+    */
+    //params
+    $tables = array ("tableaux");
+    $entries = array (
+      "titre" => "",
+      "artiste" => "",
+      "date" => "1904"
+    );
+    //fields
+    $build_fields = $this->buildFields($entries);
+    echo $build_fields;
+    //tables
+    $build_tables = $this->buildTables($tables);
+    echo $build_tables;
+    //where
+
+    //$statement = "SELECT".$build_fields."FROM".$build_table."WHERE".$build_entry;
 
   }
 
-/* Intégré à build query ou pas
-  public function check_entry($entries) {
+
+  private function check_sql_injection($entries) {
 
   }
-*/
+
+  private function buildFields($entries) {
+    $fields = array_keys($entries);
+    $build_fields;
+    foreach ($fields as $field) {
+      $build_fields .= $field;
+      if($field != end($fields)) {
+        $build_fields .=",";
+      }
+    }
+    return $build_fields;
+  }
+
+  private function buildTables($tables) {
+    //cas table unique
+    if (count($tables) == 1) {
+      $build_tables = $tables[0];
+    } else {
+      $build_tables = "joint not supported yet";
+    }
+    return $build_tables;
+  }
+
 }
 
 

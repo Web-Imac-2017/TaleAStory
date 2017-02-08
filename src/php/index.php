@@ -10,7 +10,7 @@
 
   $db = new Database("../../../TaleAStory/src/php/database_config.json");
   //var_dump($db);
-
+  $testbuild = $db->buildQuery();
   $data = $db->sendQuery('SELECT * FROM tableaux');
   echo '<p>test bdd :'.$data['titre'].'</p>';
 
