@@ -10,9 +10,15 @@
 
   $db = new Database("../../../TaleAStory/src/php/database_config.json");
   //var_dump($db);
-  $testbuild = $db->buildQuery();
-  $data = $db->sendQuery('SELECT * FROM tableaux');
-  echo '<p>test bdd :'.$data['titre'].'</p>';
+  $tables = array ("tableaux");
+  $entries = array (
+    "titre" => "",
+    "artiste" => "",
+    "date" => ""
+  );
+  $data = $db->buildQuery($tables, $entries);
+  //$data = $db->sendQuery('SELECT * FROM tableaux');
+  echo '<br><p>test bdd :'.$data['titre'].'</p>';
 
 
   //require '../index.html';

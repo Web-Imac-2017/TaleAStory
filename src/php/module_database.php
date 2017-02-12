@@ -34,47 +34,42 @@ class Database {
     return $this->pdo;
   }
 
-  //public pour test puis mettre en privé et coupler avec buildQuery
-  public function sendQuery($statement) {
-    $qry = $this->getPDO()->query($statement);
-    $data = $qry->fetch();
-    return $data;
-  }
+
 
   /*
   Construit la requete, vérifie la validité du contenu entré grace à la fct check entry
-  param : array : table de la bdd dans laquelle on cherche
+  param : array : tables de la bdd dans laquelle on cherche (keys numériques)
   param : array : associant champs et entrées de l'utilisateur
-  retour : query mysql
+  retour : data
   */
-  public function buildQuery( /*$table, $entries*/){
-    /*
-    query test :
-    table : tableaux
-    champs : titre, artiste
-    recherche date = 1904
-    */
-    //params
-    $tables = array ("tableaux");
-    $entries = array (
-      "titre" => "",
-      "artiste" => "",
-      "date" => "1904"
-    );
+  public function buildQuery($tables, $entries){
     //fields
     $build_fields = $this->buildFields($entries);
-    echo $build_fields;
     //tables
     $build_tables = $this->buildTables($tables);
-    echo $build_tables;
     //where
-
-    //$statement = "SELECT".$build_fields."FROM".$build_table."WHERE".$build_entry;
-
+    $build_entries = $this->buildEntries($entries);
+    return $this->sendQuery($build_fields, $build_tables, $build_entries);
   }
 
+  private function sendQuery($fields, $tables, $entries) {
+      $statement="SELECT ".$fields." FROM ".$tables;
+      if($entries) {
+        $statement .= " WHERE ".$entries;
+      }
+      echo $statement;
+      //$qry = $this->getPDO()->query($statement);
+      /*
+      $qry = $this->getPDO()->prepare('statement');
+      $qry->execute(array(
+        $entries
+      ) or die(print_r($qry->errorInfo()));
+      */
+      $data = $qry->fetch();
+      return $data;
+    }
 
-  private function check_sql_injection($entries) {
+  private function checkSQLInjection($entries) {
 
   }
 
@@ -84,7 +79,10 @@ class Database {
     foreach ($fields as $field) {
       $build_fields .= $field;
       if($field != end($fields)) {
-        $build_fields .=",";
+        $build_fields .=", ";
+      }
+      if ($field == "*") {
+        return "*";
       }
     }
     return $build_fields;
@@ -95,10 +93,26 @@ class Database {
     if (count($tables) == 1) {
       $build_tables = $tables[0];
     } else {
-      $build_tables = "joint not supported yet";
+      $build_tables = "";
+      echo "multiples tables not supported yet";
     }
     return $build_tables;
   }
+
+  private function buildEntries($entries) {
+    $build_entries;
+    foreach ($entries as $entry) {
+      if ($entry != NULL) {
+        $field = array_search($entry, $entries);
+        //if (checkSQLInjection($entry) ==0)
+        $build_entries .= $field." = ".$entry." ";
+        if($entry != end($entries)) {
+          $build_entries .="AND ";
+        }
+      }
+    }
+    return $build_entries;
+    }
 
 }
 
