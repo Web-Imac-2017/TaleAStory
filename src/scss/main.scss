@@ -1,5 +1,241 @@
 @import './reset';
 
+html {
+	font-family: 'BjornRegular';
+}
+
+@font-face {
+    font-family: 'BjornLight';
+    src: url('../Bjorn Light.otf');
+}
+
+@font-face {
+    font-family: 'BjornRegular';
+    src: url('../Bjorn Regular.otf');
+}
+
+@font-face {
+    font-family: 'OpenSansRegular';
+    src: url('../OpenSans-Regular.ttf');
+}
+/* *** Header - General *** */
+header {
+	width: 100%;
+	padding-left: 70px;
+	padding-right: 70px;
+	padding-top: 50px;
+	padding-bottom: 8%;
+	height: auto;
+	font-size: 10px;
+	font-family: 'BjornLight';
+}
+
+header h1 {
+	float: left;
+	font-size: 12px;
+}
+
+header a {
+	padding-top: 10px;
+	padding-left: 18px;
+	padding-right: 18px;
+	float: right;
+	text-decoration: none;
+}
+
+/* *** Blue background *** */
+
+.blueScreen header, .blueScreen header a:visited {
+	color: #62c4fa;
+}
+
+.blueScreen header a:hover {
+	color: #92d8ff;
+}
+
+.blueScreen {
+	background-image: url("../images/bgBlue_large.jpg");
+	background-size: 100% 100%;
+	background-repeat: none;
+}
+
+/* *** Orange background *** */
+
+.orangeScreen header, .orangeScreen header a:visited {
+	color: #f8ab61;
+}
+
+.orangeScreen header a:hover {
+	color: #ffcd90;
+}
+
+.orangeScreen {
+	background-image: url("../images/bgOrange_large.jpg");
+	background-size: 100% 100%;
+	background-repeat: none;
+}
+
+/* *** Screens - General *** */
+
+.screen {
+	width: 100%;
+	height: 100%;
+	display: block;
+	height:100vh;
+	color: white;
+}
+
+.screen a, .screen p, {
+	letter-spacing: 4px;
+}
+
+.content {
+	height: 100%;
+}
+
+.content .element {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+}
+
+.scroll {
+	display: block;
+	font-family: 'BjornLight';
+	font-size: 10px;
+	vertical-align: bottom;
+}
+.scroll * {
+	margin: 8px;
+}
+
+.screen .content .element {
+	margin-top: 40px;
+	margin-bottom: 40px;
+	color: white;
+}
+
+.screen button {
+	color: white;
+}
+
+button {
+    background-color: Transparent;  
+    color: white;  
+    border-style: solid;
+    border-color: white;
+    border-size: 1px;
+    padding: 12px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    font-size: 12px;
+	font-family: 'BjornRegular';
+	letter-spacing: 4px;
+}
+
+.pageTitle {
+	font-size: 58px;	
+	letter-spacing: 20px;
+}
+
 * {
 	box-sizing: border-box;
 }
+
+/* *** Screens - Title Screens *** */
+
+.sectionTitle {
+	display:inline-block;
+    border-style: solid;
+    border-color: white;
+    border-size: 1px;
+	color: white;
+	vertical-align: center;
+	text-align: center;
+	padding: 30px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 40%;
+}
+
+.sectionTitle .number {
+	display:block;
+	text-align: center;
+	font-size: 140px;
+	font-family: OpenSansRegular;
+	vertical-align: center;
+}
+
+.sectionTitle .name {
+	display:block;
+	text-align: center;
+	font-size: 28px;
+	font-family: BjornRegular;
+	vertical-align: center;
+	letter-spacing: 8px;
+	margin-top: 25px;
+}
+
+.sectionContent {
+	display:inline-block;
+	width: 50%;
+	color: white;
+	line-height: 300%;
+	font-size: 12px;
+	vertical-align: center;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+form {
+	input {
+		color: white;
+		font-family: BjornRegular;
+		border-style: solid;
+		border-color: white;
+		border-size: 1px;
+		background-color: Transparent;
+	}
+}
+
+/* *** HomePageConnectionScreen *** */
+.homePageConnectionScreen {
+	.content {
+		display: block;
+		margin-top: 2.5%;
+		.block {
+			margin: 0px auto;
+			width:35%;
+			display: block;
+			h1 {
+				font-size: 46px;
+				letter-spacing: 12px;
+				margin-bottom: 20%;
+				text-align: center;
+			}
+			form {
+				input {
+					display: block;
+					margin-left: auto;
+					margin-right: auto;
+					margin-top: 30px;
+					width: 100%;
+					height: 50px;
+				}
+				.submit {
+					display: block;
+					width: 30%;
+					float: right;
+				}
+			}
+		}
+	}
+}
+
+
+
+
+
