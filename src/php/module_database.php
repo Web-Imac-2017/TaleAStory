@@ -31,6 +31,7 @@ class Database {
           die('Erreur : '.$e->getMessage());
       }
     }
+    echo 'connexion bdd OK';
     return $this->pdo;
   }
 
@@ -42,30 +43,30 @@ class Database {
   param : array : associant champs et entrées de l'utilisateur
   retour : data
   */
-  public function buildQuery($tables, $entries){
+  public function query($tables, $entries){
     //fields
     $build_fields = $this->buildFields($entries);
     //tables
     $build_tables = $this->buildTables($tables);
     //where
     $build_entries = $this->buildEntries($entries);
-    return $this->sendQuery($build_fields, $build_tables, $build_entries);
+    $arrayEntries = $this->buildArrayEntries($entries);
+    return $this->sendQuery($build_fields, $build_tables, $build_entries, $arrayEntries);
   }
 
-  private function sendQuery($fields, $tables, $entries) {
+  private function sendQuery($fields, $tables, $entries, $arrayEntries) {
       $statement="SELECT ".$fields." FROM ".$tables;
       if($entries) {
         $statement .= " WHERE ".$entries;
       }
       echo $statement;
-      //$qry = $this->getPDO()->query($statement);
-      /*
-      $qry = $this->getPDO()->prepare('statement');
-      $qry->execute(array(
-        $entries
-      ) or die(print_r($qry->errorInfo()));
-      */
-      $data = $qry->fetch();
+      $qry = $this->getPDO()->prepare($statement);
+      $qry->execute($arrayEntries) or die(print_r($qry->errorInfo()));
+      $data = array();
+      while($d = $qry->fetch()) {
+        array_push($data, $d);
+      }
+      $qry->closeCursor();
       return $data;
     }
 
@@ -99,20 +100,31 @@ class Database {
     return $build_tables;
   }
 
+  /*renvoie string de type toto = ? AND tata = ? AND...*/
   private function buildEntries($entries) {
     $build_entries;
-    foreach ($entries as $entry) {
-      if ($entry != NULL) {
-        $field = array_search($entry, $entries);
-        //if (checkSQLInjection($entry) ==0)
-        $build_entries .= $field." = ".$entry." ";
-        if($entry != end($entries)) {
-          $build_entries .="AND ";
-        }
+    $arrayEntries = $this->buildArrayEntries($entries);
+    foreach ($arrayEntries as $entry) {
+      $field = array_search($entry, $entries);
+      $build_entries .= $field." = ? ";
+      if($entry != end($arrayEntries)) {
+        $build_entries .="AND ";
       }
     }
     return $build_entries;
+  }
+
+/*renvoie un array à index numérique des valeurs entrées*/
+  private function buildArrayEntries($entries) {
+    $tabEntries = array();
+    foreach ($entries as $entry) {
+      if ($entry != NULL) {
+        //if (checkSQLInjection($entry) ==0)
+        array_push($tabEntries, $entry);
+      }
     }
+    return $tabEntries;
+  }
 
 }
 
