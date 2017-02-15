@@ -2,6 +2,3 @@ AddDefaultCharset utf-8
 
 RewriteEngine On
 RewriteRule "(.*)"  "php/index.php?p=$1" [QSA]
-
-
-
