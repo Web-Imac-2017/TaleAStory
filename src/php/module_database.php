@@ -7,6 +7,10 @@ class Database {
   protected $dbName;
   protected $options;
 
+  /**
+   * Constructeur : configure la connexion avec la base de donnée
+   * @param [string] $path [chemin vers le fichier de configuration]
+   */
   public function __construct($path){
     //$path = "../../../TaleAStory/src/php/database_config.json"
     $config_json = file_get_contents($path);
@@ -20,6 +24,10 @@ class Database {
     );
   }
 
+  /**
+   * getPDO : fait la connexion a la base de données si elle n'a jamais été faite avant. Fonction utilisée par sendQuery()
+   * @return objet pdo
+   */
   private function getPDO() {
     if($this->pdo === null) {
       try{
@@ -37,92 +45,113 @@ class Database {
 
 
 
-  /*
-  Construit la requete, vérifie la validité du contenu entré grace à la fct check entry
-  param : array : tables de la bdd dans laquelle on cherche (keys numériques)
-  param : array : associant champs et entrées de l'utilisateur
-  retour : data
-  */
+  /**
+   * query : envoie une query et récupère les données. Utilise des fonctions tierces pour traiter les tableaux reçus,
+   * concaténer les informations dans une string au format query, puis sendQuery pour l'envoyer au serveur
+   * @param  [array de strings] $tables  [ [0...n] => "table"]
+   * @param  [array de strings] $entries [ "champ" => "entrée utilisateur"/peut etre vide]
+   * @return [array]          [contient toutes les données retournées par la requête]
+   */
   public function query($tables, $entries){
-    //fields
-    $build_fields = $this->buildFields($entries);
-    //tables
-    $build_tables = $this->buildTables($tables);
-    //where
-    $build_entries = $this->buildEntries($entries);
-    $arrayEntries = $this->buildArrayEntries($entries);
-    return $this->sendQuery($build_fields, $build_tables, $build_entries, $arrayEntries);
+    $select = $this->processSELECT($entries);
+    $from = $this->processFROM($tables);
+    $where = $this->processWHERE($entries);
+    $statement=$select.$from;
+    if($where) {
+      $statement .= $where;
+    }
+    $array_entries = $this->processArrayEntries($entries);
+    echo $statement;
+    return $this->sendQuery($statement, $array_entries);
   }
 
-  private function sendQuery($fields, $tables, $entries, $arrayEntries) {
-      $statement="SELECT ".$fields." FROM ".$tables;
-      if($entries) {
-        $statement .= " WHERE ".$entries;
-      }
-      echo $statement;
-      $qry = $this->getPDO()->prepare($statement);
-      $qry->execute($arrayEntries) or die(print_r($qry->errorInfo()));
-      $data = array();
-      while($d = $qry->fetch()) {
-        array_push($data, $d);
-      }
-      $qry->closeCursor();
-      return $data;
+  /**
+   * sendQuery : prépare la query puis l'execute en utilisant un objet PDO
+   * @param  [string] $statement     [texte de la query: variables de type "?"]
+   * @param  [array] $array_entries [[0...n] => "variables à executer dans la query"]
+   * @return [array]          [contient toutes les données retournées par la requête]
+   */
+  private function sendQuery($statement, $array_entries) {
+    $qry = $this->getPDO()->prepare($statement);
+    $qry->execute($array_entries) or die(print_r($qry->errorInfo()));
+    $data = array();
+    while($d = $qry->fetch()) {
+      array_push($data, $d);
+    }
+    $qry->closeCursor();
+    return $data;
     }
 
-  private function checkSQLInjection($entries) {
-
-  }
-
-  private function buildFields($entries) {
+  /**
+   * processSELECT : extrait les clés (champs) du tableau passé en param et les concatène dans une string contenant la partie SELECT de la query.
+   * Si le tableau contient "*" renvoie "SELECT *"
+   * @param  [array] $entries ["champ" => "entrée"]
+   * @return [string]          ["SELECT champs1,champ2"]
+   */
+  private function processSELECT($entries) {
     $fields = array_keys($entries);
-    $build_fields;
+    $process_select = "SELECT ";
     foreach ($fields as $field) {
-      $build_fields .= $field;
+      $process_select .= $field;
       if($field != end($fields)) {
-        $build_fields .=", ";
+        $process_select .=", ";
       }
       if ($field == "*") {
-        return "*";
+        return "SELECT *";
       }
     }
-    return $build_fields;
+    return $process_select;
   }
 
-  private function buildTables($tables) {
-    //cas table unique
+  /**
+   * processFROM: extrait les valeurs du tableau passé en param et les concatène dans une string contenant la partie FROM de la query.
+   * les queries sur des tables jointes ne sont pas encore prises en compte
+   * @param  [array] $tables [[0...n] => "table"]
+   * @return [string]         ["FROM table"]
+   */
+  private function processFROM($tables) {
+    $process_from = " FROM ";
     if (count($tables) == 1) {
-      $build_tables = $tables[0];
+      $process_from .= $tables[0];
     } else {
-      $build_tables = "";
+      $process_from .= "";
       echo "multiples tables not supported yet";
     }
-    return $build_tables;
+    return $process_from;
   }
 
-  /*renvoie string de type toto = ? AND tata = ? AND...*/
-  private function buildEntries($entries) {
-    $build_entries;
-    $arrayEntries = $this->buildArrayEntries($entries);
-    foreach ($arrayEntries as $entry) {
+
+  /**
+   * processWHERE: extrait les valeurs du tableau passé en param et les concatène dans une string contenant la partie WHERE de la query.
+   * @param  [array] $entries ["champ" => "entrée"]
+   * @return [string]          ["WHERE champs1 = ? AND champs2 = ?"]
+   */
+  private function processWHERE($entries) {
+    $process_where = " WHERE ";
+    $array_entries = $this->processArrayEntries($entries);
+    foreach ($array_entries as $entry) {
       $field = array_search($entry, $entries);
-      $build_entries .= $field." = ? ";
-      if($entry != end($arrayEntries)) {
-        $build_entries .="AND ";
+      $process_where .= $field." = ? ";
+      if($entry != end($array_entries)) {
+        $process_where .="AND ";
       }
     }
-    return $build_entries;
+    return $process_where;
   }
 
-/*renvoie un array à index numérique des valeurs entrées*/
-  private function buildArrayEntries($entries) {
+/**
+ * processArrayEntries: extrait les valeurs non nulles du tableau passé en param et en fait un nouveau tableau
+ * @param  [array] $entries ["champ" => "entrée"]
+ * @return [array]          [[0...n] => "entrée non nulle"]
+ */
+  private function processArrayEntries($entries) {
     $tabEntries = array();
     foreach ($entries as $entry) {
       if ($entry != NULL) {
-        //if (checkSQLInjection($entry) ==0)
         array_push($tabEntries, $entry);
       }
     }
+    var_dump($tabEntries);
     return $tabEntries;
   }
 
