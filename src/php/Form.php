@@ -9,16 +9,11 @@ class Form {
   */
   static public function getForm($form,$index) {
     $_SESSION["$form"."_token"] = "test_token";
-    var_dump ($_POST);
+    //var_dump ($_POST);
     var_dump($_FILES);
-    var_dump($_SESSION);
+    //var_dump($_SESSION);
     //on vérifie que le formulaire est authentique et que les inputs de $_POST sont ok
     if (self::verifyFormToken($form) && self::verifyFormInputs()) {
-        // Lets check the URL whether it's a real URL or not. if not, stop the script
-        if(!filter_var($_SERVER['HTTP_REFERER'],FILTER_VALIDATE_URL)) {
-          self::writeLog('URL Validation');
-          die('Please insert a valid URL');
-        }
         //on vérifie que l'index demandé est dans $_POST et que sa valeur est bonne
         if(isset($_POST["$index"]) && !empty($_POST[$index]))
           return  htmlentities(trim(strip_tags(stripslashes($_POST[$index]))), ENT_NOQUOTES, "UTF-8");
@@ -119,13 +114,13 @@ class Form {
               throw new RuntimeException('Exceeded filesize limit.');
         //Upload
         $filename = sprintf('../assets/images/%s.%s',sha1_file($_FILES["$file_input"]['tmp_name']),$ext);
+        if(file_exists($filename))
         if (!move_uploaded_file($_FILES["$file_input"]['tmp_name'], $filename))
             throw new RuntimeException('Failed to move uploaded file.');
       }catch (RuntimeException $e) {
           echo $e->getMessage();
       }
-      self::createTinyImg($filename);
-  }
+  } //nom fichier + ext
 
   /*
   @function createTinyImg
@@ -138,7 +133,7 @@ class Form {
     $width = 100;
     $height = 100;
 
-    $source = imagecreatefromjpeg($source_name); // La photo est la source
+    $source = imagecreatefromjpeg($source_name);
 
     // Cacul des nouvelles dimensions
     list($width_orig, $height_orig) = getimagesize($source_name);
@@ -146,17 +141,20 @@ class Form {
 
     if ($width/$height > $ratio_orig) {
        $width = $height*$ratio_orig;
-    } else {
+    } else
        $height = $width/$ratio_orig;
-    }
 
     // Redimensionnement
     $dest = imagecreatetruecolor($width, $height);
     imagecopyresampled($dest, $source, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
 
     // On enregistre la miniature
-    $dest_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', $source_name);
+    $dest_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', $source_name); //fonction gettinyname
     imagejpeg($dest, $dest_name."_tiny.jpg");
+  }
+
+  static public function getTinyName($source_name){
+    return preg_replace('/\\.[^.\\s]{3,4}$/', '', $source_name);
   }
 
 }

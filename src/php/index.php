@@ -13,8 +13,8 @@
   require 'Form.php';
   //$_SERVER['HTTP_REFERER'] = 'toto';
 
-//  echo(Form::getForm("test_form","name"));
-//  echo(Form::getForm("test_form","comments"));
+ echo(Form::getForm("test_form","name"));
+ echo(Form::getForm("test_form","comments"));
  Form::uploadFile("test_file");
 //  Form::createTinyImg("../assets/images/test.jpg");
 
