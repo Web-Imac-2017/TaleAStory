@@ -24,6 +24,7 @@ var config       = require('../config');
 var configJS = {
   srcPath      : './src/js/',  // Fichier principal à build
   outputDir : config.outputDir + '/assets/js', // Chemin ou va être généré le build
+  dontMangle : []
 };
 
 gulp.task('jsAll', function() {
@@ -38,10 +39,13 @@ gulp.task('watchJS', ['jsAll'], function(){
 	gulp.watch(configJS.srcPath + '*.js', function(event){
 		buildJS(event.path);
 	});
+  gulp.watch(configJS.srcPath + 'app/*.js', function(event){
+		buildJS(configJS.srcPath + 'main.js');
+	});
 });
 
 function buildJS(jsSrc) {
-	console.log('compile '+ jsSrc + '...');
+	console.log('compile '+ jsSrc + '...' + ' mangle:' + (configJS.dontMangle.indexOf(jsSrc) < 0));
 	var b = browserify({
 			fullPath: true,
 			debug: true,
@@ -49,6 +53,10 @@ function buildJS(jsSrc) {
 			cache: {},
 			packageCache: {}
 		});
+
+  var minifyOption = {mangle:(configJS.dontMangle.indexOf(jsSrc) < 0)};
+  var array = [];
+
 	return b
 		.transform(stringify,{ appliesTo: { includeExtensions: ['.html'] }, minify: true })
 		.transform(babelify, {presets: ["es2015", "react"]}) // Babel, pour l'ES6
@@ -62,7 +70,7 @@ function buildJS(jsSrc) {
 			path.extname = ".min.js";
 		}))
 		.pipe(sourcemaps.init({loadMaps: true})) // Extract the inline sourcemaps
-		.pipe(uglify())                          // Minify the build file
+    .pipe(uglify(minifyOption))                    // Minify the build file
 		.pipe(sourcemaps.write('./'))            // Set folder for sourcemaps to output to
 		.pipe(gulp.dest(configJS.outputDir))       // Set the output folder
 		.pipe(notify({
