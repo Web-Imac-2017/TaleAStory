@@ -98,7 +98,7 @@ class Form {
   /*
   @function uploadFile
   @param  $file  nom de l'input qui upload le fichier
-  @return void
+  @return $filename nom du fichier
   Gestion uploads fichiers
   */
   static public function uploadFile($file_input){
@@ -106,21 +106,26 @@ class Form {
         if(!isset($_FILES["$file_input"]))
             throw new RuntimeException('No file.');
         //Extension
-        $ext = strtolower(pathinfo($_FILES[$file_input]['name'],PATHINFO_EXTENSION));
-        if(empty($_FILES[$file_input]['tmp_name']) || !in_array($ext, array('jpg', 'jpeg','png','gif','bmp')))
+        if(empty($_FILES[$file_input]['tmp_name']) || !in_array($_FILES[$file_input]['type'], array('image/jpg', 'image/jpeg','image/png','image/gif','image/bmp')))
               throw new RuntimeException('Bad file extension...');
         //Taille > 10 MO
         if ($_FILES[$file_input]['size'] > 1000000)
               throw new RuntimeException('Exceeded filesize limit.');
+        //Nom du fichier
+        $ext = strtolower(pathinfo($_FILES[$file_input]['name'],PATHINFO_EXTENSION));
+        do{
+          $filename = sprintf('../assets/images/%s.%s',md5(uniqid(microtime(), true)),$ext);
+        }while(file_exists($filename));
         //Upload
-        $filename = sprintf('../assets/images/%s.%s',sha1_file($_FILES["$file_input"]['tmp_name']),$ext);
-        if(file_exists($filename))
         if (!move_uploaded_file($_FILES["$file_input"]['tmp_name'], $filename))
             throw new RuntimeException('Failed to move uploaded file.');
+        self::createTinyImg($filename);
       }catch (RuntimeException $e) {
           echo $e->getMessage();
+          return '';
       }
-  } //nom fichier + ext
+      return $filename;
+  } 
 
   /*
   @function createTinyImg
@@ -149,12 +154,18 @@ class Form {
     imagecopyresampled($dest, $source, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
 
     // On enregistre la miniature
-    $dest_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', $source_name); //fonction gettinyname
+    $dest_name = preg_replace('/\\.[^.\\s]{3,4}$/', '', $source_name);
     imagejpeg($dest, $dest_name."_tiny.jpg");
   }
 
+  /*
+  @function getTinyName
+  @param  $source_name chemin de l'image source
+  @return chemin de la miniature
+  Donne le chemin de la miniature d'une image donnée
+  */
   static public function getTinyName($source_name){
-    return preg_replace('/\\.[^.\\s]{3,4}$/', '', $source_name);
+    return preg_replace('/\\.[^.\\s]{3,4}$/', '', $source_name)."_tiny.jpg";
   }
 
 }
