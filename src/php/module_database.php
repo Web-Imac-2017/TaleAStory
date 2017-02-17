@@ -33,6 +33,7 @@ class Database {
       try{
         $pdo = new PDO('mysql:host='.$this->server.';dbname='.$this->dbName,$this->userName,$this->password,$this->options);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
         $this->pdo = $pdo;
       }
       catch(Exception $e){
@@ -151,9 +152,97 @@ class Database {
         array_push($tabEntries, $entry);
       }
     }
-    var_dump($tabEntries);
+    //var_dump($tabEntries);
     return $tabEntries;
   }
+
+  public function encode($purestring) {
+    /*
+    $json_file = file_get_contents("../../../TaleAStory/src/php/salt.json");
+    $salt_json = json_decode($json_file, TRUE);
+    $salt = $salt_json[salt];
+    $salted = $salt."_".$purestring;
+    echo $salted;
+    */
+     return password_hash($purestring, PASSWORD_BCRYPT);
+  }
+
+  public function decode($pw, $hashed) {
+    return password_verify($pw, $hashed);
+  }
+
+  public function insert($table, $entries) {
+    $into = "INSERT INTO ".$table;
+    $fields = $this->processFields($entries);
+    $values = $this->processValues($entries);
+    $statement = $into.$fields.$values;
+    echo "\n".$statement."\n";
+    return $this->sendInsert($statement, $entries);
+  }
+
+  private function sendInsert($statement, $entries) {
+    $insert = $this->getPDO()->prepare($statement);
+    $insert->execute($entries) or die(print_r($insert->errorInfo()));
+    echo "insert ok";
+  }
+
+  private function processFields($entries) {
+    $fields = array_keys($entries);
+    $process_fields = "(";
+    foreach ($fields as $field) {
+      $process_fields .= $field;
+      if($field != end($fields)) {
+        $process_fields .=", ";
+      }
+    }
+    $process_fields .=")";
+    return $process_fields;
+  }
+
+  private function processValues($entries) {
+    $fields = array_keys($entries);
+    $process_values = " VALUES(";
+    foreach ($fields as $field) {
+      $process_values .= " :".$field;
+      if($field != end($fields)) {
+        $process_values .=", ";
+      }
+    }
+    $process_values .=")";
+    return $process_values;
+  }
+
+  public function update($table, $entries, $identification) {
+    $update = "UPDATE ".$table;
+    $set = " SET ".$this->processUPDATE($entries);
+    $where = " WHERE ".$this->processUPDATE($identification);
+    $array_entries = array_merge($this->processArrayEntries($entries), $this->processArrayEntries($identification));
+
+    for($i = 0; $i<count($array_entries); $i++) {
+      echo $array_entries[$i]."\n";
+    }
+    $statement = $update.$set.$where;
+    echo "\n".$statement."\n";
+    return $this->sendUpdate($statement, $array_entries);
+  }
+
+  private function sendUpdate($statement, $array_entries) {
+    $update = $this->getPDO()->prepare($statement);
+    $update->execute($array_entries) or die(print_r($update->errorInfo()));
+    echo "update ok";
+  }
+
+  private function processUPDATE($entries) {
+    $process_set;
+    foreach ($entries as $field => $entry) {
+      $process_set .= $field." = ?";
+      if($entry != end($entries)) {
+        $process_set .=", ";
+      }
+    }
+    return $process_set;
+  }
+
 
 }
 
