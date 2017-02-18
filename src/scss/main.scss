@@ -1,78 +1,127 @@
 @import './reset';
 
+$break-tiny: 340px;
+$break-small: 560px;
+$break-medium: 900px;
+$break-large: 1200px;
+
+$width-index: 80px;
+
 html {
-	font-family: 'BjornRegular';
+	font-family: 'Bjorn';
 }
 
 @font-face {
-    font-family: 'BjornLight';
+    font-family: 'Bjorn';
     src: url('../Bjorn Light.otf');
+    font-weight: lighter;
 }
 
 @font-face {
-    font-family: 'BjornRegular';
+    font-family: 'Bjorn';
     src: url('../Bjorn Regular.otf');
 }
 
 @font-face {
-    font-family: 'OpenSansRegular';
+    font-family: 'OpenSans';
     src: url('../OpenSans-Regular.ttf');
 }
+
+@font-face {
+    font-family: 'OpenSans';
+    src: url('../OpenSans-Bold.ttf');
+    font-weight: bold;
+}
+
+
+
 /* *** Header - General *** */
 header {
 	width: 100%;
-	padding-left: 70px;
-	padding-right: 70px;
-	padding-top: 50px;
-	padding-bottom: 8%;
+	padding-left: 5%;
+	padding-right: 5%;
+	padding-top: 3%;
 	height: auto;
 	font-size: 10px;
-	font-family: 'BjornLight';
-}
+	font-family: 'Bjorn';
+	font-weight: lighter;
+	
+	h1 {
+		float: left;
+		font-size: 12px;
+		margin-bottom: 10px;
+	}
+	
+	.links {
+		float: right;
+		height: 100%;
 
-header h1 {
-	float: left;
-	font-size: 12px;
-}
+		.profilPic {
+			width: 32px;
+			height: 32px;
+			margin: auto;
+		}
 
-header a {
-	padding-top: 10px;
-	padding-left: 18px;
-	padding-right: 18px;
-	float: right;
-	text-decoration: none;
+	}
+
+	a {
+		text-decoration: none;
+		padding-left: 18px;
+		padding-right: 18px;
+		margin-top: 10px;
+		display: block;
+		float: left;
+		vertical-align: middle;
+	}
+	
 }
 
 /* *** Blue background *** */
-
-.blueScreen header, .blueScreen header a:visited {
-	color: #62c4fa;
-}
-
-.blueScreen header a:hover {
-	color: #92d8ff;
-}
 
 .blueScreen {
 	background-image: url("../images/bgBlue_large.jpg");
 	background-size: 100% 100%;
 	background-repeat: none;
+	
+	header, header a:visited {
+		color: #62c4fa;
+	}
+	
+	header, header a:hover {
+		color: #92d8ff;
+	}
+	
+	
 }
 
 /* *** Orange background *** */
-
-.orangeScreen header, .orangeScreen header a:visited {
-	color: #f8ab61;
-}
-
-.orangeScreen header a:hover {
-	color: #ffcd90;
-}
 
 .orangeScreen {
 	background-image: url("../images/bgOrange_large.jpg");
 	background-size: 100% 100%;
 	background-repeat: none;
+	
+	header, header a:visited {
+		color: #f8ab61;
+		a:hover {
+			color: #ffcd90;
+		}
+	}
+}
+
+/* *** Purple background *** */
+
+.purpleScreen {
+	background-image: url("../images/bgPurple_large.jpg");
+	background-size: 100% 100%;
+	background-repeat: none;
+	
+	header, header a:visited {
+		color: #6852D1;
+		a:hover {
+			color: #A795F9;
+		}
+	}
 }
 
 /* *** Screens - General *** */
@@ -80,44 +129,129 @@ header a {
 .screen {
 	width: 100%;
 	height: 100%;
-	display: block;
+	display: flex;
+	flex-direction: column;
 	height:100vh;
 	color: white;
+		
+	a, p {
+		letter-spacing: 4px;
+	}
+	
+	button {
+		color: white;
+	}
 }
 
-.screen a, .screen p, {
-	letter-spacing: 4px;
+.picto {
+	@media screen and (max-width: $break-small) {
+    	width: 50px;
+    }
+}
+
+.columnsContainer {
+	margin: auto;
+	display: flex;
+	flex-direction: row;
+	height: 60%;
+	width: 100%;
+}
+
+.cols {
+	display: flex;
+	flex-direction: row;
+}
+
+.rows {
+	display: flex;
+	flex-direction: column;
+}
+
+.index, .antiIndex{
+	display: flex;
+	flex-direction: row;
+	max-width: $width-index;
+	min-width: $width-index;
+	height: 100%;
+	margin: 0px 5%;
+
+	@media screen and (max-width: $break-small) {
+    	display: none;
+    }
+
+   .indexContent {
+   		display: flex;
+   		flex-direction: column;
+   		height: 100%;
+
+   		a {
+   			margin: auto 10px;
+   			font-family: OpenSans;
+   			font-weight: bold;
+   			color: rgba(255,255,255,0.7);
+   			text-decoration: none;
+   		}
+
+		a:hover {
+			color: rgba(255,255,255,0.9);
+		}
+
+   }
+
+}
+
+.verticalLine {
+	border-left: thick solid rgba(255,255,255, 0.35);
+    border-width: 2px;
+    height: 100%;
 }
 
 .content {
-	height: 100%;
-}
+	
+	width: 100%;
+	margin: auto;
+	align-self: flex-start;
+	
+	@media screen and (max-width: $break-medium) {
+		display: flex !important;
+		flex-direction: column !important;
+    }
 
-.content .element {
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
-	text-align: center;
+	.element {
+		display: block;
+		text-align: center;
+		margin: 30px auto;
+		@media screen and (max-width: $break-small) {
+			margin: 10px auto;
+		}
+	}
+	
+	.pageTitle {
+		font-size: 58px;	
+		letter-spacing: 20px;
+		margin-bottom: 40px;
+
+		@media screen and (max-width: $break-small) {
+			font-size: 38px;
+			letter-spacing: 14px;
+			margin-bottom: 20px;
+	    }
+	}
+
 }
 
 .scroll {
-	display: block;
-	font-family: 'BjornLight';
+	font-family: 'Bjorn';
+	font-weight: lighter;
 	font-size: 10px;
-	vertical-align: bottom;
-}
-.scroll * {
-	margin: 8px;
-}
-
-.screen .content .element {
-	margin-top: 40px;
-	margin-bottom: 40px;
-	color: white;
-}
-
-.screen button {
-	color: white;
+	width: 100%;
+	text-align: center;
+	align-self: flex-end;
+	padding-bottom: 25px;
+	
+	p {
+		margin-bottom:12px;
+	}
 }
 
 button {
@@ -132,68 +266,108 @@ button {
     display: inline-block;
     cursor: pointer;
     font-size: 12px;
-	font-family: 'BjornRegular';
+	font-family: 'Bjorn';
 	letter-spacing: 4px;
-}
 
-.pageTitle {
-	font-size: 58px;	
-	letter-spacing: 20px;
+	@media screen and (max-width: $break-small) {
+	    padding: 8px 16px;
+	    font-size: 10px;
+    }
 }
 
 * {
 	box-sizing: border-box;
 }
 
+.rounded{
+    border-radius: 50%;
+
+}
+
 /* *** Screens - Title Screens *** */
 
 .sectionTitle {
-	display:inline-block;
-    border-style: solid;
-    border-color: white;
-    border-size: 1px;
+	display: block;
 	color: white;
-	vertical-align: center;
-	text-align: center;
 	padding: 30px;
-	margin-left: auto;
-	margin-right: auto;
-	width: 40%;
-}
+	margin: auto !important;
+	width: 350px;
+	height: 350px;
+	border: thick solid rgba(255,255,255, 0.6);
+    border-width: 2px;
 
-.sectionTitle .number {
-	display:block;
-	text-align: center;
-	font-size: 140px;
-	font-family: OpenSansRegular;
-	vertical-align: center;
-}
+	@media screen and (max-width: $break-large) {
+		width: 280px;
+		height: 280px;
+    }
 
-.sectionTitle .name {
-	display:block;
-	text-align: center;
-	font-size: 28px;
-	font-family: BjornRegular;
-	vertical-align: center;
-	letter-spacing: 8px;
-	margin-top: 25px;
+
+	@media screen and (max-width: $break-small) {
+		display: none;
+    }
+	
+	div {
+		margin: 10% auto !important;
+		display: block;
+	}
+
+	.number {
+		display:block;
+		text-align: center;
+		font-size: 140px;
+		font-family: OpenSans;
+		font-weight: bold;
+		vertical-align: center;
+		@media screen and (max-width: $break-large) {
+			font-size: 80px;
+	    }
+	}
+	
+	.name {
+		display:block;
+		text-align: center;
+		font-size: 28px;
+		font-family: Bjorn;
+		vertical-align: center;
+		letter-spacing: 8px;
+		margin-top: 25px;
+		@media screen and (max-width: $break-large) {
+			font-size: 20px;
+	    }
+	}
 }
 
 .sectionContent {
 	display:inline-block;
-	width: 50%;
+	width: 45%;
 	color: white;
 	line-height: 300%;
 	font-size: 12px;
 	vertical-align: center;
 	margin-left: auto;
 	margin-right: auto;
+
+	p {
+		width: 80%;
+		margin: auto;
+	}
+
+	@media screen and (max-width: $break-large) {
+		font-size: 10px;
+		width: 100%;
+		margin: auto;
+   }
+
+	@media screen and (max-width: $break-tiny) {
+		font-size: 8px;
+   }
+
 }
 
 form {
 	input {
 		color: white;
-		font-family: BjornRegular;
+		font-family: Bjorn;
 		border-style: solid;
 		border-color: white;
 		border-size: 1px;
@@ -235,7 +409,17 @@ form {
 	}
 }
 
+/* *** Index Screens *** */
 
+.presentationPageScreen02{
+	.content {
+		display: flex;
+		flex-direction: row;
 
+		div {
+			margin: 0px 3%;
+		}
 
+	}
+}
 

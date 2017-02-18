@@ -53,14 +53,61 @@ domready(() => {
 
 });
 
+class Header extends React.Component{	
+
+	render() {
+		if (this.props.logged == 1) {
+			return (
+				<HeaderRegistered/>
+			);
+		} else {
+			return (
+				<HeaderUnregistered/>
+			);
+		} 
+	}
+}
+
 class HeaderUnregistered extends React.Component{
 	render() {
 		return (
 			<header>
 				<h1><a href="">Tale A Story</a></h1>
-				<a href="">Inscription</a>
-				<a href="">Connexion</a>
+				<div className="links">
+					<a href="">Inscription</a>
+					<a href="">Connexion</a>
+				</div>
 			</header>
+		);
+	}
+}
+
+
+/* <a href="">{this.props.name}</a>
+<PresentationPageScreen01 name="John"/>
+*/
+class HeaderRegistered extends React.Component{
+	render() {
+		let tmpName = "Marcel Patulacci";
+		return (
+			<header>
+				<h1><a href="">Tale A Story</a></h1>
+				<div className="links">
+					<a href="">{tmpName}</a>
+					<img className="rounded profilPic" src={imagesPath() + 'patulacci_large.jpg'}/>
+				</div>
+			</header>
+		);
+	}
+}
+
+class Scroll extends React.Component{
+	render() {
+		return (
+			<div className="scroll">
+				<p>Scroll</p>
+				<img src={imagesPath() + 'scrollArrow_large.png'}/>
+			</div>
 		);
 	}
 }
@@ -70,9 +117,24 @@ class PresentationPage extends React.Component{
 		return  <div>
 					<PresentationPageScreen01/>
 					<PresentationPageScreen02/>
+					<PresentationPageScreen03/>
 					<HomePageConnectionScreen/>
 					<HomePageRegisterScreen/>
-				</div>;
+				</div>
+	}
+}
+
+
+class Index extends React.Component{
+	render(){		
+		return  <div className="index">
+					<div className="verticalLine"></div>
+					<div className="indexContent">
+						<a href="">01</a>
+						<a href="">02</a>
+						<a href="">03</a>
+					</div>
+				</div>
 	}
 }
 
@@ -80,40 +142,72 @@ class PresentationPage extends React.Component{
 class PresentationPageScreen01 extends React.Component{
 	render(){		
 		return  <div className="screen presentationPageScreen01 blueScreen" >
-					<HeaderUnregistered/>
-					<div className="content">
-						<img className="picto element" src={imagesPath() + 'pictoMountains_large.png'}/>
-						<img className="element" src={imagesPath() + 'wave_large.png'}/>
-						<h1 className="pageTitle element">Tale A Story</h1>
-						<button className="element" type="button">Commencer l'aventure</button>
-						<div className="scroll element">
-							<p>Scroll</p>
-							<img src={imagesPath() + 'scrollArrow_large.png'}/>
+					<Header logged="0"/>
+					<div className="columnsContainer">
+						<div className="antiIndex"></div>
+						<div className="content">
+							<img className="picto element" src={imagesPath() + 'pictoMountains_large.png'}/>
+							<img className="element" src={imagesPath() + 'wave_large.png'}/>
+							<h1 className="pageTitle element">Tale A Story</h1>
+							<button className="element" type="button">Commencer l'aventure</button>
 						</div>
+						<Index/>
 					</div>
-				</div>;
+					<Scroll/>
+				</div>
 	}
 }
 
 class PresentationPageScreen02 extends React.Component{
 	render(){		
 		return  <div className="screen presentationPageScreen02 orangeScreen" >
-					<HeaderUnregistered/>
-					<div className="content">
-						<div className="sectionTitle">
-							<p className="number">02</p>
-							<p className="name">Presentation</p>
+					<Header logged="1"/>
+					<div className="columnsContainer">
+						<div className="content">
+							<div className="sectionTitle">
+								<div>
+									<p className="number">02</p>
+									<p className="name">Presentation</p>
+								</div>
+							</div>
+							<div className="sectionContent">
+								<img className="picto element" src={imagesPath() + 'pictoMountains_large.png'}/>
+								<img className="element" src={imagesPath() + 'wave_large.png'}/>
+								<p>Lorem ipsum dolor sit amet consecteur nulla adispisin bacon ipsum jambon fromage poulet rotie j’ai pas internet donc je ne peux pas télécharger du lorem ipsum alors j’écris un petit peu n’importe quoi</p>
+							</div>
 						</div>
-						<div className="sectionContent">
-							<img className="picto element" src={imagesPath() + 'pictoMountains_large.png'}/>
-							<img className="element" src={imagesPath() + 'wave_large.png'}/>
-							<p>Lorem ipsum dolor sit amet consecteur nulla adispisin bacon ipsum jambon fromage poulet rotie j’ai pas internet donc je ne peux pas télécharger du lorem ipsum alors j’écris un petit peu n’importe quoi</p>
-						</div>
-						<div className="scroll element">
-							<p>Scroll</p>
-							<img src={imagesPath() + 'scrollArrow_large.png'}/>
-						</div>
+						<Index/>
 					</div>
+					<Scroll/>
+				</div>;
+	}
+}
+
+class PresentationPageScreen03 extends React.Component{
+	render(){		
+		return  <div className="screen presentationPageScreen03 purpleScreen" >
+					<Header logged="1"/>
+					<div className="columnsContainer">
+						<div className="content cols">
+							<div className="sectionTitle">
+								<div>
+									<p className="number">03</p>
+									<p className="name">L'Aventure</p>
+								</div>
+							</div>
+							<div className="sectionContent rows">
+								<img className="picto element" src={imagesPath() + 'pictoMountains_large.png'}/>
+								<img className="element" src={imagesPath() + 'wave_large.png'}/>
+								<p>Lorem ipsum dolor sit amet consecteur nulla adispisin bacon ipsum jambon fromage poulet rotie. Bon alors ici faut pas trop de text pour le responsive, hein, déso.</p>
+								<div className="buttons cols">
+									<button className="element" type="button">Faites le test</button>
+									<button className="element" type="button">Inscription</button>
+								</div>
+							</div>
+						</div>
+						<Index/>
+					</div>
+					<Scroll/>
 				</div>;
 	}
 }
