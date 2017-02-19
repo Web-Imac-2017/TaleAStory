@@ -2,24 +2,23 @@
 
 class Router {
 
-    private $url = $_GET['url'];
-    // FIREGREEN ** Faites une liste simple sans vous soucier des REQUEST_METHOD **
-    private $routes = []; // chargera le JSON d'Estelle
+    static $routes = [];
 
     public static function insert($path, $callable){
+
         $path = trim($path, '/');
-        $route = new Route($path, $callable);
-        $this->routes["GET"][] = $route;
-        return $route;
+        self::$routes["GET"][] = new Route($path, $callable);
+        return self::$routes["GET"];
     }
 
     public static function run(){
-      foreach($this->routes as $route){
+      $url = $_GET['url'];
+      foreach(self::$routes["GET"] as $route){
           if($route->match($url)){
               return $route->call();
           }
       }
-      throw new RouterException('No matching routes');//faire la 404
+      throw new RouterException('No matching routes'); //faire la 404
   }
 
   public static function index(){
