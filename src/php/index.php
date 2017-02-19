@@ -1,29 +1,10 @@
 <?php
 
-
-  class Autoloader{
-
-      static function register(){
-          spl_autoload_register(array(__CLASS__, 'autoload'));
-      }
-
-      static function autoload($class){
-          require $class.'.php';
-      }
-  }
-
-  require 'autoloader.php';
+  require 'Autoloader.php';
   Autoloader::register();
 
+  $router = new Router($_GET['url']);
+  $router->get('/', function($id){ echo "Bienvenue sur ma homepage !"; });
+  $router->run();
 
-  $options = array(
-      PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
-  );
-
-  $pdo = new PDO('mysql:dbname=test;host=localhost', 'root', '', $options);
-
-  $i = $pdo->query('SELECT COUNT(*) FROM test');
-  //var_dump($i->fetchColumn(0));
-
-  require '../index.html';
 ?>
