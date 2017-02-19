@@ -27,7 +27,6 @@ class Route {
     public function call(){
       return call_user_func_array($this->callable, $this->matches);
     }
-
 }
 
 ?>
