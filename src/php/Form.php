@@ -1,4 +1,7 @@
 <?php
+/*
+  FIREGREEN ** fait une fonction pour la méthode GET et une autre pour POST **
+*/
 class Form {
   /*
   @function getForm
@@ -8,10 +11,13 @@ class Form {
   Vérifie et retourne les données entrées par l'user et envoyées via $_POST
   */
   static public function getForm($form,$index) {
-    $_SESSION["$form"."_token"] = "test_token";
+    $_SESSION["$form"."_token"] = "test_token"; // FIREGREEN ** ne redéfinit pas le token ici
     //var_dump ($_POST);
     var_dump($_FILES);
     //var_dump($_SESSION);
+    /*
+      FIREGREEN ** Met le verfiyFormToken dans le verifyFormInputs
+    */
     //on vérifie que le formulaire est authentique et que les inputs de $_POST sont ok
     if (self::verifyFormToken($form) && self::verifyFormInputs()) {
         //on vérifie que l'index demandé est dans $_POST et que sa valeur est bonne
@@ -102,11 +108,13 @@ class Form {
   Gestion uploads fichiers
   */
   static public function uploadFile($file_input){
+    $whitelist = array('image/jpg', 'image/jpeg','image/png','image/gif','image/bmp');
     try {
         if(!isset($_FILES["$file_input"]))
             throw new RuntimeException('No file.');
         //Extension
-        if(empty($_FILES[$file_input]['tmp_name']) || !in_array($_FILES[$file_input]['type'], array('image/jpg', 'image/jpeg','image/png','image/gif','image/bmp')))
+        if(empty($_FILES[$file_input]['tmp_name'])
+            || !in_array($_FILES[$file_input]['type'], $whitelist))
               throw new RuntimeException('Bad file extension...');
         //Taille > 10 MO
         if ($_FILES[$file_input]['size'] > 1000000)
@@ -125,7 +133,7 @@ class Form {
           return '';
       }
       return $filename;
-  } 
+  }
 
   /*
   @function createTinyImg
