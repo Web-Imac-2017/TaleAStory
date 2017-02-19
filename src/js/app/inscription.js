@@ -1,17 +1,11 @@
 import React from 'react';
-import {animationIn, animationOut} from './router';
-export default React.createClass({
+import RouteComponent from './routecomponent';
 
-  dom : null,
-
-  componentDidMount() {
-    animationIn(this.dom);
-  },
-
+export default RouteComponent({
   render(){
-    return  <div className="page" ref={(dom) => { this.dom = dom; }}>
-              <div className="mini-title"> TALE A STORY </div>
-              <div className="main-title"> INSCRIPTION </div>
-            </div>
+    return    <div>
+                <div className="mini-title"> TALE A STORY </div>
+                <div className="main-title"> INSCRIPTION </div>
+              </div>
   }
 });

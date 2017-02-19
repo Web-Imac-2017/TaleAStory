@@ -24,8 +24,8 @@ function onChange(prev, next, replace, callback){
         animationIn = inUp;
       }
       else{
-        animationOut = inDown;
-        animationIn = outDown;
+        animationOut = outDown;
+        animationIn = inDown;
       }
     }
   }
@@ -43,35 +43,34 @@ function createElement(Component, props) {
 }
 
 outUp = dom => {
-  return TweenLite.to(dom, 2, {y:"-100%", opacity:0});
+  return TweenLite.to(dom, 1.2,{y:"-100%", opacity:0});
 }
 
 inUp = dom => {
-  return TweenLite.fromTo(dom, 2, {y:"100%", opacity:0}, {y:"0%", opacity:1});
+  return TweenLite.to(dom, 1.2, {y:"0%", opacity:1});
 }
 
 outDown = dom => {
-  return TweenLite.to(dom, 2, {y:"100%", opacity:0});
+  return TweenLite.to(dom, 1.2, {y:"100%", opacity:0});
 }
 
 inDown = dom => {
-  return TweenLite.fromTo(dom, 2, {y:"-100%", opacity:0}, {y:"0%", opacity:1});
+  return TweenLite.to(dom, 1.2, {y:"0%", opacity:1});
 }
 
 outDefault = dom => {
-  return TweenLite.to(dom, 2, {opacity:0});
+  return TweenLite.to(dom, 1.2, {opacity:0});
 }
 
 inDefault = dom => {
-  return TweenLite.fromTo(dom, 2, {opacity:0}, {opacity:1});
+  return TweenLite.fromTo(dom, 1.2, {opacity:0}, {opacity:1});
 }
 
 animationOut = outDefault;
 animationIn = inDefault;
 
-
 AppRouter =
-    <Router history={browserHistory} createElement={createElement} onUpdate={onUpdate} transition={null}>
+    <Router history={browserHistory} createElement={createElement} onUpdate={onUpdate}>
       <Route path={config.path('')} component={Wrapper} onChange={onChange}>
         <IndexRoute component={Index} index={1}/>
         <Route path='connexion' component={Connexion} index={2}/>
@@ -80,4 +79,4 @@ AppRouter =
     </Router>
 
 export default AppRouter;
-export { animationIn, animationOut };
+export {animationIn, animationOut};
