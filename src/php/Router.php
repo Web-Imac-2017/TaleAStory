@@ -34,7 +34,7 @@ class Router {
   public static function setJson($json_path){
     private $json = file_get_contents("".$json_path."");
     $obj_json= json_decode($json, true); //Json => Objet Array
-    foreach($obj_json as key => value) {
+    foreach($obj_json as $key => $value) {
       this->insert($key, $value);
     }
   }
