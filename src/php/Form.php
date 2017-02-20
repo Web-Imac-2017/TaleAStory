@@ -1,28 +1,39 @@
 <?php
-/*
-  FIREGREEN ** fait une fonction pour la méthode GET et une autre pour POST **
-*/
 class Form {
   /*
-  @function getForm
+  @function getFormPost
   @param string form  id du form concerné
   @param string index du champ demandé
   @return string  valeur correspondant au champ demandé
   Vérifie et retourne les données entrées par l'user et envoyées via $_POST
   */
-  static public function getForm($form,$index) {
-    $_SESSION["$form"."_token"] = "test_token"; // FIREGREEN ** ne redéfinit pas le token ici
-    //var_dump ($_POST);
-    var_dump($_FILES);
-    //var_dump($_SESSION);
-    /*
-      FIREGREEN ** Met le verfiyFormToken dans le verifyFormInputs
-    */
+  static public function getFormPost($form,$index) {
     //on vérifie que le formulaire est authentique et que les inputs de $_POST sont ok
-    if (self::verifyFormToken($form) && self::verifyFormInputs()) {
+    if (self::verifyFormInputs()) {
         //on vérifie que l'index demandé est dans $_POST et que sa valeur est bonne
         if(isset($_POST["$index"]) && !empty($_POST[$index]))
           return  htmlentities(trim(strip_tags(stripslashes($_POST[$index]))), ENT_NOQUOTES, "UTF-8");
+        else
+          return null;
+      } else {
+        echo "Hack-Attempt detected. Got ya!.";
+        self::writeLog('Formtoken');
+        return null;
+      }
+  }
+  /*
+  @function getFormGet
+  @param string form  id du form concerné
+  @param string index du champ demandé
+  @return string  valeur correspondant au champ demandé
+  Vérifie et retourne les données entrées par l'user et envoyées via $_GET
+  */
+  static public function getFormGet($form,$index) {
+    //on vérifie que le formulaire est authentique et que les inputs de $_GET sont ok
+    if (self::verifyFormInputs()) {
+        //on vérifie que l'index demandé est dans $_GET et que sa valeur est bonne
+        if(isset($_GET["$index"]) && !empty($_GET[$index]))
+          return  htmlentities(trim(strip_tags(stripslashes($_GET[$index]))), ENT_NOQUOTES, "UTF-8");
         else
           return null;
       } else {
@@ -49,7 +60,7 @@ class Form {
         return false;
       }
     }
-    return true;
+    return verifyFormToken($form);
   }
 
   /*
