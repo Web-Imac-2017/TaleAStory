@@ -53,13 +53,16 @@ class Database {
    * @param  [array de strings] $entries [ "champ" => "entrée utilisateur"/peut etre vide]
    * @return [array]          [contient toutes les données retournées par la requête]
    */
-  public function query($tables, $entries){
+  public function query($tables, $entries, $$addEndStatement = NULL){
     $select = $this->processSELECT($entries);
     $from = $this->processFROM($tables);
     $where = $this->processWHERE($entries);
     $statement=$select.$from;
     if($where) {
       $statement .= $where;
+    }
+    if($addEndStatement) {
+      $statement .= $addEndStatement;
     }
     $array_entries = $this->processArrayEntries($entries);
     echo $statement;
@@ -107,16 +110,25 @@ class Database {
   /**
    * processFROM: extrait les valeurs du tableau passé en param et les concatène dans une string contenant la partie FROM de la query.
    * les queries sur des tables jointes ne sont pas encore prises en compte
-   * @param  [array] $tables [[0...n] => "table"]
+   * @param  [array] $tables ["table" => "tables.champjoint"]
    * @return [string]         ["FROM table"]
    */
   private function processFROM($tables) {
     $process_from = " FROM ";
+  /*
+    if ($tables != "Array") {
+      $process_from .= $tables;
+    } else */
+
     if (count($tables) == 1) {
-      $process_from .= $tables[0];
-    } else {
-      $process_from .= "";
-      echo "multiples tables not supported yet";
+      $process_from .= current($tables);
+    } else if (count($tables) > 1) {
+      $process_from .= key(current($tables));
+      foreach($tables as $joint) {
+        $left = each($joint);
+        $right = each($joint);
+        $process_from .= " LEFT JOIN ".$right[0]." ON ".$right[1]." = ".$left[1];
+      }
     }
     return $process_from;
   }
@@ -215,12 +227,8 @@ class Database {
   public function update($table, $entries, $identification) {
     $update = "UPDATE ".$table;
     $set = " SET ".$this->processUPDATE($entries);
-    $where = " WHERE ".$this->processUPDATE($identification);
+    $where = $this->processWHERE($identification);
     $array_entries = array_merge($this->processArrayEntries($entries), $this->processArrayEntries($identification));
-
-    for($i = 0; $i<count($array_entries); $i++) {
-      echo $array_entries[$i]."\n";
-    }
     $statement = $update.$set.$where;
     echo "\n".$statement."\n";
     return $this->sendUpdate($statement, $array_entries);
@@ -243,6 +251,20 @@ class Database {
     return $process_set;
   }
 
+  public function delete($table, $identification) {
+    $delete = "DELETE FROM ".$table;
+    $where = $this->processWHERE($identification);
+    $statement = $delete.$where;
+    $array_entries = $this->processArrayEntries($identification);
+    echo $statement;
+    return $this->sendDelete($statement, $array_entries);
+  }
+
+  private function sendDelete($statement, $array_entries){
+    $delete = $this->getPDO()->prepare($statement);
+    $delete->execute($array_entries) or die(print_r($delete->errorInfo()));
+    echo "delete ok";
+  }
 
 }
 
