@@ -1,3 +1,3 @@
 module.exports = {
-  outputDir: '../www/TaleAStory'
+  outputDir: '../TaleAStory'
 }

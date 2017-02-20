@@ -1,4 +1,4 @@
 {
-  "/":"router::index",
-  "/connexion":"router::connexion"
+  "/":"Router::index",
+  "/connexion":"Router::connexion"
 }

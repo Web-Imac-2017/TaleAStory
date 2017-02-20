@@ -25,8 +25,7 @@ call_user_func_array(array(__NAMESPACE__ .'\Foo', 'test'), array('Philip'));
 ?>
 */
 
-  Router::insert('/:id', "Router::index");
-  Router::insert('/', "Router::index");
+  Router::setJson("Routes.json");
   Router::run();
 
 
