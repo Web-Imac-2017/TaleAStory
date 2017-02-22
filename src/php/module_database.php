@@ -53,7 +53,7 @@ class Database {
    * @param  [array de strings] $entries [ "champ" => "entrée utilisateur"/peut etre vide]
    * @return [array]          [contient toutes les données retournées par la requête]
    */
-  public function query($tables, $entries, $$addEndStatement = NULL){
+  public function query($tables, $entries, $addEndStatement = NULL){
     $select = $this->processSELECT($entries);
     $from = $this->processFROM($tables);
     $where = $this->processWHERE($entries);
@@ -62,7 +62,7 @@ class Database {
       $statement .= $where;
     }
     if($addEndStatement) {
-      $statement .= $addEndStatement;
+      $statement .= " ".$addEndStatement;
     }
     $array_entries = $this->processArrayEntries($entries);
     echo $statement;
@@ -115,14 +115,16 @@ class Database {
    */
   private function processFROM($tables) {
     $process_from = " FROM ";
-  /*
-    if ($tables != "Array") {
+    echo $tables;
+    if (!is_array($tables)) {
       $process_from .= $tables;
-    } else */
-
-    if (count($tables) == 1) {
-      $process_from .= current($tables);
-    } else if (count($tables) > 1) {
+    } else if (count($tables) == 1 && !is_array(current($tables))){
+      if (is_int(key($tables))) {
+        $process_from .= current($tables);
+      } else {
+        $process_from .= key($tables);
+      }
+    } else if (count($tables) >= 1) {
       $process_from .= key(current($tables));
       foreach($tables as $joint) {
         $left = each($joint);
@@ -149,6 +151,9 @@ class Database {
         $process_where .="AND ";
       }
     }
+    if($process_where == " WHERE ") {
+      return 0;
+    }
     return $process_where;
   }
 
@@ -169,13 +174,6 @@ class Database {
   }
 
   public function encode($purestring) {
-    /*
-    $json_file = file_get_contents("../../../TaleAStory/src/php/salt.json");
-    $salt_json = json_decode($json_file, TRUE);
-    $salt = $salt_json[salt];
-    $salted = $salt."_".$purestring;
-    echo $salted;
-    */
      return password_hash($purestring, PASSWORD_BCRYPT);
   }
 
@@ -225,11 +223,13 @@ class Database {
   }
 
   public function update($table, $entries, $identification) {
-    $update = "UPDATE ".$table;
+    $update = "UPDATE ";
+    $from = $this->processFROM($table);
+    $from = str_replace("FROM ", "", $from);
     $set = " SET ".$this->processUPDATE($entries);
     $where = $this->processWHERE($identification);
     $array_entries = array_merge($this->processArrayEntries($entries), $this->processArrayEntries($identification));
-    $statement = $update.$set.$where;
+    $statement = $update.$from.$set.$where;
     echo "\n".$statement."\n";
     return $this->sendUpdate($statement, $array_entries);
   }
@@ -252,11 +252,16 @@ class Database {
   }
 
   public function delete($table, $identification) {
-    $delete = "DELETE FROM ".$table;
+    $delete = "DELETE ";
+    $from = $this->processFROM($table);
     $where = $this->processWHERE($identification);
-    $statement = $delete.$where;
+    $statement = $delete.$from.$where;
     $array_entries = $this->processArrayEntries($identification);
     echo $statement;
+    if (strstr($statement, "WHERE") == FALSE) {
+      echo "BUG DELETE";
+      return 0;
+    }
     return $this->sendDelete($statement, $array_entries);
   }
 

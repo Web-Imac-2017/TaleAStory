@@ -9,7 +9,8 @@
     array(
       "tableaux" => "tableaux.artiste",
       "artistes" => "artistes.nom"
-    ),
+    )
+    /*,
     array(
       "tableaux" => "tableaux.ID",
       "tableaux_themes" => "tableaux_themes.tableaux_id"
@@ -18,12 +19,17 @@
       "tableaux_themes" => "tableaux_themes.themes_id",
       "themes" => "themes.ID"
     )
+    */
   );
 
   $table = "tableaux";
+  $table = array("tableaux" => "");
+  $entries_insert = array(
+    "nom" => "iouii"
+  );
   $entries_update = array (
-    "titre" => "Lady Castiel",
-    "description" => "Un superbe dessin de Castiel occupant le corps de mamie Novak"
+    "tableaux.ID" => 5,
+    "artistes.prenom" => "Lou"
   );
   $entries_query = array(
     "tableaux.titre" => "",
@@ -33,20 +39,21 @@
     "themes.tag" => ""
   );
   $identification = array (
-    "ID" => 5,
-    "artiste" => "iouii"
+    "tableaux.ID" => 5,
+    "tableaux.artiste" => "iouii"
   );
-  $groupBy = "tableaux.titre";
-  //$db->insert($table, $entries_insert);
-  //$db->update($table, $entries_update, $identification);
+  $addEndStatement = "GROUP BY tableaux.titre";
+  //$db->insert("artistes", $entries_insert);
+  $db->update($tables, $entries_update, $identification);
   //$db->delete($table, $identification);
-
-  $data = $db->query($tables, $entries_query, $addEndStatement);
-  var_dump($data);
+/*
+  $data = $db->query($tables, $entries_query);
+  echo '<pre>'.var_export($data, true).'</pre>';
   for ($i=0; $i<count($data); $i++) {
-    echo '<p>oeuvre :'.$data[$i]['titre'].",".$data[$i]['artiste']." ".$data['prenom'].'</p>';
+    echo '<p>oeuvre :'.$data[$i]['titre'].",".$data[$i]['artiste']." ".$data[$i]['prenom'].'</p>';
     echo '<p>themes :'.$data[$i]['tag'].'</p>';
   }
+  */
   $pw= "plop";
   $crypt = $db->encode($pw);
   echo $crypt."\n";
