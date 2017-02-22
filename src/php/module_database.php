@@ -11,8 +11,8 @@ class Database {
     //info login depuis un fichier à implémenter
     $this->server = 'localhost';
     $this->userName = 'root';
-    $this->password = 'root';
-    $this->dbName = 'fauves';
+    $this->password = '';
+    $this->dbName = 'test';
     $this->options = array(
       PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
     );
