@@ -149,7 +149,7 @@ class PresentationPageScreen01 extends React.Component{
 							<img className="picto element" src={imagesPath() + 'pictoMountains_large.png'}/>
 							<img className="element" src={imagesPath() + 'wave_large.png'}/>
 							<h1 className="pageTitle element">Tale A Story</h1>
-							<button className="element" type="button">Commencer l'aventure</button>
+							<a href="" className="element button">Commencer l'aventure</a>
 						</div>
 						<Index/>
 					</div>
@@ -200,8 +200,8 @@ class PresentationPageScreen03 extends React.Component{
 								<img className="element" src={imagesPath() + 'wave_large.png'}/>
 								<p>Lorem ipsum dolor sit amet consecteur nulla adispisin bacon ipsum jambon fromage poulet rotie. Bon alors ici faut pas trop de text pour le responsive, hein, déso.</p>
 								<div className="buttons cols">
-									<button className="element" type="button">Faites le test</button>
-									<button className="element" type="button">Inscription</button>
+									<a href="" className="element button">Faites le test</a>
+									<a href="" className="element button">Inscription</a>
 								</div>
 							</div>
 						</div>

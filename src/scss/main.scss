@@ -13,23 +13,23 @@ html {
 
 @font-face {
     font-family: 'Bjorn';
-    src: url('../Bjorn Light.otf');
+    src: url('../fonts/Bjorn Light.otf');
     font-weight: lighter;
 }
 
 @font-face {
     font-family: 'Bjorn';
-    src: url('../Bjorn Regular.otf');
+    src: url('../fonts/Bjorn Regular.otf');
 }
 
 @font-face {
     font-family: 'OpenSans';
-    src: url('../OpenSans-Regular.ttf');
+    src: url('../fonts/OpenSans-Regular.ttf');
 }
 
 @font-face {
     font-family: 'OpenSans';
-    src: url('../OpenSans-Bold.ttf');
+    src: url('../fonts/OpenSans-Bold.ttf');
     font-weight: bold;
 }
 
@@ -138,9 +138,32 @@ header {
 		letter-spacing: 4px;
 	}
 	
-	button {
-		color: white;
+	.button {
+		display: block;
+		max-width: 300px;
+		transition: all 0.25s;    
+		background-color: Transparent;  
+	    color: white;  
+	    padding: 12px 25px;
+	    text-align: center;
+	    text-decoration: none;
+	    display: inline-block;
+	    cursor: pointer;
+	    font-size: 12px;
+		font-family: 'Bjorn';
+		letter-spacing: 4px;
+	    border: 1px solid #fff;
+
+		@media screen and (max-width: $break-small) {
+		    padding: 8px 16px;
+		    font-size: 10px;
+	    }
 	}
+
+	.button:hover {
+		/*background-color: rgba(255,255,255,0.25);*/
+	}
+
 }
 
 .picto {
