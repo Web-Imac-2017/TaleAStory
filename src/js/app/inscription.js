@@ -1,5 +1,5 @@
 import React from 'react';
-import RouteComponent from './routecomponent';
+import RouteComponent from '../utils/routecomponent';
 
 export default RouteComponent({
   render(){

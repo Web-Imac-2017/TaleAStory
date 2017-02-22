@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {animationIn, animationOut} from './router.js'
+import {animationIn, animationOut} from './pagetransition'
 
 function render(){
   let component = this._render();
@@ -12,12 +12,18 @@ function render(){
 
 function animationInDom(callback){
   let dom = ReactDOM.findDOMNode(this);
-  animationIn(dom).eventCallback("onComplete", () => setTimeout(callback,500));
+  //console.log(this);
+  dom.style.position = "absolute";
+  animationIn(dom).eventCallback("onComplete",
+                                () => { dom.style.position = "unset"; callback(); });
 }
 
 function animationOutDom(callback){
   let dom = ReactDOM.findDOMNode(this);
-  animationOut(dom).eventCallback("onComplete", () => setTimeout(callback,500));
+  //console.log(this);
+  dom.style.position = "absolute";
+  animationOut(dom).eventCallback("onComplete",
+                                () => { dom.style.position = "unset"; callback(); });
 }
 
 function componentWillEnter(callback){
@@ -30,9 +36,24 @@ function componentWillLeave(callback){
   animationOutDom(callback);
 }
 
+function callOnEnter(){
+  if(this.props.route)
+    if(typeof this.props.route.onEnter == "function")
+      this.props.route.onEnter();
+}
+
+function componentWillMount(){
+  this._componentWillMount();
+  callOnEnter();
+}
+
 export default function(spec){
   let classSpec = Object.assign({
   }, spec);
+
+  classSpec.contextTypes = Object.assign({
+    router : React.PropTypes.object
+  }, spec.contextTypes);
 
   if(typeof spec.render != "undefined"){
     classSpec._render = spec.render;
@@ -44,6 +65,15 @@ export default function(spec){
               </div>
     }
   }
+
+  if(typeof spec.componentWillMount != "undefined"){
+    classSpec._componentWillMount = spec.componentWillMount;
+    classSpec.componentWillMount = componentWillMount;
+  }
+  else{
+    classSpec.componentWillMount = callOnEnter;
+  }
+
   if(typeof spec.componentWillEnter != "undefined"){
     classSpec._componentWillEnter = spec.componentWillEnter;
     classSpec.componentWillAppear = classSpec.componentWillEnter

@@ -9,6 +9,5 @@ import idGen from './utils/idGenerator';
 import AppRouter from './app/router';
 
 domready(() => {
-		//ReactDOM.render(<TimeRender/>, document.getElementById('root'));
 		ReactDOM.render(AppRouter, document.getElementById('root'));
 });

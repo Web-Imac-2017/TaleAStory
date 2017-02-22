@@ -1,6 +1,6 @@
 import React from 'react';
 import config from '../config'
-import RouteComponent from './routecomponent'
+import RouteComponent from '../utils/routecomponent'
 import {Link} from 'react-router'
 
 export default RouteComponent({
