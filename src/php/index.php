@@ -1,18 +1,15 @@
 <?php
 
-  /*
-  $pdo = new PDO('mysql:dbname=test;host=localhost', 'root', '', $options);
-  $i = $pdo->query('SELECT COUNT(*) FROM test');
-  var_dump($i->fetchColumn(0));
-  */
-  require 'module_database.php';
-  $db = new Database();
-  var_dump($db);
+  require 'model_joueur.php';
 
-  $data = $db->sendQuery('SELECT * FROM tableaux');
-  echo '<p>test bdd :'.$data['titre'].'</p>';
-
-  //require '../index.html';
-
-
+  echo '<p>TEST</br></p>';
+  //constructeur avec 4+ param = signup
+  $Tom = new Joueur("masterloutre","willie","bloup","willie@");
+  //constructeur 1-3 param = connexion
+  $Tom = new Joueur("willie","bloup");
+  //constructeur sans param = instanciation à 0
+  $Tom = new Joueur();
+  //possibilité d'appeler ensuite un fct de signup ou connexion
+  $Tom = $Tom->signup("masteroutre","willie","bloup","williejunpow@");
+  echo $Tom->mail;
 ?>
