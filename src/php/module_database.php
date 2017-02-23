@@ -44,7 +44,28 @@ class Database {
     return $this->pdo;
   }
 
+    //////////*****ENCODAGE DECODAGE******//////////
 
+  /**
+   * encode :
+   * @param  [string] $purestring [un mot lisible]
+   * @return [string]             [une chaine hashée avec un salt aléatoire et une clée de décryption]
+   */
+  public function encode($purestring) {
+     return password_hash($purestring, PASSWORD_BCRYPT);
+  }
+
+  /**
+   * [decode description]
+   * @param  [string] $pw     [un mot lisible]
+   * @param  [string] $hashed [la chaine hashée à comparer]
+   * @return [bool]         [true : les deux chaines correspondent, false non]
+   */
+  public function decode($pw, $hashed) {
+    return password_verify($pw, $hashed);
+  }
+
+  //////////*****REQUETES******//////////
 
   /**
    * query : envoie une query et récupère les données. Utilise des fonctions tierces pour traiter les tableaux reçus,
@@ -86,6 +107,61 @@ class Database {
     return $data;
     }
 
+  public function insert($table, $entries) {
+    $into = "INSERT INTO ".$table;
+    $fields = $this->processFields($entries);
+    $values = $this->processValues($entries);
+    $statement = $into.$fields.$values;
+    echo "\n".$statement."\n";
+    return $this->sendInsert($statement, $entries);
+  }
+
+  private function sendInsert($statement, $entries) {
+    $insert = $this->getPDO()->prepare($statement);
+    $insert->execute($entries) or die(print_r($insert->errorInfo()));
+    echo "insert ok";
+  }
+
+  public function update($table, $entries, $identification) {
+    $update = "UPDATE ";
+    $from = $this->processFROM($table);
+    $from = str_replace("FROM ", "", $from);
+    $set = " SET ".$this->processUPDATE($entries);
+    $where = $this->processWHERE($identification);
+    $array_entries = array_merge($this->processArrayEntries($entries), $this->processArrayEntries($identification));
+    $statement = $update.$from.$set.$where;
+    echo "\n".$statement."\n";
+    return $this->sendUpdate($statement, $array_entries);
+  }
+
+  private function sendUpdate($statement, $array_entries) {
+    $update = $this->getPDO()->prepare($statement);
+    $update->execute($array_entries) or die(print_r($update->errorInfo()));
+    echo "update ok";
+  }
+
+  public function delete($table, $identification) {
+    $delete = "DELETE ";
+    $from = $this->processFROM($table);
+    $where = $this->processWHERE($identification);
+    $statement = $delete.$from.$where;
+    $array_entries = $this->processArrayEntries($identification);
+    echo $statement;
+    if (strstr($statement, "WHERE") == FALSE) {
+      echo "BUG DELETE";
+      return 0;
+    }
+    return $this->sendDelete($statement, $array_entries);
+  }
+
+  private function sendDelete($statement, $array_entries){
+    $delete = $this->getPDO()->prepare($statement);
+    $delete->execute($array_entries) or die(print_r($delete->errorInfo()));
+    echo "delete ok";
+  }
+
+  //////////*****TRAITEMENTS DES PARAMETRES POUR LA CONSTRUCTION DES REQUETES******//////////
+
   /**
    * processSELECT : extrait les clés (champs) du tableau passé en param et les concatène dans une string contenant la partie SELECT de la query.
    * Si le tableau contient "*" renvoie "SELECT *"
@@ -110,7 +186,9 @@ class Database {
   /**
    * processFROM: extrait les valeurs du tableau passé en param et les concatène dans une string contenant la partie FROM de la query.
    * les queries sur des tables jointes ne sont pas encore prises en compte
-   * @param  [array] $tables ["table" => "tables.champjoint"]
+   * cas une table : une string ou un arrayt à une valeur ou la clé d'un array à une valeurs
+   * cas jointure : un array d'array ou chaque sous array contient une paire table gauche/droite à joindre avec les clés correspondantes
+   * @param  [array d'array] $tables [array("tableLeft" => "tables.cléEtrangereLeft", "tablesRight" => "tables.cléEtrangereRight"]
    * @return [string]         ["FROM table"]
    */
   private function processFROM($tables) {
@@ -173,29 +251,6 @@ class Database {
     return $tabEntries;
   }
 
-  public function encode($purestring) {
-     return password_hash($purestring, PASSWORD_BCRYPT);
-  }
-
-  public function decode($pw, $hashed) {
-    return password_verify($pw, $hashed);
-  }
-
-  public function insert($table, $entries) {
-    $into = "INSERT INTO ".$table;
-    $fields = $this->processFields($entries);
-    $values = $this->processValues($entries);
-    $statement = $into.$fields.$values;
-    echo "\n".$statement."\n";
-    return $this->sendInsert($statement, $entries);
-  }
-
-  private function sendInsert($statement, $entries) {
-    $insert = $this->getPDO()->prepare($statement);
-    $insert->execute($entries) or die(print_r($insert->errorInfo()));
-    echo "insert ok";
-  }
-
   private function processFields($entries) {
     $fields = array_keys($entries);
     $process_fields = "(";
@@ -222,23 +277,6 @@ class Database {
     return $process_values;
   }
 
-  public function update($table, $entries, $identification) {
-    $update = "UPDATE ";
-    $from = $this->processFROM($table);
-    $from = str_replace("FROM ", "", $from);
-    $set = " SET ".$this->processUPDATE($entries);
-    $where = $this->processWHERE($identification);
-    $array_entries = array_merge($this->processArrayEntries($entries), $this->processArrayEntries($identification));
-    $statement = $update.$from.$set.$where;
-    echo "\n".$statement."\n";
-    return $this->sendUpdate($statement, $array_entries);
-  }
-
-  private function sendUpdate($statement, $array_entries) {
-    $update = $this->getPDO()->prepare($statement);
-    $update->execute($array_entries) or die(print_r($update->errorInfo()));
-    echo "update ok";
-  }
 
   private function processUPDATE($entries) {
     $process_set;
@@ -249,26 +287,6 @@ class Database {
       }
     }
     return $process_set;
-  }
-
-  public function delete($table, $identification) {
-    $delete = "DELETE ";
-    $from = $this->processFROM($table);
-    $where = $this->processWHERE($identification);
-    $statement = $delete.$from.$where;
-    $array_entries = $this->processArrayEntries($identification);
-    echo $statement;
-    if (strstr($statement, "WHERE") == FALSE) {
-      echo "BUG DELETE";
-      return 0;
-    }
-    return $this->sendDelete($statement, $array_entries);
-  }
-
-  private function sendDelete($statement, $array_entries){
-    $delete = $this->getPDO()->prepare($statement);
-    $delete->execute($array_entries) or die(print_r($delete->errorInfo()));
-    echo "delete ok";
   }
 
 }
