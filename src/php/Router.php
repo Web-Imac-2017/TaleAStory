@@ -18,7 +18,7 @@ class Router {
               return $route->call();
           }
       }
-      throw new RouterException('No matching routes'); //faire la 404
+      throw new RouterException('No matching routes'); // faire la 404
   }
 
   public static function index(){
