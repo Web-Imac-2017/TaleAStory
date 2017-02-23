@@ -1,0 +1,1 @@
+{"version":3,"names":[],"mappings":"","sources":["body.html"],"sourcesContent":["<!DOCTYPE html>\r\n\r\n  <body>\r\n  \t<script type=\"text/javascript\" src=\"assets/js/main.min.js\"></script>\r\n    <div id=\"root\">\r\n    </div>\r\n  </body>\r\n</html>\r\n"],"file":"body.html"}
