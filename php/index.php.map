@@ -1,1 +1,0 @@
-{"version":3,"names":[],"mappings":"","sources":["index.php"],"sourcesContent":["<?php\r\n\r\n  require 'Autoloader.php';\r\n  Autoloader::register();\r\n  Router::setJson(\"Routes.json\");\r\n  Router::run();\r\n\r\n\r\n?>\r\n"],"file":"index.php"}

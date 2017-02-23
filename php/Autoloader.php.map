@@ -1,1 +1,0 @@
-{"version":3,"names":[],"mappings":"","sources":["Autoloader.php"],"sourcesContent":["<?php\r\n\r\nclass Autoloader{\r\n    static function register(){\r\n        spl_autoload_register(array(__CLASS__, 'autoload'));\r\n    }\r\n\r\n    static function autoload($class){\r\n        require $class.'.php';\r\n    }\r\n}\r\n\r\n?>\r\n"],"file":"Autoloader.php"}
