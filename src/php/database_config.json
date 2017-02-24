@@ -1,0 +1,8 @@
+{
+  "database" : {
+    "name" : "fauves",
+    "server" : "localhost",
+    "user" : "root",
+    "password" : "root"
+  }
+}
