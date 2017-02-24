@@ -138,31 +138,68 @@ header {
 		letter-spacing: 4px;
 	}
 	
-	.button {
-		display: block;
-		max-width: 300px;
-		transition: all 0.25s;    
-		background-color: Transparent;  
-	    color: white;  
-	    padding: 12px 25px;
-	    text-align: center;
-	    text-decoration: none;
-	    display: inline-block;
-	    cursor: pointer;
-	    font-size: 12px;
+
+	
+	a.button{
+	    display: block;
+		color: #fff;
 		font-family: 'Bjorn';
-		letter-spacing: 4px;
-	    border: 1px solid #fff;
+		text-transform: uppercase;
+		font-size: 12px;
+		letter-spacing: 5px;
+		text-decoration: none;
+		transition : all 0.3s;
+		z-index: 10;
+		padding: 12px 14px;
+		border: 1px solid #fff;
+		background: rgba(255,255,255,0);
+		margin: auto;
+
+		min-width: 220px;
+		max-width: 350px;
 
 		@media screen and (max-width: $break-small) {
-		    padding: 8px 16px;
-		    font-size: 10px;
-	    }
+			padding: 8px 16px;
+			font-size: 10px;
+		}
+
 	}
 
-	.button:hover {
-		/*background-color: rgba(255,255,255,0.25);*/
+	/*a.button:after{
+		width: 110%;
+		height: 80%;
+		border: 1px solid #fff;
+		position: absolute;
+		background: rgba(255,255,255,0.75);
+		transition : all 0.4s;
+		z-index: -1!important;
+		bottom: 2px;
+		left: -7px;
+	}*/
+
+	/*a.button:before{
+		width: 0%;
+		height: 100%;
+		background: rgba(255,255,255,0.25);
+		position: absolute;
+		transition : all 0.4s;
+		z-index: -1!important;
+		bottom: 0;
+		left: 0;
+	}*/
+
+	a.button:hover{
+		border-color: rgba(255,255,255,0.60);
+		letter-spacing: 6.5px;
 	}
+/*
+	a.button:hover::before{
+		width: 100%;
+		height: 100%;
+		background: rgba(255,255,255,0.75);
+		transition : all 0.5s;
+	}
+*/
 
 }
 
@@ -364,15 +401,18 @@ button {
 	display:inline-block;
 	width: 45%;
 	color: white;
-	line-height: 300%;
 	font-size: 12px;
 	vertical-align: center;
 	margin-left: auto;
 	margin-right: auto;
 
-	p {
+	p, .buttons {
 		width: 80%;
-		margin: auto;
+		margin: 20px auto;
+	}
+
+	p {
+		line-height: 300%;
 	}
 
 	@media screen and (max-width: $break-large) {
