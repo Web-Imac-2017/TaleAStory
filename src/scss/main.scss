@@ -7,9 +7,29 @@ $break-large: 1200px;
 
 $width-index: 80px;
 
+html, body, #root, #app, #app > span, #wrapper {
+  width:100%;
+  height:100%;
+}
+
+html, body, #root, #app{
+  background-color: black;
+}
+
+#wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+#app span {
+  display:block;
+
+}
+
 html {
 	font-family: 'Bjorn';
 }
+
 
 @font-face {
     font-family: 'Bjorn';
@@ -45,13 +65,13 @@ header {
 	font-size: 10px;
 	font-family: 'Bjorn';
 	font-weight: lighter;
-	
+
 	h1 {
 		float: left;
 		font-size: 12px;
 		margin-bottom: 10px;
 	}
-	
+
 	.links {
 		float: right;
 		height: 100%;
@@ -73,7 +93,7 @@ header {
 		float: left;
 		vertical-align: middle;
 	}
-	
+
 }
 
 /* *** Blue background *** */
@@ -82,16 +102,16 @@ header {
 	background-image: url("../images/bgBlue_large.jpg");
 	background-size: 100% 100%;
 	background-repeat: none;
-	
+
 	header, header a:visited {
 		color: #62c4fa;
 	}
-	
+
 	header, header a:hover {
 		color: #92d8ff;
 	}
-	
-	
+
+
 }
 
 /* *** Orange background *** */
@@ -100,7 +120,7 @@ header {
 	background-image: url("../images/bgOrange_large.jpg");
 	background-size: 100% 100%;
 	background-repeat: none;
-	
+
 	header, header a:visited {
 		color: #f8ab61;
 		a:hover {
@@ -115,7 +135,7 @@ header {
 	background-image: url("../images/bgPurple_large.jpg");
 	background-size: 100% 100%;
 	background-repeat: none;
-	
+
 	header, header a:visited {
 		color: #6852D1;
 		a:hover {
@@ -133,17 +153,17 @@ header {
 	flex-direction: column;
 	height:100vh;
 	color: white;
-		
+
 	a, p {
 		letter-spacing: 4px;
 	}
-	
+
 	.button {
 		display: block;
 		max-width: 300px;
-		transition: all 0.25s;    
-		background-color: Transparent;  
-	    color: white;  
+		transition: all 0.25s;
+		background-color: Transparent;
+	    color: white;
 	    padding: 12px 25px;
 	    text-align: center;
 	    text-decoration: none;
@@ -196,7 +216,8 @@ header {
 	max-width: $width-index;
 	min-width: $width-index;
 	height: 100%;
-	margin: 0px 5%;
+  width: 10%;
+	margin: 0px 3%;
 
 	@media screen and (max-width: $break-small) {
     	display: none;
@@ -230,11 +251,11 @@ header {
 }
 
 .content {
-	
+
 	width: 100%;
 	margin: auto;
 	align-self: flex-start;
-	
+
 	@media screen and (max-width: $break-medium) {
 		display: flex !important;
 		flex-direction: column !important;
@@ -248,9 +269,9 @@ header {
 			margin: 10px auto;
 		}
 	}
-	
+
 	.pageTitle {
-		font-size: 58px;	
+		font-size: 58px;
 		letter-spacing: 20px;
 		margin-bottom: 40px;
 
@@ -271,15 +292,15 @@ header {
 	text-align: center;
 	align-self: flex-end;
 	padding-bottom: 25px;
-	
+
 	p {
 		margin-bottom:12px;
 	}
 }
 
 button {
-    background-color: Transparent;  
-    color: white;  
+    background-color: Transparent;
+    color: white;
     border-style: solid;
     border-color: white;
     border-size: 1px;
@@ -328,7 +349,7 @@ button {
 	@media screen and (max-width: $break-small) {
 		display: none;
     }
-	
+
 	div {
 		margin: 10% auto !important;
 		display: block;
@@ -345,7 +366,7 @@ button {
 			font-size: 80px;
 	    }
 	}
-	
+
 	.name {
 		display:block;
 		text-align: center;
@@ -432,6 +453,15 @@ form {
 	}
 }
 
+.caca{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 100%;
+  > span {
+    width : 90%;
+  }
+}
 /* *** Index Screens *** */
 
 .presentationPageScreen02{
@@ -445,4 +475,3 @@ form {
 
 	}
 }
-
