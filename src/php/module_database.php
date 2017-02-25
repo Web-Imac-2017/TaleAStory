@@ -7,14 +7,6 @@ class Database {
   protected $dbName;
   protected $options;
 
-<<<<<<< HEAD
-  public function __construct(){
-    //info login depuis un fichier à implémenter
-    $this->server = 'localhost';
-    $this->userName = 'root';
-    $this->password = '';
-    $this->dbName = 'test';
-=======
   /**
    * Constructeur : configure la connexion avec la base de donnée
    * @param [string] $path [chemin vers le fichier de configuration]
@@ -27,7 +19,6 @@ class Database {
     $this->userName = $config_data[database][user];
     $this->password = $config_data[database][password];
     $this->dbName = $config_data[database][name];
->>>>>>> c8c66300135065d2d7ea6abd6371068c235f0167
     $this->options = array(
       PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
     );
