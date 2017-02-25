@@ -95,9 +95,31 @@ class HeaderRegistered extends React.Component{
 				<h1><a href="">Tale A Story</a></h1>
 				<div className="links">
 					<a href="">{tmpName}</a>
-					<img className="rounded profilPic" src={imagesPath() + 'patulacci_large.jpg'}/>
+					<a href=""><img className="rounded profilPic" src={imagesPath() + 'patulacci_large.jpg'}/> </a>
 				</div>
+				<ProfileMenu/>
 			</header>
+		);
+	}
+}
+
+class ProfileMenu extends React.Component{
+	render() {
+		return (
+				<div className="profileMenu rows">
+					<div className="cols">
+						<img src={imagesPath() + 'patulacci_large.jpg'}/>
+						<a href="">Mon Profil</a>
+					</div>
+					<div className="cols">
+						<img src={imagesPath() + 'patulacci_large.jpg'}/>
+						<a href="">Mes Trophées</a>
+					</div>
+					<div className="cols">
+						<img src={imagesPath() + 'patulacci_large.jpg'}/>
+						<a href="">Déconnexion</a>
+					</div>
+				</div>
 		);
 	}
 }
@@ -131,9 +153,9 @@ class Index extends React.Component{
 		return  <div className="index">
 					<div className="verticalLine"></div>
 					<div className="indexContent">
-						<a href="">01</a>
-						<a href="">02</a>
-						<a href="">03</a>
+						<a href="" data-content="Accueil">01</a>
+						<a href="" data-content="Présentation">02</a>
+						<a href="" data-content="L'Aventure">03</a>
 					</div>
 				</div>
 	}

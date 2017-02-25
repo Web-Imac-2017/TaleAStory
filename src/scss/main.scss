@@ -65,6 +65,7 @@ header {
 	font-size: 10px;
 	font-family: 'Bjorn';
 	font-weight: lighter;
+	position: relative;
 
 	h1 {
 		float: left;
@@ -80,11 +81,15 @@ header {
 			width: 32px;
 			height: 32px;
 			margin: auto;
+			float: left;
+			position: absolute;
+			top: -8px;
+			left: 5px;
 		}
 
 	}
 
-	a, a:visited {
+	a, a:visited, p {
 		text-decoration: none;
 		padding-left: 18px;
 		padding-right: 18px;
@@ -120,6 +125,27 @@ header {
 		background: rgba(255,255,255,1);
 		position: absolute;
 		transition : all 0.3s;
+	}
+
+	.profileMenu {
+		width: 250px;
+		display: block;
+		position: absolute;
+		background-color: rgba(0,0,0,0.50);
+		right: 5%;
+		top: 75px;
+		line-height: 2px;
+		padding: 5px;
+		z-index: 15;
+
+		div {
+			margin: 10px;
+		}
+
+		img {
+			width: 20px;
+			height: 20px;
+		}
 	}
 
 }
@@ -297,12 +323,38 @@ header {
    		height: 100%;
 
    		a {
+			position: relative;
    			margin: auto 10px;
    			font-family: OpenSans;
    			font-weight: bold;
-   			color: rgba(255,255,255,0.7);
+   			color: rgba(255,255,255,0.5);
    			text-decoration: none;
+			transition : all 0.4s;
+			padding: 8px;
    		}
+
+
+		a:before{
+			color: rgba(255,255,255,0);
+			display: block;
+			margin: auto;
+			transform: rotate(270deg);
+			width: 200px;
+			height: 30px;
+			text-align: center;
+			content: attr(data-content);
+			text-transform: uppercase;
+			position: absolute;
+			transition : all 0.4s;
+			left: -115px;
+   			letter-spacing: 3px;
+   			font-size: 12px;
+		}
+		
+		a:hover::before{
+			left: -135px;
+			color: rgba(255,255,255,0.9);
+		}
 
 		a:hover {
 			color: rgba(255,255,255,0.9);
@@ -365,14 +417,41 @@ header {
 	font-family: 'Bjorn';
 	font-weight: lighter;
 	font-size: 10px;
-	width: 100%;
 	text-align: center;
 	align-self: flex-end;
 	padding-bottom: 25px;
+	position: relative;
+	margin: auto;
+	transition : all 0.3s;
+	color: rgba(255,255,255,0.75);
 
 	p {
 		margin-bottom:12px;
 	}
+}
+
+.scroll:before{
+	width: 0%;
+	height: 1px;
+	content: '';
+	background: rgba(255,255,255,0.75);
+	position: absolute;
+	transition : all 0.4s;
+	bottom: 46px;
+	left: 20%;
+}
+
+.scroll:hover::before{
+	width: 60%;
+	height: 1px;
+	content: '';
+	background: rgba(255,255,255,1);
+	position: absolute;
+	transition : all 0.3s;
+}
+
+.scroll:hover{
+	color: rgba(255,255,255,1);
 }
 
 button {
