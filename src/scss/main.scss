@@ -84,14 +84,42 @@ header {
 
 	}
 
-	a {
+	a, a:visited {
 		text-decoration: none;
 		padding-left: 18px;
 		padding-right: 18px;
+		padding-bottom: 6px;
 		margin-top: 10px;
 		display: block;
 		float: left;
 		vertical-align: middle;
+		transition: all 0.25s;
+		border-bottom: 0px solid rgba(255,255,255,0.75);
+		position: relative;
+	}
+
+	a:hover{
+		color: white !important;
+	}
+
+	a:before{
+		width: 0%;
+		height: 1px;
+		content: '';
+		background: rgba(255,255,255,0.75);
+		position: absolute;
+		transition : all 0.4s;
+		bottom: 0;
+		left: 20%;
+	}
+	
+	a:hover::before{
+		width: 60%;
+		height: 1px;
+		content: '';
+		background: rgba(255,255,255,1);
+		position: absolute;
+		transition : all 0.3s;
 	}
 
 }
@@ -103,12 +131,8 @@ header {
 	background-size: 100% 100%;
 	background-repeat: none;
 
-	header, header a:visited {
+	header a:visited, header a {
 		color: #62c4fa;
-	}
-
-	header, header a:hover {
-		color: #92d8ff;
 	}
 
 
@@ -121,12 +145,10 @@ header {
 	background-size: 100% 100%;
 	background-repeat: none;
 
-	header, header a:visited {
+	header a:visited, header a {
 		color: #f8ab61;
-		a:hover {
-			color: #ffcd90;
-		}
 	}
+
 }
 
 /* *** Purple background *** */
@@ -136,11 +158,8 @@ header {
 	background-size: 100% 100%;
 	background-repeat: none;
 
-	header, header a:visited {
+	header a:visited, header a {
 		color: #6852D1;
-		a:hover {
-			color: #A795F9;
-		}
 	}
 }
 
@@ -158,30 +177,71 @@ header {
 		letter-spacing: 4px;
 	}
 
-	.button {
+	.button{	    
+		padding: 18px 8px;
+		border: 1px solid rgba(255,255,255,0.85);
+		background: rgba(255,255,255,0);
 		display: block;
-		max-width: 300px;
-		transition: all 0.25s;
-		background-color: Transparent;
-	    color: white;
-	    padding: 12px 25px;
-	    text-align: center;
-	    text-decoration: none;
-	    display: inline-block;
-	    cursor: pointer;
-	    font-size: 12px;
+		position: relative;
+		color: #fff;
 		font-family: 'Bjorn';
-		letter-spacing: 4px;
-	    border: 1px solid #fff;
+		text-transform: uppercase;
+		font-size: 12px;
+		letter-spacing: 5px;
+		text-decoration: none;
+		margin: 0px 20px 0px 0px;
+		border-bottom: 8px solid transparent;
+		transition : all 0.3s;
+		z-index: 10;
+		border: 1px solid #fff;
+		margin: auto;
+		transition : all 0.3s;
+
+		min-width: 220px;
+		max-width: 350px;
 
 		@media screen and (max-width: $break-small) {
-		    padding: 8px 16px;
-		    font-size: 10px;
-	    }
+			padding: 12px 5.5px;
+			font-size: 10px;
+		}
+
 	}
 
-	.button:hover {
-		/*background-color: rgba(255,255,255,0.25);*/
+	.button:after{
+		width: 104%;
+		height: 86%;
+		content: '';
+		border: 1px solid #fff;
+		position: absolute;
+		transition : all 0.4s;
+		z-index: -1!important;
+		bottom: 6%;
+		left: -2.25%;
+	}
+
+	.button:before{
+		width: 100%;
+		height: 0%;
+		content: '';
+		background: rgba(255,255,255,0);
+		position: absolute;
+		transition : all 0.4s;
+		z-index: -1!important;
+		bottom: 0;
+		left: 0;
+	}
+
+	.button:hover::before{
+		width: 100%;
+		height: 100%;
+		content: '';
+		background: rgba(255,255,255,0.15);
+		position: absolute;
+		transition : all 0.3s;
+	}
+
+	.button:hover::after{
+		background: rgba(255,255,255,0.15);
 	}
 
 }
@@ -189,6 +249,14 @@ header {
 .picto {
 	@media screen and (max-width: $break-small) {
     	width: 50px;
+    }
+	@media screen and (max-width: $break-tiny) {
+    	display: none !important;
+    }
+}
+.wave {
+	@media screen and (max-width: $break-tiny) {
+    	display: none !important;
     }
 }
 
@@ -216,7 +284,7 @@ header {
 	max-width: $width-index;
 	min-width: $width-index;
 	height: 100%;
-  width: 10%;
+    width: 10%;
 	margin: 0px 3%;
 
 	@media screen and (max-width: $break-small) {
@@ -254,6 +322,7 @@ header {
 
 	width: 100%;
 	margin: auto;
+	padding: 0px 3%;
 	align-self: flex-start;
 
 	@media screen and (max-width: $break-medium) {
@@ -265,9 +334,17 @@ header {
 		display: block;
 		text-align: center;
 		margin: 30px auto;
-		@media screen and (max-width: $break-small) {
+
+		@media screen and (max-width: $break-medium) {
 			margin: 10px auto;
 		}
+		@media screen and (max-width: $break-small) {
+			margin: 5px auto;
+		}
+		@media screen and (max-width: $break-tiny) {
+			margin: 2px auto;
+		}
+
 	}
 
 	.pageTitle {
@@ -332,13 +409,13 @@ button {
 
 .sectionTitle {
 	display: block;
+	position: relative;
 	color: white;
 	padding: 30px;
 	margin: auto !important;
 	width: 350px;
 	height: 350px;
-	border: thick solid rgba(255,255,255, 0.6);
-    border-width: 2px;
+	border: 1px solid #fff;
 
 	@media screen and (max-width: $break-large) {
 		width: 280px;
@@ -381,19 +458,33 @@ button {
 	}
 }
 
+.sectionTitle:after{
+	width: 104%;
+	height: 96%;
+	content: '';
+	border: 1px solid #fff;
+	position: absolute;
+	bottom: 2%;
+	left: -2%;
+}
+
 .sectionContent {
 	display:inline-block;
 	width: 45%;
 	color: white;
-	line-height: 300%;
 	font-size: 12px;
 	vertical-align: center;
 	margin-left: auto;
 	margin-right: auto;
 
+	p, .buttons {
+		/*width: 80%;*/
+		margin: 20px 15px;
+		padding: 0px 5%;
+	}
+
 	p {
-		width: 80%;
-		margin: auto;
+		line-height: 300%;
 	}
 
 	@media screen and (max-width: $break-large) {
@@ -407,6 +498,7 @@ button {
    }
 
 }
+
 
 form {
 	input {
