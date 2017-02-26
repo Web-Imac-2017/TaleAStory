@@ -2,10 +2,10 @@
 
 class Router {
     static $routes = [];
-
+    static $webRoot = "";
     public static function init() {
         $script_path = $_SERVER['SCRIPT_NAME'];
-        $webRoot = str_replace('php/index.php', '', $script_path);
+        self::$webRoot = str_replace('php/index.php', '', $script_path);
     }
 
 
