@@ -43,7 +43,7 @@ Class Session {
   /*
   @function getSessionAttribute
   @param  $name nom de la variable que la fonction retourne
-  @return la variable si elle existe, chaine vide sinon
+  @return la variable si elle existe dans la session ou les cookies, chaine vide sinon
   */
   static public function getSessionAttribute($name){
     if(isset($_SESSION["$name"]))
@@ -58,14 +58,23 @@ Class Session {
   @function setSessionAttribute
   @param  $name nom de la variable à enregistrer
   @param  $value valeur de la variable à enregistrer
+  @return void
+  enregistre une variable dans la session
+  */
+  static public function setSessionAttribute($name,$value){
+    $_SESSION["$name"]=$value;
+  }
+  /*
+  @function setCookieAttribute
+  @param  $name nom de la variable à enregistrer
+  @param  $value valeur de la variable à enregistrer
   @param  $cookie_time date expiration du cookie
   @return void
+  enregistre une variable dans les cookies
   */
-  static public function setSessionAttribute($name,$value,$cookie_time=null){
-    $_SESSION["$name"]=$value;
+  static public function setCookieAttribute($name,$value,$cookie_time=null){
     $cookie_time==null?time() + 3600:$cookie_time;
     setcookie("$name",$value,$cookie_time);
   }
-
 }
 ?>
