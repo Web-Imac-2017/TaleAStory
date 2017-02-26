@@ -3,8 +3,7 @@
 class Response
 {
   public static function generateIndex($param){
-
-    require"../php/header.php";
+    require"./header.php";
     require"../body.html";
   }
 }

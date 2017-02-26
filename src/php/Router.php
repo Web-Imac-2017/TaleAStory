@@ -23,14 +23,7 @@ class Router {
 
   public static function index(){
     //require"../index.html";
-    $param="document.globalBack.setObject({
-            userID : '1',
-            userName : 'Marcel',
-            userSurname : 'Patulacci',
-            userImgpath : 'patulacci_large.jpg',
-            time : '16h45'
-        });";
-    Response::generateIndex($param);
+    Response::generateIndex((object)array('userID' => '1', 'userName' => 'Marcel', 'userSurname'=> 'Patulacci', 'userImgPath' => 'patulacci_large.jpg', 'time' => '16h45'));
   }
 
   public static function connexion(){
