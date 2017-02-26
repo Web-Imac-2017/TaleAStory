@@ -22,9 +22,8 @@ Class Session {
   static public function getCurrentUser(){
     if(isset($_SESSION["userid"]))
       return $_SESSION["userid"];
-    else if (isset($_COOKIE["userid"]) && isset($_COOKIE["hashed_id"])){
-        return password_verify($_COOKIE["hashed_id"],$_COOKIE["userid"]);
-    }
+    else if (isset($_COOKIE["userid"]) && isset($_COOKIE["hash_id"]))
+      return password_verify($_COOKIE["userid"],$_COOKIE["hash_id"])==true?$_COOKIE["userid"]:null;
     else
       return null;
   }
@@ -46,13 +45,13 @@ Class Session {
   @return void
   Supprime l'id de l'user dans la session et les cookies
   */
-  static public function disconnectUser($userid){
+  static public function disconnectUser(){
     session_unset($_SESSION["userid"]);
-    if (isset($_COOKIE["userid"]) && isset($_COOKIE["hashed_id"])){
+    if (isset($_COOKIE["userid"]) && isset($_COOKIE["hash_id"])){
       unset($_COOKIE["userid"]);
-      unset($_COOKIE["hashed_id"]);
+      unset($_COOKIE["hash_id"]);
       setcookie($_COOKIE["userid"],time()-3600);
-      setcookie($_COOKIE["hashed_id"],time()-3600);
+      setcookie($_COOKIE["hash_id"],time()-3600);
     }
   }
   /*

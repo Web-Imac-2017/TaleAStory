@@ -21,25 +21,17 @@
   //echo(Form::getTinyName($filename));
   Session::setSession();
   Session::connectUser(1);
-  echo("Session : ");
-  var_dump($_SESSION);
-  echo("Cookie : ");
-  var_dump($_COOKIE);
-  //echo(Session::getCurrentUser());
+
+  session_unset();
+  $user = Session::getCurrentUser();
+  var_dump($user);
+
   Session::setSessionAttribute("toto","valeur de toto");
   echo("Session : ");
   var_dump($_SESSION);
   echo("Cookie : ");
   var_dump($_COOKIE);
-  $toto1 = Session::getSessionAttribute("toto");
-  var_dump($toto1);
-  Session::closeSession();
-  //echo("Session : ");
-  //var_dump($_SESSION);
-  session_unset();
-  $toto2 = Session::getSessionAttribute("toto");
-  var_dump($toto2);
-  Session::setSessionAttribute("titi","valeur de titi",time()+564889);
+
 
 
 ?>
