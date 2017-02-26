@@ -41,6 +41,21 @@ Class Session {
     setcookie("hash_id",$hashed_id);
   }
   /*
+  @function disconnectUser
+  @param  $userid
+  @return void
+  Supprime l'id de l'user dans la session et les cookies
+  */
+  static public function disconnectUser($userid){
+    session_unset($_SESSION["userid"]);
+    if (isset($_COOKIE["userid"]) && isset($_COOKIE["hashed_id"])){
+      unset($_COOKIE["userid"]);
+      unset($_COOKIE["hashed_id"]);
+      setcookie($_COOKIE["userid"],time()-3600);
+      setcookie($_COOKIE["hashed_id"],time()-3600);
+    }
+  }
+  /*
   @function getSessionAttribute
   @param  $name nom de la variable que la fonction retourne
   @return la variable si elle existe dans la session ou les cookies, chaine vide sinon
