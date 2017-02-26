@@ -23,6 +23,13 @@ class Router {
 
   public static function index(){
     //require"../index.html";
+    $param="document.globalBack.setObject({
+            userID : '1',
+            userName : 'Marcel',
+            userSurname : 'Patulacci',
+            userImgpath : 'patulacci_large.jpg',
+            time : '16h45'
+        });";
     Response::generateIndex($param);
   }
 
@@ -32,7 +39,7 @@ class Router {
 
   public static function setJson($json_path){
     $json = file_get_contents($json_path);
-    $obj_json= json_decode($json, true); //Json => Objet Array
+    $obj_json= json_decode($json, true);
     foreach($obj_json as $key => $value){
       self::insert($key, $value);
     }
