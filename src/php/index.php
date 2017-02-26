@@ -20,17 +20,26 @@
 //  Form::createTinyImg("../assets/images/test.jpg");
   //echo(Form::getTinyName($filename));
   Session::setSession();
-  echo("Session : ");
-  var_dump($_SESSION);
   Session::connectUser(1);
   echo("Session : ");
   var_dump($_SESSION);
   echo("Cookie : ");
   var_dump($_COOKIE);
-  echo(Session::getCurrentUser());
-  Session::closeSession();
+  //echo(Session::getCurrentUser());
+  Session::setSessionAttribute("toto","valeur de toto");
   echo("Session : ");
   var_dump($_SESSION);
+  echo("Cookie : ");
+  var_dump($_COOKIE);
+  $toto1 = Session::getSessionAttribute("toto");
+  var_dump($toto1);
+  Session::closeSession();
+  //echo("Session : ");
+  //var_dump($_SESSION);
+  session_unset();
+  $toto2 = Session::getSessionAttribute("toto");
+  var_dump($toto2);
+  Session::setSessionAttribute("titi","valeur de titi",time()+564889);
 
 
 ?>

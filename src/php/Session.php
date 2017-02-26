@@ -40,6 +40,32 @@ Class Session {
     $hashed_id = password_hash($userid,PASSWORD_DEFAULT);
     setcookie("hash_id",$hashed_id);
   }
+  /*
+  @function getSessionAttribute
+  @param  $name nom de la variable que la fonction retourne
+  @return la variable si elle existe, chaine vide sinon
+  */
+  static public function getSessionAttribute($name){
+    if(isset($_SESSION["$name"]))
+      return $_SESSION["$name"];
+    else if (isset($_COOKIE["$name"])){
+        return $_COOKIE["$name"];
+    }
+    else
+      return null;
+  }
+  /*
+  @function setSessionAttribute
+  @param  $name nom de la variable à enregistrer
+  @param  $value valeur de la variable à enregistrer
+  @param  $cookie_time date expiration du cookie
+  @return void
+  */
+  static public function setSessionAttribute($name,$value,$cookie_time=null){
+    $_SESSION["$name"]=$value;
+    $cookie_time==null?time() + 3600:$cookie_time;
+    setcookie("$name",$value,$cookie_time);
+  }
 
 }
 ?>
