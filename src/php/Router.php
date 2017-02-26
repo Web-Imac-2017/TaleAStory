@@ -1,8 +1,13 @@
 <?php
 
 class Router {
-
     static $routes = [];
+
+    public static function init() {
+        $script_path = $_SERVER['SCRIPT_NAME'];
+        $webRoot = str_replace('php/index.php', '', $script_path);
+    }
+
 
     public static function insert($path, $callable){
 
