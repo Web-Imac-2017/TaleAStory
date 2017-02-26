@@ -1,5 +1,4 @@
 <?php
-var_dump($param);
 ?>
 <head>
   <title>Tale A Story</title>

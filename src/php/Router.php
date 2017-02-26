@@ -22,7 +22,6 @@ class Router {
   }
 
   public static function index(){
-    //require"../index.html";
     Response::generateIndex((object)array('userID' => '1', 'userName' => 'Marcel', 'userSurname'=> 'Patulacci', 'userImgPath' => 'patulacci_large.jpg', 'time' => '16h45'));
   }
 
