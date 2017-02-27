@@ -17,6 +17,9 @@ html, body, #root, #app, #app > span, #wrapper {
   position: absolute;
   top: 0;
   left: 0;
+  display : flex;
+  flex-direction : column;
+  height : 100%;
 }
 
 html, body, #root, #app{
@@ -212,13 +215,13 @@ header {
 	flex-direction: column;
 }
 
-.index, .antiIndex{
+.index{
 	display: flex;
 	flex-direction: row;
 	max-width: $width-index;
 	min-width: $width-index;
-	height: 100%;
-  width: 10%;
+	height: 70%;
+  	width: 10%;
 	margin: 0px 3%;
 
 	@media screen and (max-width: $break-small) {
@@ -236,6 +239,7 @@ header {
    			font-weight: bold;
    			color: rgba(255,255,255,0.7);
    			text-decoration: none;
+   			font-size : 10px;
    		}
 
 		a:hover {
@@ -388,7 +392,7 @@ button {
 	width: 45%;
 	color: white;
 	line-height: 300%;
-	font-size: 12px;
+	font-size: 10px;
 	vertical-align: center;
 	margin-left: auto;
 	margin-right: auto;
@@ -396,6 +400,7 @@ button {
 	p {
 		width: 80%;
 		margin: auto;
+		font-size : 10px;
 	}
 
 	@media screen and (max-width: $break-large) {
@@ -464,7 +469,7 @@ form {
     display: flex;
     position: relative;
     width : 90%;
-    height: 80%;
+    height: 100%;
     overflow: hidden;
   }
 }

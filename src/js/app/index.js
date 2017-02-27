@@ -9,7 +9,6 @@ export default RouteComponent({
   render(){
     return  <div>
               <div className="columnsContainer">
-                <div className="antiIndex"></div>
                 <div className="content">
                   <img className="picto element" src={config.imagePath('pictoMountains_large.png')}/>
                   <img className="element" src={config.imagePath('wave_large.png')}/>
