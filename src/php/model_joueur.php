@@ -7,14 +7,17 @@ class Joueur {
   public $mail;
   public $imgpath;
   public $connected;
-  private $defaultImgpath = "../../defaultImg.jpg";
+  public $defaultImgpath = "../../defaultImg.jpg";
   public $database;
 
   public function __construct($_db){
    $this->database = $_db;
    $arg = func_get_args();
    $num = func_num_args();
-   if($num == 0) {
+   array_shift($arg);
+   $num--;
+   echo '<pre>' . var_export($arg, true) . '</pre>';
+   if($num <= 0) {
      echo "pas d'arg on passe a la suite";
      return $this;
    } else if($num>=4) {
@@ -27,13 +30,15 @@ class Joueur {
 
   public function signup($_pseudo, $_login, $_pwd, $_mail, $_imgpath = NULL) {
     echo "SIGN UP!";
+    //VERIFIER LES CHAMPS
     $this->pseudo = $_pseudo;
     $this->login = $_login;
     $this->pwd = $this->database->encode($_pwd);
     $this->mail = $_mail;
-    $this->imgpath = ($_imgpath)?$_imgpath:$defaultImgpath;
+    $this->imgpath = is_null($_imgpath) ? $this->defaultImgpath : $_imgpath;
     $this->connected = 1;
     $this->ID = $this->save();
+    echo "signup completed";
     return $this;
   }
 
@@ -45,8 +50,8 @@ class Joueur {
       "Login" => $this->login,
       "Pwd" => $this->pwd,
       "Pseudo" => $this->pseudo,
-      "Mail" => $this->mail;
-    )
+      "Mail" => $this->mail
+    );
     $this->database->insert($table, $entries);
     $id = $this->database->query($table, array("ID" =>"", "Login" =>$this->login));
     return $id[0][ID];
@@ -61,14 +66,15 @@ class Joueur {
       "Pwd" => $this->pwd,
       "Pseudo" => $this->pseudo,
       "Mail" => $this->mail
-    )
+    );
     $this->database->update($table, $entries);
+
   }
 
   public function connect($_login, $_pwd) {
     echo "CONNECT!";
     //if(keepConnection)
-    if(checkData($_login, "Login") && checkPwd($pwd)) {
+    if(checkData($_login, "Login") && checkPwd($_pwd)) {
       $dataPlayer = $this->database->query("Player",array("Login"=>$this->login, "*" => ""));
       $this->ID = $dataPlayer[0]["ID"];
       $this->pseudo = $dataPlayer[0]["Pseudo"];
@@ -77,11 +83,13 @@ class Joueur {
       $this->mail = $dataPlayer[0]["Mail"];
       $this->imgpath = $dataPlayer[0]["ImgPath"];
       $this->connected = 1;
-      return $this
-    } else {
-      $this = NULL;
       return $this;
+      echo "connected";
+    } else {
+      echo "connection failed";
+      return NULL;
     }
+
   }
 
   public function checkPwd($pwd){
@@ -104,7 +112,7 @@ class Joueur {
       )
     );
     //CHECKER SI CA MARCHE AVEC table.*
-    $stats = $this->database->query($tables,array("PlayerStat.IDPlayer"=>$this->ID, "Stat.*" => ""))
+    $stats = $this->database->query($tables,array("PlayerStat.IDPlayer"=>$this->ID, "Stat.*" => ""));
     return $stats;
   }
 
@@ -115,7 +123,7 @@ class Joueur {
         "Item" => "Item.ID"
       )
     );
-    $items = $this->database->query($tables,array("Inventory.IDPlayer"=>$this->ID, "Item.*" => ""))
+    $items = $this->database->query($tables,array("Inventory.IDPlayer"=>$this->ID, "Item.*" => ""));
     return $items;
   }
 
@@ -126,7 +134,7 @@ class Joueur {
         "Achievement" => "Achievement.ID"
       )
     );
-    $achievements = $this->database->query($tables,array("PlayerAchievement.IDPlayer"=>$this->ID, "Achievement.*" => ""))
+    $achievements = $this->database->query($tables,array("PlayerAchievement.IDPlayer"=>$this->ID, "Achievement.*" => ""));
     return $achievements;
   }
 
@@ -137,17 +145,15 @@ class Joueur {
         "Step" => "Step.ID"
       )
     );
-    $pastSteps = $this->database->query($tables,array("PastStep.IDPlayer"=>$this->ID, "Step.*" => ""))
+    $pastSteps = $this->database->query($tables,array("PastStep.IDPlayer"=>$this->ID, "Step.*" => ""));
     return $pastSteps;
   }
 
   public function passStep($perpetie){
-    /*
     $entries = array(
       ""
-    )
-    $database->insert("Step",$entries);
-    */
+    );
+    //$database->insert("Step",$entries);
    $peripethieID;
    $entries = array(
      "IDPlayer" => $this->ID,
@@ -158,9 +164,8 @@ class Joueur {
   }
 
   public function alterStats($newStats){
-    /*
-    $newStats = array($stats => $valeur)
-     */
+    //$newStats = array($stats => $valeur)
+
     $tables = array(
       array(
         "PlayerStat" => "PlayerStat.IDStat",
@@ -184,5 +189,9 @@ class Joueur {
 
   }
 
+  //////////-----FORMATS ENTREES-----////////////
+  static function formatMail($entry){
+
+  }
 }
  ?>
