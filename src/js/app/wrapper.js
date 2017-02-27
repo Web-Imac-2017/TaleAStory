@@ -48,6 +48,8 @@ export default RouteComponent({
       {links}
     </ul>
     */
+    console.log(children);
+    
     return  <div id="wrapper" className={this.props.route.className}>
               {header}
 
