@@ -9,9 +9,6 @@ import TweenLite from './greenshock/TweenMax.js';
 import idGen from './utils/idGenerator';
 import AppRouter from './app/router';
 
-document.backInterface = function(){
-	console.log("lol");
-}
 domready(() => {
 		ReactDOM.render(AppRouter, document.getElementById('root'));
 });

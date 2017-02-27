@@ -11,19 +11,11 @@ function render(){
 }
 
 function animationInDom(callback){
-  let dom = ReactDOM.findDOMNode(this);
-  //console.log(this);
-  //dom.style.position = "absolute";
-  animationIn(dom).eventCallback("onComplete",
-                                () => { /*dom.style.position = "unset"*/; callback(); });
+  animationIn(this, callback);
 }
 
 function animationOutDom(callback){
-  let dom = ReactDOM.findDOMNode(this);
-  console.log(this);
-  //dom.style.position = "absolute";
-  animationOut(dom).eventCallback("onComplete",
-                                () => { /*dom.style.position = "unset"*/; callback(); });
+  animationOut(this, callback);
 }
 
 function componentWillEnter(callback){

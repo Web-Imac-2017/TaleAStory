@@ -31,9 +31,10 @@
     "gulp-duration": "0.0.0",
     "gulp-htmlmin": "^3.0.0",
     "gulp-image-resize": "^0.12.0",
+    "gulp-jsonminify": "^1.0.0",
     "gulp-livereload": "^3.8.1",
     "gulp-minify-css": "^1.2.4",
-    "gulp-notify": "^2.2.0",
+    "gulp-notify": "^3.0.0",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.3.2",
     "gulp-sourcemaps": "^1.11.1",
@@ -55,17 +56,13 @@
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "vinyl-transform": "^1.0.0",
-    "vue": "^2.0.3",
-    "vue-router": "^2.0.1",
-    "vueify": "^9.2.4",
     "watchify": "^3.8.0"
   },
   "browserify": {
     "transform": [
       "browserify-shim",
       "stringify",
-      "babelify",
-      "vueify"
+      "babelify"
     ]
   },
   "browserify-shim": {

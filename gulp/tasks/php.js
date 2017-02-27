@@ -9,6 +9,7 @@ var sourcemaps   = require('gulp-sourcemaps');   // Provide external sourcemap f
 
 var mapError     = require('../error');
 var config       = require('../config');
+var jsonminify = require('gulp-jsonminify');
 
 var configPhp = {
   srcPath    : './src/php/',         // Les fichiers à watch
@@ -18,6 +19,7 @@ var configPhp = {
 // La tache pour générer le build scss.
 // C'est un peu similaire à la tache js.
 gulp.task('phpAll', function() {
+  buildJSON(configPhp.srcPath + '*.json')
   return buildPhp(configPhp.srcPath + '*.php');
 });
 
@@ -25,17 +27,19 @@ gulp.task('watchPHP', ['phpAll'], function(){
 	gulp.watch(configPhp.srcPath + '*.php', function(event){
 		buildPhp(event.path);
 	});
+  gulp.watch(configPhp.srcPath + '*.json', function(event){
+		buildJSON(event.path);
+	});
 });
 
 function buildPhp(phpSrc) {
   return gulp.src(phpSrc)
-    .pipe(sourcemaps.init({ loadMaps: true }))
     .on('error', mapError)
-    //.pipe(minify()) // Minify build file
-    .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest(configPhp.outputDir))
-    .pipe(notify({
-      onLast: true,
-      message: 'Generated file: <%= file.relative %>',
-    }));
+    .pipe(gulp.dest(configPhp.outputDir));
+}
+
+function buildJSON(jsonSrc){
+  return gulp.src(jsonSrc)
+        .pipe(jsonminify())
+        .pipe(gulp.dest(configPhp.outputDir));
 }

@@ -13,7 +13,6 @@ var source     = require('vinyl-source-stream'); // Vinyl stream support
 var sourcemaps = require('gulp-sourcemaps');     // Provide external sourcemap files
 var stringify  = require('stringify');           // Require text files like templates
 var uglify     = require('gulp-uglify');         // Require text files like templates
-var vueify     = require('vueify');              // Allow you to write vue files
 var transform = require('vinyl-transform');
 var watchify   = require('watchify');            // Watchify for source changes
 var glob = require("glob");
@@ -39,13 +38,13 @@ gulp.task('watchJS', ['jsAll'], function(){
 	gulp.watch(configJS.srcPath + '*.js', function(event){
 		buildJS(event.path);
 	});
-  gulp.watch(configJS.srcPath + 'app/*.js', function(event){
+  gulp.watch(configJS.srcPath + '*/*.js', function(event){
 		buildJS(configJS.srcPath + 'main.js');
 	});
 });
 
 function buildJS(jsSrc) {
-	console.log('compile '+ jsSrc + '...' + ' mangle:' + (configJS.dontMangle.indexOf(jsSrc) < 0));
+	console.log('compile '+ jsSrc + '...');
 	var b = browserify({
 			fullPath: true,
 			debug: true,
@@ -60,7 +59,6 @@ function buildJS(jsSrc) {
 	return b
 		.transform(stringify,{ appliesTo: { includeExtensions: ['.html'] }, minify: true })
 		.transform(babelify, {presets: ["es2015", "react"]}) // Babel, pour l'ES6
-		.transform(vueify)
 		.bundle()
 		.on('error', mapError)                   // Map error reporting
 		.pipe(source(jsSrc))                 // Set source name

@@ -8,18 +8,7 @@ class Form {
   Vérifie et retourne les données entrées par l'user et envoyées via $_POST
   */
   static public function getFormPost($form,$index) {
-    //on vérifie que le formulaire est authentique et que les inputs de $_POST sont ok
-    if (self::verifyFormInputs()) {
-        //on vérifie que l'index demandé est dans $_POST et que sa valeur est bonne
-        if(isset($_POST["$index"]) && !empty($_POST[$index]))
-          return  htmlentities(trim(strip_tags(stripslashes($_POST[$index]))), ENT_NOQUOTES, "UTF-8");
-        else
-          return null;
-      } else {
-        echo "Hack-Attempt detected. Got ya!.";
-        self::writeLog('Formtoken');
-        return null;
-      }
+    $this->_getForm($form, $index, $_POST);
   }
   /*
   @function getFormGet
@@ -29,18 +18,22 @@ class Form {
   Vérifie et retourne les données entrées par l'user et envoyées via $_GET
   */
   static public function getFormGet($form,$index) {
+    $this->_getForm($form, $index, $_GET);
+  }
+
+  static private function _getForm($form, $index, $array){
     //on vérifie que le formulaire est authentique et que les inputs de $_GET sont ok
-    if (self::verifyFormInputs()) {
-        //on vérifie que l'index demandé est dans $_GET et que sa valeur est bonne
-        if(isset($_GET["$index"]) && !empty($_GET[$index]))
-          return  htmlentities(trim(strip_tags(stripslashes($_GET[$index]))), ENT_NOQUOTES, "UTF-8");
-        else
-          return null;
-      } else {
-        echo "Hack-Attempt detected. Got ya!.";
-        self::writeLog('Formtoken');
+    if (self::verifyFormInputs($form, $array)) {
+      //on vérifie que l'index demandé est dans $_GET et que sa valeur est bonne
+      if(isset($array["$index"]) && !empty($array[$index]))
+        return  htmlentities(trim(strip_tags(stripslashes($array[$index]))), ENT_NOQUOTES, "UTF-8");
+      else
         return null;
-      }
+    } else {
+      echo "Hack-Attempt detected. Got ya!.";
+      self::writeLog('Formtoken');
+      return null;
+    }
   }
 
   /*
@@ -48,12 +41,12 @@ class Form {
   @return void
   Vérifie la liste d'inputs du formulaire
   */
-  static public function verifyFormInputs(){
+  static public function verifyFormInputs($form, $array){
     // liste des inputs possibles
     $whitelist = array('token','name','email','likeit','comments');
 
     // liste des inputs présets dans $_POST
-    foreach ($_POST as $key=>$item) {
+    foreach ($array as $key=>$item) {
       // On vérifie si $key (fieldname from $_POST) est présent dans la whitelist
       if (!in_array($key, $whitelist)) {
         self::writeLog('Unknown form fields');

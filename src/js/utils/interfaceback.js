@@ -1,13 +1,13 @@
 class GlobalBack{
   static get(field){
-    if(typeof document._globalBackValue == "undefined")
+    if(typeof document._globalBackValues == "undefined")
       return '';
-    if(!(field in document._globalBackValue))
+    if(!(field in document._globalBackValues))
       return '';
-    return document._globalBackValue[field];
+    return document._globalBackValues[field];
   }
   static set(field, value){
-     document._globalBackValue[field] = value;
+     document._globalBackValues[field] = value;
   }
   static setObject(fields){
     for (let key in fields){
@@ -18,5 +18,5 @@ class GlobalBack{
   }
 }
 document.globalBack = GlobalBack;
-document._globalBackValue = {};
+document._globalBackValues = {};
 export {GlobalBack};

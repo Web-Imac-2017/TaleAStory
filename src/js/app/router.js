@@ -1,6 +1,5 @@
 import {applyRouterMiddleware, Router, IndexRoute, IndexRedirect,
         Route, browserHistory } from 'react-router'
-import { useScroll } from 'react-router-scroll';
 import { updateAnimation } from '../utils/pagetransition'
 import React from 'react';
 import Wrapper from './wrapper'

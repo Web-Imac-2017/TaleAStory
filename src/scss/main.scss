@@ -12,6 +12,13 @@ html, body, #root, #app, #app > span, #wrapper {
   height:100%;
 }
 
+.route-component{
+  width:100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
 html, body, #root, #app{
   background-color: black;
 }
@@ -19,11 +26,6 @@ html, body, #root, #app{
 #wrapper {
   display: flex;
   flex-direction: column;
-}
-
-#app span {
-  display:block;
-
 }
 
 html {
@@ -453,13 +455,17 @@ form {
 	}
 }
 
-.caca{
+#app .caca{
   display: flex;
   flex-direction: row;
   align-items: center;
   height: 100%;
   > span {
+    display: flex;
+    position: relative;
     width : 90%;
+    height: 80%;
+    overflow: hidden;
   }
 }
 /* *** Index Screens *** */
