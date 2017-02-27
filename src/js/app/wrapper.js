@@ -40,7 +40,7 @@ export default RouteComponent({
                   null :
                   GlobalBack.get('userID') ?
                     <Header name={GlobalBack.get('userName')} surname={GlobalBack.get('userSurname')}
-                            imgpath={GlobalBack.get('userImgpath')}/> :
+                            imgpath={GlobalBack.get('userImgPath')}/> :
                     <Header/>
                   ;
     /*

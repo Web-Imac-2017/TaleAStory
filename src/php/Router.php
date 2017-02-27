@@ -3,6 +3,9 @@
 class Router {
     static $routes = [];
     static $webRoot = "";
+    const DEFAULT_ROUTE = "__default__";
+    static $defaultRoute = null;
+
     public static function init() {
         $script_path = $_SERVER['SCRIPT_NAME'];
         self::$webRoot = str_replace('php/index.php', '', $script_path);
@@ -10,8 +13,11 @@ class Router {
 
 
     public static function insert($path, $callable){
-
         $path = trim($path, '/');
+        if($path == self::DEFAULT_ROUTE){
+          self::$defaultRoute = new Route($path, $callable);
+          return self::$defaultRoute;
+        }
         self::$routes["GET"][] = new Route($path, $callable);
         return self::$routes["GET"];
     }
@@ -23,11 +29,17 @@ class Router {
               return $route->call();
           }
       }
+      if(self::$defaultRoute != null)
+        return self::$defaultRoute->call();
       throw new RouterException('No matching routes');
   }
 
   public static function index(){
-    Response::generateIndex((object)array('userID' => '1', 'userName' => 'Marcel', 'userSurname'=> 'Patulacci', 'userImgPath' => 'patulacci_large.jpg', 'time' => '16h45'));
+    Response::generateIndex((object)array('userID' => '1',
+                                          'userName' => 'Marcel',
+                                          'userSurname'=> 'Patulacci',
+                                          'userImgPath' => 'patulacci_tiny.jpg',
+                                          'time' => '16h45'));
   }
 
   public static function connexion(){
