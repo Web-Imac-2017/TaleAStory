@@ -1,5 +1,483 @@
 @import './reset';
 
+$break-tiny: 340px;
+$break-small: 560px;
+$break-medium: 900px;
+$break-large: 1200px;
+
+$width-index: 80px;
+
+html, body, #root, #app, #app > span, #wrapper {
+  width:100%;
+  height:100%;
+}
+
+.route-component{
+  width:100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+html, body, #root, #app{
+  background-color: black;
+}
+
+#wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+html {
+	font-family: 'Bjorn';
+}
+
+
+@font-face {
+    font-family: 'Bjorn';
+    src: url('../fonts/Bjorn Light.otf');
+    font-weight: lighter;
+}
+
+@font-face {
+    font-family: 'Bjorn';
+    src: url('../fonts/Bjorn Regular.otf');
+}
+
+@font-face {
+    font-family: 'OpenSans';
+    src: url('../fonts/OpenSans-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'OpenSans';
+    src: url('../fonts/OpenSans-Bold.ttf');
+    font-weight: bold;
+}
+
+
+
+/* *** Header - General *** */
+header {
+	width: 100%;
+	padding-left: 5%;
+	padding-right: 5%;
+	padding-top: 3%;
+	height: auto;
+	font-size: 10px;
+	font-family: 'Bjorn';
+	font-weight: lighter;
+
+	h1 {
+		float: left;
+		font-size: 12px;
+		margin-bottom: 10px;
+	}
+
+	.links {
+		float: right;
+		height: 100%;
+
+		.profilPic {
+			width: 32px;
+			height: 32px;
+			margin: auto;
+		}
+
+	}
+
+	a {
+		text-decoration: none;
+		padding-left: 18px;
+		padding-right: 18px;
+		margin-top: 10px;
+		display: block;
+		float: left;
+		vertical-align: middle;
+	}
+
+}
+
+/* *** Blue background *** */
+
+.blueScreen {
+	background-image: url("../images/bgBlue_large.jpg");
+	background-size: 100% 100%;
+	background-repeat: none;
+
+	header, header a:visited {
+		color: #62c4fa;
+	}
+
+	header, header a:hover {
+		color: #92d8ff;
+	}
+
+
+}
+
+/* *** Orange background *** */
+
+.orangeScreen {
+	background-image: url("../images/bgOrange_large.jpg");
+	background-size: 100% 100%;
+	background-repeat: none;
+
+	header, header a:visited {
+		color: #f8ab61;
+		a:hover {
+			color: #ffcd90;
+		}
+	}
+}
+
+/* *** Purple background *** */
+
+.purpleScreen {
+	background-image: url("../images/bgPurple_large.jpg");
+	background-size: 100% 100%;
+	background-repeat: none;
+
+	header, header a:visited {
+		color: #6852D1;
+		a:hover {
+			color: #A795F9;
+		}
+	}
+}
+
+/* *** Screens - General *** */
+
+.screen {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	height:100vh;
+	color: white;
+
+	a, p {
+		letter-spacing: 4px;
+	}
+
+	.button {
+		display: block;
+		max-width: 300px;
+		transition: all 0.25s;
+		background-color: Transparent;
+	    color: white;
+	    padding: 12px 25px;
+	    text-align: center;
+	    text-decoration: none;
+	    display: inline-block;
+	    cursor: pointer;
+	    font-size: 12px;
+		font-family: 'Bjorn';
+		letter-spacing: 4px;
+	    border: 1px solid #fff;
+
+		@media screen and (max-width: $break-small) {
+		    padding: 8px 16px;
+		    font-size: 10px;
+	    }
+	}
+
+	.button:hover {
+		/*background-color: rgba(255,255,255,0.25);*/
+	}
+
+}
+
+.picto {
+	@media screen and (max-width: $break-small) {
+    	width: 50px;
+    }
+}
+
+.columnsContainer {
+	margin: auto;
+	display: flex;
+	flex-direction: row;
+	height: 60%;
+	width: 100%;
+}
+
+.cols {
+	display: flex;
+	flex-direction: row;
+}
+
+.rows {
+	display: flex;
+	flex-direction: column;
+}
+
+.index, .antiIndex{
+	display: flex;
+	flex-direction: row;
+	max-width: $width-index;
+	min-width: $width-index;
+	height: 100%;
+  width: 10%;
+	margin: 0px 3%;
+
+	@media screen and (max-width: $break-small) {
+    	display: none;
+    }
+
+   .indexContent {
+   		display: flex;
+   		flex-direction: column;
+   		height: 100%;
+
+   		a {
+   			margin: auto 10px;
+   			font-family: OpenSans;
+   			font-weight: bold;
+   			color: rgba(255,255,255,0.7);
+   			text-decoration: none;
+   		}
+
+		a:hover {
+			color: rgba(255,255,255,0.9);
+		}
+
+   }
+
+}
+
+.verticalLine {
+	border-left: thick solid rgba(255,255,255, 0.35);
+    border-width: 2px;
+    height: 100%;
+}
+
+.content {
+
+	width: 100%;
+	margin: auto;
+	align-self: flex-start;
+
+	@media screen and (max-width: $break-medium) {
+		display: flex !important;
+		flex-direction: column !important;
+    }
+
+	.element {
+		display: block;
+		text-align: center;
+		margin: 30px auto;
+		@media screen and (max-width: $break-small) {
+			margin: 10px auto;
+		}
+	}
+
+	.pageTitle {
+		font-size: 58px;
+		letter-spacing: 20px;
+		margin-bottom: 40px;
+
+		@media screen and (max-width: $break-small) {
+			font-size: 38px;
+			letter-spacing: 14px;
+			margin-bottom: 20px;
+	    }
+	}
+
+}
+
+.scroll {
+	font-family: 'Bjorn';
+	font-weight: lighter;
+	font-size: 10px;
+	width: 100%;
+	text-align: center;
+	align-self: flex-end;
+	padding-bottom: 25px;
+
+	p {
+		margin-bottom:12px;
+	}
+}
+
+button {
+    background-color: Transparent;
+    color: white;
+    border-style: solid;
+    border-color: white;
+    border-size: 1px;
+    padding: 12px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    font-size: 12px;
+	font-family: 'Bjorn';
+	letter-spacing: 4px;
+
+	@media screen and (max-width: $break-small) {
+	    padding: 8px 16px;
+	    font-size: 10px;
+    }
+}
+
 * {
 	box-sizing: border-box;
+}
+
+.rounded{
+    border-radius: 50%;
+
+}
+
+/* *** Screens - Title Screens *** */
+
+.sectionTitle {
+	display: block;
+	color: white;
+	padding: 30px;
+	margin: auto !important;
+	width: 350px;
+	height: 350px;
+	border: thick solid rgba(255,255,255, 0.6);
+    border-width: 2px;
+
+	@media screen and (max-width: $break-large) {
+		width: 280px;
+		height: 280px;
+    }
+
+
+	@media screen and (max-width: $break-small) {
+		display: none;
+    }
+
+	div {
+		margin: 10% auto !important;
+		display: block;
+	}
+
+	.number {
+		display:block;
+		text-align: center;
+		font-size: 140px;
+		font-family: OpenSans;
+		font-weight: bold;
+		vertical-align: center;
+		@media screen and (max-width: $break-large) {
+			font-size: 80px;
+	    }
+	}
+
+	.name {
+		display:block;
+		text-align: center;
+		font-size: 28px;
+		font-family: Bjorn;
+		vertical-align: center;
+		letter-spacing: 8px;
+		margin-top: 25px;
+		@media screen and (max-width: $break-large) {
+			font-size: 20px;
+	    }
+	}
+}
+
+.sectionContent {
+	display:inline-block;
+	width: 45%;
+	color: white;
+	line-height: 300%;
+	font-size: 12px;
+	vertical-align: center;
+	margin-left: auto;
+	margin-right: auto;
+
+	p {
+		width: 80%;
+		margin: auto;
+	}
+
+	@media screen and (max-width: $break-large) {
+		font-size: 10px;
+		width: 100%;
+		margin: auto;
+   }
+
+	@media screen and (max-width: $break-tiny) {
+		font-size: 8px;
+   }
+
+}
+
+form {
+	input {
+		color: white;
+		font-family: Bjorn;
+		border-style: solid;
+		border-color: white;
+		border-size: 1px;
+		background-color: Transparent;
+	}
+}
+
+/* *** HomePageConnectionScreen *** */
+.homePageConnectionScreen {
+	.content {
+		display: block;
+		margin-top: 2.5%;
+		.block {
+			margin: 0px auto;
+			width:35%;
+			display: block;
+			h1 {
+				font-size: 46px;
+				letter-spacing: 12px;
+				margin-bottom: 20%;
+				text-align: center;
+			}
+			form {
+				input {
+					display: block;
+					margin-left: auto;
+					margin-right: auto;
+					margin-top: 30px;
+					width: 100%;
+					height: 50px;
+				}
+				.submit {
+					display: block;
+					width: 30%;
+					float: right;
+				}
+			}
+		}
+	}
+}
+
+#app .caca{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 100%;
+  > span {
+    display: flex;
+    position: relative;
+    width : 90%;
+    height: 80%;
+    overflow: hidden;
+  }
+}
+/* *** Index Screens *** */
+
+.presentationPageScreen02{
+	.content {
+		display: flex;
+		flex-direction: row;
+
+		div {
+			margin: 0px 3%;
+		}
+
+	}
 }
