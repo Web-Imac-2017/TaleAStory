@@ -4,6 +4,6 @@
     "name" : "TaleAstory",
     "server" : "localhost",
     "user" : "root",
-    "password" : ""
+    "password" : "root"
   }
 }

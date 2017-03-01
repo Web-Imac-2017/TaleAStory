@@ -10,5 +10,7 @@ try {
   echo 'Exception reçue : ',  $e->message, "\n";
 }
 
+echo "TEST";
+
 
 ?>
