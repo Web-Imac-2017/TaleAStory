@@ -1,14 +1,10 @@
 <?php
 require "model_Player.php";
-$test = Database::instance();
-echo "<pre>".var_export($test, true)."</pre>";
-//$user = User::signup("pseudo", "login", "password", "mail");
+//$user = Player::signup("Nemo", "Dori", "poisson", "sea@bulb");
 $user = User::connect("login","password");
-//echo "ID player = ".$player->ID
-$user->mail = "adraissmeuille";
-echo "<pre>".var_export($user, true)."</pre>";
-$user->update();
-echo "<pre>".var_export($user, true)."</pre>";
+$test = $user->items();
+$test2 = $test[0]['ID'];
+echo "<pre>".var_export($test, true)."</pre>";
 echo "TEST";
 
 /*

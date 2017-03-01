@@ -122,19 +122,37 @@ private function __construct(/*$ID, $pseudo, $login, $pwd, $mail, $imgpath*/){
     return ($dbData == $data)?1:0;
   }
   */
-
+/*
 }
 
 class Player extends User {
+  public $stats = 24;
+  */
+  /**
+   * [arrayMap description]
+   * @param  [type] $entry [description]
+   * @param  [string] $key   [champ de la table, si int le tableau retourné aura des index numériques incrémentés à partir de 0]
+   * @param  [type] $value [description]
+   * @return [type]        [description]
+   */
+  public function arrayMap($entry, $key, $value) {
+    $map = array();
+    foreach($entry as $data){
+      $map = array_merge($map, array($data[$key]=>$data[$value]));
+    }
+    return $map;
+  }
+
   public function stats() {
+    echo "stats";
     $tables = array(
       array(
         "PlayerStat" => "PlayerStat.IDStat",
         "Stat" => "Stat.ID"
       )
     );
-    //CHECKER SI CA MARCHE AVEC table.*
-    $stats = Database::instance()->query($tables,array("PlayerStat.IDPlayer"=>$this->ID, "Stat.*" => ""));
+    $statsQuery = Database::instance()->query($tables,array("PlayerStat.IDPlayer"=>$this->ID, "Stat.*" => ""));
+    $stats = $this->arrayMap($statsQuery, 'Name', 'Value');
     return $stats;
   }
 
@@ -146,6 +164,7 @@ class Player extends User {
       )
     );
     $items = Database::instance()->query($tables,array("Inventory.IDPlayer"=>$this->ID, "Item.*" => ""));
+    $items = $this->arrayMap($items, 'ID', 'Name');
     return $items;
   }
 
@@ -157,6 +176,7 @@ class Player extends User {
       )
     );
     $achievements = Database::instance()->query($tables,array("PlayerAchievement.IDPlayer"=>$this->ID, "Achievement.*" => ""));
+    $achievements = $this->arrayMap($achievements, 'ID', 'Name');
     return $achievements;
   }
 
