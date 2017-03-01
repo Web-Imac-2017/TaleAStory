@@ -9,7 +9,9 @@ import Index from './index'
 import Pres01 from './presentation01'
 import Pres02 from './presentation02'
 import Connexion from './connexion'
+import ConnexionAdmin from './connexionadmin'
 import Inscription from './inscription'
+import Maker from './storymaker'
 
 let AppRouter, routes;
 
@@ -39,6 +41,13 @@ AppRouter =
           <Route path='sign' component={Wrapper} index={2} className="screen presentationPageScreen03 orangeScreen">
             <Route path='in' component={Connexion} index={2}/>
             <Route path='up' component={Inscription} index={3}/>
+          </Route>
+          <Route path='signadmin' component={Wrapper} index={3} className="screen">
+            <IndexRoute component={ConnexionAdmin} index={1}/>
+          </Route>
+          <Route path='admin' component={Wrapper} index={1} className="screen">
+            <IndexRedirect to={config.path('admin/maker')} />
+            <Route path='maker' component={Maker} index={1}/>
           </Route>
         </Route>
     </Router>
