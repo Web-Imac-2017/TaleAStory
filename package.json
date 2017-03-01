@@ -47,6 +47,7 @@
     "react-addons-transition-group": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-history": "^0.18.2",
+    "react-media": "^1.5.1",
     "react-router": "^3.0.2",
     "react-router-scroll": "^0.4.1",
     "smoosh": "^0.4.1",
