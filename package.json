@@ -70,6 +70,7 @@
     "tweenlite": "global:TweenLite"
   },
   "dependencies": {
-    "gulp-install": "^0.6.0"
+    "gulp-install": "^0.6.0",
+    "react-media": "^1.5.1"
   }
 }
