@@ -1,4 +1,6 @@
 <?php
+require 'module_datase.php';
+
 class Choice {
   public $id;
 
@@ -20,6 +22,7 @@ class Choice {
   Maj les stats du joueur (perdues et gagnées), ajoute les items gagnés et enlève les items recquis
   */
   public function alterPlayer($player){
+   $database = Database::instance();
    try {
        $tables = array(
          array(
