@@ -1,10 +1,12 @@
 <?php
 require "model_Player.php";
-//$user = Player::signup("Nemo", "Dori", "poisson", "sea@bulb");
-$user = User::connect("login","password");
-$test = $user->items();
-$test2 = $test[0]['ID'];
-echo "<pre>".var_export($test, true)."</pre>";
+//$admin = Admin::signup("Nemo", "Dori", "poisson", "sea@bulb");
+$admin = Admin::connect("Dorie","poisson"); 
+//$test = Database::instance();
+//$user = Player::connect("login", "pwd");
+//$test = $user->items();
+//$user->changeImage("./lala.jpg");
+echo "<pre>".var_export($admin, true)."</pre>";
 echo "TEST";
 
 /*
