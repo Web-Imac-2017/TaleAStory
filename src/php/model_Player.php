@@ -112,12 +112,7 @@ class Player {
     return ($dbData == $data)?1:0;
   }
   */
-/*
-}
 
-class Player extends Player {
-  public $stats = 24;
-  */
   /**
    * [arrayMap description]
    * @param  [type] $entry [description]
@@ -146,6 +141,7 @@ class Player extends Player {
     return $stats;
   }
 
+///////------ITEMS------//////
   public function items() {
     $tables = array(
       array(
@@ -156,6 +152,29 @@ class Player extends Player {
     $items = Database::instance()->query($tables,array("Inventory.IDPlayer"=>$this->ID, "Item.*" => ""));
     $items = $this->arrayMap($items, 'Name', 'IDItem');
     return $items;
+  }
+
+
+  public function addItem($item) {
+    $qry = Database::instance()->query("Inventory",Array("IDPlayer"=>$this->ID, "IDItem"=>$item->ID, "quantity"=>""));
+    $quantity = $test[0]['quantity'];
+    if($quantity) {
+      $quantity++;
+      Database::instance()->update("Inventory",Array("quantity"=>$quantite),Array("IDPlayer"=>$this->ID, "IDItem"=>$item->ID));
+    } else {
+      Database::instance()->insert("Inventory", Array("IDPlayer"=>$this->ID, "IDItem"=>$item->ID, "quantity"=>1));
+    }
+  }
+
+  public function removeItem($item) {
+    $qry = Database::instance()->query("Inventory",Array("IDPlayer"=>$this->ID, "IDItem"=>$item->ID, "quantity"=>""));
+    $quantity = $test[0]['quantity'];
+    if($quantity >1) {
+      $quantity --;
+      Database::instance()->update("Inventory",Array("quantity"=>$quantite),Array("IDPlayer"=>$this->ID, "IDItem"=>$item->ID));
+    } else {
+      Database::instance()->delete("Inventory",Array("IDPlayer"=>$this->ID, "IDItem"=>$item->ID));
+    }
   }
 
   public function achievements() {
