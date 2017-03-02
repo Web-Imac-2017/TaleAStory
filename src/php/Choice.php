@@ -1,10 +1,18 @@
 <?php
 require 'module_datase.php';
 
+/*
+- Doit-on insérer dans la BD quand on construit l'objet ? (cf l.19)
+---> si oui : vérif de l'id step ?
+
+*/
+
 class Choice {
   public $id;
+  public $answer;
+  public $idStep;
 
-  public function __construct($answer,$idStep){
+  public function __construct($id, $answer, $idStep) {
    $this->id = $id;
    $table = "Choice";
    $entries = array(
@@ -13,14 +21,15 @@ class Choice {
      "IDStep" => $idStep //return false si idStep non existant ?
    );
    $db->insert($table, $entries);
-
   }
+
   /*
   @function alterPlayer
   @param  $player  joueur courant
   @return $bool faux si erreur, vrai si ok
   Maj les stats du joueur (perdues et gagnées), ajoute les items gagnés et enlève les items recquis
   */
+  
   public function alterPlayer($player){
    $database = Database::instance();
    try {
@@ -137,5 +146,15 @@ class Choice {
       return true;
     }
   }
+
+  public function save() {
+   $table = "Choice";
+   $entries = array(
+     "ID" => "",
+     'answer' = $this->$answer;
+     'idStep' = $this->$idStep;
+   );
+   $db->insert($table, $entries);
+   }
 }
  ?>
