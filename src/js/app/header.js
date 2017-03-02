@@ -44,7 +44,7 @@ class HeaderRegistered extends React.Component{
 			<header>
 				<Link to={config.path('')}><h1>Tale A Story</h1></Link>
 				<div className="links">
-					<a href="">{this.props.name + ' ' + this.props.surname}</a>
+					<Link to={config.path('admin/')}>{this.props.name + ' ' + this.props.surname}</Link>
 					<img className="rounded profilPic" src={config.imagePath(this.props.img)}/>
 				</div>
 			</header>
