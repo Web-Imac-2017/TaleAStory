@@ -2,7 +2,7 @@
 require "module_database.php";
 
 class Player {
-  public $ID;
+  public $id;
   public $pseudo;
   public $login;
   public $pwd;
@@ -23,8 +23,8 @@ class Player {
       $player->pwd = Database::instance()->encode($pwd);
       $player->mail = $mail;
       $player->imgpath = (is_null($imgpath)) ? $defaultImgpath : $imgpath;
-      $player->ID = $player->save();
-      if($player->ID == NULL) {
+      $player->id = $player->save();
+      if($player->id == NULL) {
         echo "signup failed";
         return NULL;
       }
@@ -44,7 +44,7 @@ class Player {
     echo "<pre>".var_export($login, true).var_export($pwd, true)."</pre>";
     if($login && $pwd) {
       $dataPlayer = Database::instance()->query("player",array("Login"=>$login, "*" => ""));
-      $player->ID = $dataPlayer[0]["IDPlayer"];
+      $player->id = $dataPlayer[0]["IDPlayer"];
       $player->pseudo = $dataPlayer[0]["Pseudo"];
       $player->login = $dataPlayer[0]["Login"];
       $player->pwd = $dataPlayer[0]["Pwd"];
@@ -80,14 +80,14 @@ class Player {
     echo "UPDATE";
     $table = "Player";
     $entries = array(
-      "IDPlayer" => $this->ID,
+      "IDPlayer" => $this->id,
       "ImgPath" => $this->imgpath,
       "Login" => $this->login,
       "Pwd" => $this->pwd,
       "Pseudo" => $this->pseudo,
       "Mail" => $this->mail
     );
-    $where = array("IDPlayer" => $this->ID);
+    $where = array("IDPlayer" => $this->id);
     Database::instance()->update($table, $entries, $where);
     echo "update completed";
   }
@@ -136,7 +136,7 @@ class Player {
         "Stat" => "Stat.IDStat"
       )
     );
-    $statsQuery = Database::instance()->query($tables,array("PlayerStat.IDPlayer"=>$this->ID, "Stat.*" => ""));
+    $statsQuery = Database::instance()->query($tables,array("PlayerStat.IDPlayer"=>$this->id, "Stat.*" => ""));
     $stats = $this->arrayMap($statsQuery, 'Name', 'Value');
     return $stats;
   }
@@ -149,31 +149,34 @@ class Player {
         "Item" => "Item.IDItem"
       )
     );
-    $items = Database::instance()->query($tables,array("Inventory.IDPlayer"=>$this->ID, "Item.*" => ""));
-    $items = $this->arrayMap($items, 'Name', 'IDItem');
+    $items = Database::instance()->query($tables,array("Inventory.IDPlayer"=>$this->id, "Inventory.quantity"=>"", "Item.*" => ""));
     return $items;
   }
 
 
   public function addItem($item) {
-    $qry = Database::instance()->query("Inventory",Array("IDPlayer"=>$this->ID, "IDItem"=>$item->ID, "quantity"=>""));
-    $quantity = $test[0]['quantity'];
+
+    $quantity = Database::instance()->query("Inventory",Array("IDPlayer"=>$this->id, "IDItem"=>$item->id, "quantity"=>""));
+    $quantity = $quantity[0]['quantity'];
+    echo "<pre>".var_export($quantity, true)."</pre>";
     if($quantity) {
-      $quantity++;
-      Database::instance()->update("Inventory",Array("quantity"=>$quantite),Array("IDPlayer"=>$this->ID, "IDItem"=>$item->ID));
+      if($quantity<10){$quantity++;}
+      Database::instance()->update("Inventory",Array("quantity"=>$quantity),Array("IDPlayer"=>$this->id, "IDItem"=>$item->id));
     } else {
-      Database::instance()->insert("Inventory", Array("IDPlayer"=>$this->ID, "IDItem"=>$item->ID, "quantity"=>1));
+      Database::instance()->insert("Inventory", Array("IDPlayer"=>$this->id, "IDItem"=>$item->id, "quantity"=>1));
     }
+
   }
 
   public function removeItem($item) {
-    $qry = Database::instance()->query("Inventory",Array("IDPlayer"=>$this->ID, "IDItem"=>$item->ID, "quantity"=>""));
-    $quantity = $test[0]['quantity'];
+    $quantity = Database::instance()->query("Inventory",Array("IDPlayer"=>$this->id, "IDItem"=>$item->id, "quantity"=>""));
+    $quantity = $quantity[0]['quantity'];
+    echo "<pre>".var_export($quantity, true)."</pre>";
     if($quantity >1) {
       $quantity --;
-      Database::instance()->update("Inventory",Array("quantity"=>$quantite),Array("IDPlayer"=>$this->ID, "IDItem"=>$item->ID));
-    } else {
-      Database::instance()->delete("Inventory",Array("IDPlayer"=>$this->ID, "IDItem"=>$item->ID));
+      Database::instance()->update("Inventory",Array("quantity"=>$quantity),Array("IDPlayer"=>$this->id, "IDItem"=>$item->id));
+    } else if ($quantity == 1) {
+      Database::instance()->delete("Inventory",Array("IDPlayer"=>$this->id, "IDItem"=>$item->id));
     }
   }
 
@@ -184,7 +187,7 @@ class Player {
         "Achievement" => "Achievement.IDAchievement"
       )
     );
-    $achievements = Database::instance()->query($tables,array("PlayerAchievement.IDPlayer"=>$this->ID, "Achievement.*" => ""));
+    $achievements = Database::instance()->query($tables,array("PlayerAchievement.IDPlayer"=>$this->id, "Achievement.*" => ""));
     $achievements = $this->arrayMap($achievements, 'IDAchievement', 'Name');
     return $achievements;
   }
@@ -196,7 +199,7 @@ class Player {
         "Step" => "Step.IDStep"
       )
     );
-    $pastSteps = Database::instance()->query($tables,array("PastStep.IDPlayer"=>$this->ID, "Step.*" => ""));
+    $pastSteps = Database::instance()->query($tables,array("PastStep.IDPlayer"=>$this->id, "Step.*" => ""));
     $pastSteps = $this->arrayMap($pastSteps, 'IDStep', 'Name');
     return $pastSteps;
   }
@@ -208,7 +211,7 @@ class Player {
     //Database::instance()->insert("Step",$entries);
    $peripethieID;
    $entries = array(
-     "IDPlayer" => $this->ID,
+     "IDPlayer" => $this->id,
      "IDStep" =>$peripetieID
    );
    Database::instance()->insert("PastStep",$entries);
@@ -224,7 +227,7 @@ class Player {
         "Stat" => "Stat.IDStat"
       )
     );
-    $identification = array("PlayerStat.IDPlayer" => $this->ID);
+    $identification = array("PlayerStat.IDPlayer" => $this->id);
     $currentStats = $this->stats();
     foreach($newStats as $stat => $value) {
       if($currentStats[0][$stat]) {
@@ -236,7 +239,7 @@ class Player {
 
   public function changeImage($path){
     $this->imgpath = $path;
-    Database::instance()->update("Player", array("ImgPath" => $path), array("IDPlayer"=>$this->ID));
+    Database::instance()->update("Player", array("ImgPath" => $path), array("IDPlayer"=>$this->id));
   }
 
 
@@ -244,21 +247,22 @@ class Player {
   static function formatMail($entry){
 
   }
+
 }
 
 class Admin {
-  public $ID;
+  public $id;
   public $player;
 
   public function __construct($id, $player){
-    $this->ID = $id;
+    $this->id = $id;
     $this->player = $player;
   }
 
   static public function signup($pseudo, $login, $pwd, $mail, $imgpath = NULL){
     $player = Player::signup($pseudo, $login, $pwd, $mail, $imgpath = NULL);
     echo "<pre>".var_export($player, true)."</pre>";
-    Database::instance()->insert("admin", array("IDAdmin"=>"", "IDPLayer"=>$player->ID));
+    Database::instance()->insert("admin", array("IDAdmin"=>"", "IDPLayer"=>$player->id));
     $id = Database::instance()->query("admin", array("IDPLayer"=>$player->id, "IDAdmin"=>""));
     $id = $id[0]['IDAdmin'];
     if(!$id || !$player) {return NULL;}
@@ -268,7 +272,7 @@ class Admin {
 
   static public function connect($login, $pwd) {
     $player = Player::connect($login, $pwd);
-    $id = Database::instance()->query("admin", array("IDAdmin"=>"", "IDPLayer"=>$player->ID));
+    $id = Database::instance()->query("admin", array("IDAdmin"=>"", "IDPLayer"=>$player->id));
     $id = $id[0]['IDAdmin'];
     if(!$id || !$player) {return NULL;}
     $admin = new Admin($id, $player);
