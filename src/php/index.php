@@ -1,18 +1,14 @@
 <?php
+//try {
+  require 'Autoloader.php';
+  Autoloader::register();
+  Router::init();
+  Router::setJson("Routes.json");
+  Router::run();
 
-  /*
-  $pdo = new PDO('mysql:dbname=test;host=localhost', 'root', '', $options);
-  $i = $pdo->query('SELECT COUNT(*) FROM test');
-  var_dump($i->fetchColumn(0));
-  */
-  require 'module_database.php';
-  $db = new Database();
-  var_dump($db);
-
-  $data = $db->sendQuery('SELECT * FROM tableaux');
-  echo '<p>test bdd :'.$data['titre'].'</p>';
-
-  //require '../index.html';
+/*} catch (RouterException $e) {
+  echo 'Exception reçue : ',  $e->message, "\n";
+}*/
 
 
 ?>

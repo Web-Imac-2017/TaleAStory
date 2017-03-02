@@ -13,7 +13,6 @@ var source     = require('vinyl-source-stream'); // Vinyl stream support
 var sourcemaps = require('gulp-sourcemaps');     // Provide external sourcemap files
 var stringify  = require('stringify');           // Require text files like templates
 var uglify     = require('gulp-uglify');         // Require text files like templates
-var vueify     = require('vueify');              // Allow you to write vue files
 var transform = require('vinyl-transform');
 var watchify   = require('watchify');            // Watchify for source changes
 var glob = require("glob");
@@ -24,6 +23,7 @@ var config       = require('../config');
 var configJS = {
   srcPath      : './src/js/',  // Fichier principal à build
   outputDir : config.outputDir + '/assets/js', // Chemin ou va être généré le build
+  dontMangle : []
 };
 
 gulp.task('jsAll', function() {
@@ -38,6 +38,9 @@ gulp.task('watchJS', ['jsAll'], function(){
 	gulp.watch(configJS.srcPath + '*.js', function(event){
 		buildJS(event.path);
 	});
+  gulp.watch(configJS.srcPath + '*/*.js', function(event){
+		buildJS(configJS.srcPath + 'main.js');
+	});
 });
 
 function buildJS(jsSrc) {
@@ -49,10 +52,13 @@ function buildJS(jsSrc) {
 			cache: {},
 			packageCache: {}
 		});
+
+  var minifyOption = {mangle:(configJS.dontMangle.indexOf(jsSrc) < 0)};
+  var array = [];
+
 	return b
 		.transform(stringify,{ appliesTo: { includeExtensions: ['.html'] }, minify: true })
 		.transform(babelify, {presets: ["es2015", "react"]}) // Babel, pour l'ES6
-		.transform(vueify)
 		.bundle()
 		.on('error', mapError)                   // Map error reporting
 		.pipe(source(jsSrc))                 // Set source name
@@ -62,7 +68,7 @@ function buildJS(jsSrc) {
 			path.extname = ".min.js";
 		}))
 		.pipe(sourcemaps.init({loadMaps: true})) // Extract the inline sourcemaps
-		.pipe(uglify())                          // Minify the build file
+    .pipe(uglify(minifyOption))                    // Minify the build file
 		.pipe(sourcemaps.write('./'))            // Set folder for sourcemaps to output to
 		.pipe(gulp.dest(configJS.outputDir))       // Set the output folder
 		.pipe(notify({
