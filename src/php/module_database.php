@@ -27,7 +27,7 @@ class Database {
 
   static public function instance(){
     if(is_null(self::$_instance)){
-      self::$_instance = new Database("database_config.json");
+      self::$_instance = new Database("../../ressources/php/database_config.json");
     }
     return self::$_instance;
   }
@@ -175,6 +175,14 @@ class Database {
     $delete = $this->getPDO()->prepare($statement);
     $delete->execute($array_entries) or die(print_r($delete->errorInfo()));
     echo "delete ok";
+  }
+
+  public function arrayMap($entry, $key, $value) {
+    $map = array();
+    foreach($entry as $data){
+      $map = array_merge($map, array($data[$key]=>$data[$value]));
+    }
+    return $map;
   }
 
   //////////*****TRAITEMENTS DES PARAMETRES POUR LA CONSTRUCTION DES REQUETES******//////////
