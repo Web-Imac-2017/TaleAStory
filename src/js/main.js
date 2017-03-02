@@ -8,7 +8,9 @@ import TweenMax from './greenshock/TweenMax.js';
 import TweenLite from './greenshock/TweenMax.js';
 import Media from 'react-media';
 import AppRouter from './app/router';
+import webGL from './webgl.js';
 
+var bg_anim;
 domready(() => {
 		/*const element = <PresentationPage/>;
 		ReactDOM.render(
@@ -16,6 +18,7 @@ domready(() => {
 			document.getElementById('root')
 		);*/
 		ReactDOM.render(AppRouter, document.getElementById('root'));
+		webGL.runWebGL();
 });
 
 class Header extends React.Component{
