@@ -30,14 +30,17 @@ Class Session {
   /*
   @function connectUser
   @param  $userid
+  @param  $keepconnection bool, enregistre l'user dans les cookies si vrai
   @return void
   Enregistre l'id de l'user dans $_SESSION et $_COOKIE
   */
-  static public function connectUser($userid){
+  static public function connectUser($userid, $keepconnection){
     $_SESSION["userid"]=$userid;
-    setcookie("userid",$userid);
-    $hashed_id = password_hash($userid,PASSWORD_DEFAULT);
-    setcookie("hash_id",$hashed_id);
+    if($keepconnection){
+      setcookie("userid",$userid);
+      $hashed_id = password_hash($userid,PASSWORD_DEFAULT);
+      setcookie("hash_id",$hashed_id);
+    }
   }
   /*
   @function disconnectUser
