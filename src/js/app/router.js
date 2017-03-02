@@ -24,7 +24,6 @@ function onUpdate(){
 function createElement(Component, props) {
   return <Component {...props}/>;
 }
-
 AppRouter =
     <Router history={browserHistory} createElement={createElement} onUpdate={onUpdate}>
         <Route path={config.path('')} component={App} onChange={updateAnimation}>

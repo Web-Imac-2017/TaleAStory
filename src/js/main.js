@@ -1,21 +1,21 @@
 'use strict';
 
 import domready  from 'domready';
+import {GlobalBack} from './utils/interfaceback';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import TweenMax from './greenshock/TweenMax.js';
 import TweenLite from './greenshock/TweenMax.js';
-import idGen from './utils/idGenerator';
 import Media from 'react-media';
+import AppRouter from './app/router';
 
 domready(() => {
-		//const element = <TimeRender id="lol"/>;
-		const element = <PresentationPage/>;
+		/*const element = <PresentationPage/>;
 		ReactDOM.render(
 			element,
 			document.getElementById('root')
-		);
-
+		);*/
+		ReactDOM.render(AppRouter, document.getElementById('root'));
 });
 
 class Header extends React.Component{

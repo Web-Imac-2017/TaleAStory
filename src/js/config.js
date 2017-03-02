@@ -1,7 +1,7 @@
 import {GlobalBack} from './utils/interfaceback';
 
 let config = {
-  baseURL : GlobalBack.get('webRoot') ? GlobalBack.get('webRoot') : '/taleastory/',
+  baseURL : '/taleastory',
   path : function(path){
     return this.baseURL + '/' + path;
   },
