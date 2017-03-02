@@ -4,6 +4,7 @@ import RouteComponent from '../utils/routecomponent';
 import {Link} from 'react-router';
 import Scroll from '../utils/scroll';
 import {RightNavigation} from './wrapper';
+import Media from 'react-media';
 
 export default RouteComponent({
   render(){
@@ -20,10 +21,19 @@ export default RouteComponent({
     								<img className="picto element" src={config.imagePath('pictoMountains_large.png')}/>
     								<img className="element" src={config.imagePath('wave_large.png')}/>
     								<p>Lorem ipsum dolor sit amet consecteur nulla adispisin bacon ipsum jambon fromage poulet rotie. Bon alors ici faut pas trop de text pour le responsive, hein, déso.</p>
-    								<div className="buttons cols">
-    									<a href="" className="element button">Faites le test</a>
-    									<a href="" className="element button">Inscription</a>
-    								</div>
+    								<Media query="(max-width: 599px)">
+                        {matches => matches ? (
+                          <div className="buttons rows">
+                              <a href="" className="element button">Faites le test</a>
+                              <a href="" className="element button">Inscription</a>
+                          </div>
+                        ) : (
+                        <div className="buttons cols">
+                            <a href="" className="element button">Faites le test</a>
+                            <a href="" className="element button">Inscription</a>
+                        </div>
+                        )}
+                    </Media>
     							</div>
     						</div>
               </div>

@@ -1,3 +1,5 @@
+import {GlobalBack} from './utils/interfaceback';
+
 let config = {
   baseURL : '/taleastory',
   path : function(path){
