@@ -202,7 +202,7 @@ class Database {
    */
   private function processFROM($tables) {
     $process_from = " FROM ";
-    echo $tables;
+    //echo $tables;
     if (!is_array($tables)) {
       $process_from .= $tables;
     } else if (count($tables) == 1 && !is_array(current($tables))){
