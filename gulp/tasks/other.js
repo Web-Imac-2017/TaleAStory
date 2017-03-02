@@ -15,31 +15,36 @@ var configPhp = {
   srcPath    : './src/php/',         // Les fichiers à watch
   outputDir : config.outputDir + '/php',     // Le dossier ou le build sera généré
 };
+var configRessources = {
+  srcPath    : './ressources/',         // Les fichiers à watch
+  outputDir : config.outputDir,     // Le dossier ou le build sera généré
+};
 
-// La tache pour générer le build scss.
-// C'est un peu similaire à la tache js.
-gulp.task('phpAll', function() {
-  buildJSON(configPhp.srcPath + '*.json')
-  return buildPhp(configPhp.srcPath + '*.php');
+
+gulp.task('otherAll', function() {
+  moveAll(configRessources.srcPath + '**/*');
+  moveAll(configRessources.srcPath + '.*');
+  return buildPHP(configPhp.srcPath + '*.php');
 });
 
-gulp.task('watchPHP', ['phpAll'], function(){
+gulp.task('watchOTHER', ['otherAll'], function(){
 	gulp.watch(configPhp.srcPath + '*.php', function(event){
-		buildPhp(event.path);
+		buildPHP(event.path);
 	});
-  gulp.watch(configPhp.srcPath + '*.json', function(event){
-		buildJSON(event.path);
+  gulp.watch(configRessources.srcPath + '**/*', function(event){
+		moveAll(event.path);
+	});
+  gulp.watch(configRessources.srcPath + '.*', function(event){
+		moveAll(event.path);
 	});
 });
 
-function buildPhp(phpSrc) {
+function buildPHP(phpSrc) {
   return gulp.src(phpSrc)
-    .on('error', mapError)
-    .pipe(gulp.dest(configPhp.outputDir));
+        .pipe(gulp.dest(configPhp.outputDir));
 }
 
-function buildJSON(jsonSrc){
-  return gulp.src(jsonSrc)
-        .pipe(jsonminify())
-        .pipe(gulp.dest(configPhp.outputDir));
+function moveAll(src){
+  return gulp.src(src)
+        .pipe(gulp.dest(configRessources.outputDir));
 }

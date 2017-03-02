@@ -6,12 +6,13 @@ class Database {
   protected $password;
   protected $dbName;
   protected $options;
+  static private $_instance = NULL;
 
   /**
    * Constructeur : configure la connexion avec la base de donnée
    * @param [string] $path [chemin vers le fichier de configuration]
    */
-  public function __construct($path){
+  private function __construct($path){
     //$path = "../../../TaleAStory/src/php/database_config.json"
     $config_json = file_get_contents($path);
     $config_data = json_decode($config_json, TRUE);
@@ -22,6 +23,13 @@ class Database {
     $this->options = array(
       PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
     );
+  }
+
+  static public function instance(){
+    if(is_null(self::$_instance)){
+      self::$_instance = new Database("database_config.json");
+    }
+    return self::$_instance;
   }
 
   /**
