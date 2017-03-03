@@ -44,10 +44,10 @@ let webGL={
 		};
 		
 		this.update = function(){
-			if(this.transition <100 && this.transition>0)
+			if(this.transition <100 && this.transition!=0)
 				this.transition++;
 			
-			if(Math.random()>0.96 && this.particlesLight.length<10){
+			if(Math.random()>0.94 && this.particlesLight.length<10){
 				this.particlesLight.push(new webGL.Particle((Math.random()-0.5)*8,(Math.random()-0.5)*3,Math.pow(Math.exp(Math.random())-1,2)));
 			}
 			for (var i = 0; i < this.particlesLight.length; i++) {
@@ -75,8 +75,8 @@ let webGL={
 		
 		this.animate= function(m){
 			if(this.transition!=0){
-				LIBS.translate(m,[this.animation[0]*this.transition/8. ,this.animation[1]*this.transition/10.,0]);
-				LIBS.scale(m,[1+this.transition/50.,1+this.transition/50.,1]);
+				LIBS.translate(m,[this.animation[0]*this.transition*this.transition/60. ,this.animation[1]*this.transition*this.transition/100.,0]);
+				LIBS.scale(m,[1+this.transition*this.transition/500.,1+this.transition*this.transition/500.,1]);
 				
 			}
 		};
@@ -84,7 +84,8 @@ let webGL={
 
 	Background_Animation: function(r,v,b,a){
 		var bg = new webGL.Background(r,v,b,a);
-		var bg2 = new webGL.Background(Math.random(),Math.random(),Math.random(),1);
+		var color = webGL.randColor();
+		var bg2 = new webGL.Background(color[0],color[1],color[2],1);
 		
 		
 		this.getTransition= function(){
@@ -103,7 +104,7 @@ let webGL={
 		this.print = function(GL,MOVEMATRIX, _hasColor, _Mmatrix, _UOpacity, _Color){
 			
 			GL.uniform1i(_hasColor,0);
-			GL.uniform1f(_UOpacity,1-bg.transition/20);
+			GL.uniform1f(_UOpacity,1-bg.transition*bg.transition/200);
 			GL.uniformMatrix4fv(_Mmatrix, false, MOVEMATRIX);
 			
 			
@@ -119,7 +120,7 @@ let webGL={
 					LIBS.translate(MOVEMATRIX,[bg.animation[0]*bg.transition/8. ,bg.animation[1]*bg.transition/10.,0]);
 				}
 				LIBS.scale(MOVEMATRIX,[bg.particlesLight[i].size+Math.cos(bg.particlesLight[i].anim/100.)*0.01,bg.particlesLight[i].size+Math.sin(bg.particlesLight[i].anim/100.)*0.01,1]);
-				GL.uniform1f(_UOpacity,Math.sin(bg.particlesLight[i].anim/70)*bg.particlesLight[i].opacity-bg.transition/100);
+				GL.uniform1f(_UOpacity,Math.sin(bg.particlesLight[i].anim/70)*bg.particlesLight[i].opacity-bg.transition*Math.sign(bg.transition)/100);
 				GL.uniformMatrix4fv(_Mmatrix, false, MOVEMATRIX);
 				
 				
@@ -135,7 +136,7 @@ let webGL={
 					LIBS.translate(MOVEMATRIX,[bg.animation[0]*bg.transition/8. ,bg.animation[1]*bg.transition/10.,0]);
 				}
 				LIBS.scale(MOVEMATRIX,[bg.particlesBack[i].size+Math.cos(bg.particlesBack[i].anim/100.)*0.01,bg.particlesBack[i].size+Math.sin(bg.particlesBack[i].anim/100.)*0.01,1]);
-				GL.uniform1f(_UOpacity,Math.sin(bg.particlesBack[i].anim/70)*(bg.particlesBack[i].opacity+0.2)/bg.particlesBack[i].size-bg.transition/100);
+				GL.uniform1f(_UOpacity,Math.sin(bg.particlesBack[i].anim/70)*(bg.particlesBack[i].opacity+0.2)/bg.particlesBack[i].size-bg.transition*Math.sign(bg.transition)/100);
 				GL.uniformMatrix4fv(_Mmatrix, false, MOVEMATRIX);
 				
 				
@@ -148,16 +149,24 @@ let webGL={
 			bg.update();
 			LIBS.set_I4(MOVEMATRIX);
 			bg.animate(MOVEMATRIX);
-			bg.activecol[3]=1-bg.transition/100.;
-			bg2.activecol[3]=bg.transition/100.;
-			LIBS.scale(MOVEMATRIX,[6.2,3,1.]);
+			if(bg.transition>0){
+				bg.activecol[3]=1-bg.transition/50.;
+				bg2.activecol[3]=bg.transition/50.;
+			}
+			else{
+				bg.activecol[3]=1;
+			}
+			LIBS.scale(MOVEMATRIX,[7,3.5,1.]);
 			
+			var tmp = Math.sin(bg.transition*bg.transition/(4000- 3500*Math.min(0,Math.sign(bg.transition))*Math.sign(bg.transition) )+ 0.*Math.min(0,Math.sign(bg.transition))*Math.sign(bg.transition))/5;
 			
-			GL.clearColor(bg.activecol[0]*bg.activecol[3] + bg2.activecol[0]*bg2.activecol[3],bg.activecol[1]*bg.activecol[3] + bg2.activecol[1]*bg2.activecol[3],bg.activecol[2]*bg.activecol[3] + bg2.activecol[2]*bg2.activecol[3],1);
-
-			if(bg.transition>=100){
+			GL.clearColor(bg.activecol[0]*bg.activecol[3] + bg2.activecol[0]*bg2.activecol[3] -tmp,bg.activecol[1]*bg.activecol[3] + bg2.activecol[1]*bg2.activecol[3]-tmp,bg.activecol[2]*bg.activecol[3] + bg2.activecol[2]*bg2.activecol[3]-tmp,1);
+			console.log(Math.sin(bg.transition*bg.transition/(4000- 3500*Math.min(0,Math.sign(bg.transition))*Math.sign(bg.transition) )+ 0.*Math.min(0,Math.sign(bg.transition))*Math.sign(bg.transition)));
+			if(bg.transition>=50){
 				bg=bg2;
-				bg2=new webGL.Background(Math.random(),Math.random(),Math.random(),0);
+				var color = webGL.randColor();
+				bg2=new webGL.Background(color[0],color[1],color[2],0);
+				bg.transition=-20;
 			}
 		};
 		
@@ -170,7 +179,7 @@ let webGL={
 	
 	
 	randColor : function(){
-		var color = [0.4+(Math.random()-0.5)/7.,0.6+(Math.random()-0.5)/5.,0.9+(Math.random()-0.5)/10.];
+		var color = [0.1+(Math.random()-0.5)/15.,0.25+(Math.random()-0.5)/15.,0.5+(Math.random()-0.5)/15.];
 		var i = Math.floor(Math.random()*100)%3;
 		var j=(Math.random()*2-1);
 		if(j<0){
@@ -358,7 +367,7 @@ let webGL={
 		return image;
 	  };
 	  
-	  var cube_texture=get_texture(config.imagePath('background_large.png'));
+	  var cube_texture=[get_texture(config.imagePath('background_large.png')),get_texture(config.imagePath('background_white_large.png'))];
 	  var particle_texture=[get_texture(config.imagePath('blur_mask_large.png')),get_texture(config.imagePath('white_blur_large.png'))];
 
 
@@ -386,11 +395,11 @@ let webGL={
 		GL.uniformMatrix4fv(_Vmatrix, false, VIEWMATRIX);
 		
 			
-			if (cube_texture.webglTexture) {
+			if (cube_texture[1].webglTexture) {
 
 			  GL.activeTexture(GL.TEXTURE0);
 
-			  GL.bindTexture(GL.TEXTURE_2D, cube_texture.webglTexture);
+			  GL.bindTexture(GL.TEXTURE_2D, cube_texture[1].webglTexture);
 			}
 			GL.bindBuffer(GL.ARRAY_BUFFER, CUBE_VERTEX);
 			GL.vertexAttribPointer(_position, 3, GL.FLOAT, false,4*(3+2),0) ;
@@ -405,8 +414,8 @@ let webGL={
 				GL.bindTexture(GL.TEXTURE_2D, particle_texture[1].webglTexture);
 			}
 			webGL.bg_anim.printParticles(GL,MOVEMATRIX,_Mmatrix,_UOpacity);
-			if ( particle_texture[0].webglTexture) {
-				GL.bindTexture(GL.TEXTURE_2D, particle_texture[0].webglTexture);
+			if ( particle_texture[1].webglTexture) {
+				GL.bindTexture(GL.TEXTURE_2D, particle_texture[1].webglTexture);
 			}
 			webGL.bg_anim.printParticlesBack(GL,MOVEMATRIX,_Mmatrix,_UOpacity);
 			
