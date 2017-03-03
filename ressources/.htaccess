@@ -1,7 +1,7 @@
 AddDefaultCharset UTF-8
 RewriteEngine on
 RewriteCond %{HTTPS} off
-RewriteRule ^(.*) https://%{HTTP_HOST}%{REQUEST_URI} [R,L]
+#RewriteRule ^(.*) https://%{HTTP_HOST}%{REQUEST_URI} [R,L]
 RewriteRule ^([a-zA-Z0-9\-\_\/]*)$ php/index.php?url=$1 [QSA]
 
 <IfModule mod_headers.c>
