@@ -136,8 +136,7 @@ class Player {
         "Stat" => "Stat.IDStat"
       )
     );
-    $statsQuery = Database::instance()->query($tables,array("PlayerStat.IDPlayer"=>$this->id, "Stat.*" => ""));
-    $stats = $this->arrayMap($statsQuery, 'Name', 'Value');
+    $stats = Database::instance()->query($tables,array("PlayerStat.IDPlayer"=>$this->id,"PlayerStat.Value"=>"", "Stat.*" => ""));
     return $stats;
   }
 
@@ -187,8 +186,7 @@ class Player {
         "Achievement" => "Achievement.IDAchievement"
       )
     );
-    $achievements = Database::instance()->query($tables,array("PlayerAchievement.IDPlayer"=>$this->id, "Achievement.*" => ""));
-    $achievements = $this->arrayMap($achievements, 'IDAchievement', 'Name');
+    $achievements = Database::instance()->query($tables,array("PlayerAchievement.IDPlayer"=>$this->id,"PlayerAchievement.isRead"=>"", "Achievement.*" => ""));
     return $achievements;
   }
 
@@ -200,7 +198,6 @@ class Player {
       )
     );
     $pastSteps = Database::instance()->query($tables,array("PastStep.IDPlayer"=>$this->id, "Step.*" => ""));
-    $pastSteps = $this->arrayMap($pastSteps, 'IDStep', 'Name');
     return $pastSteps;
   }
 
