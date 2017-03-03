@@ -28,7 +28,7 @@ AppRouter =
     <Router history={browserHistory} createElement={createElement} onUpdate={onUpdate}>
         <Route path={config.path('')} component={App} onChange={updateAnimation}>
           <IndexRedirect to={config.path('home')} />
-          <Route path='home' component={Wrapper} className="screen presentationPageScreen01 blueScreen"
+          <Route path='home' component={Wrapper} className="screen presentationPageScreen01"
               indexComponent={Index} index={1}
               links={[{'path' :'home', 'label' : 'Home'},
                       {'path' :'home/connexion', 'label' : 'Connexion'},
@@ -37,14 +37,14 @@ AppRouter =
             <Route path='brief1' component={Pres01} index={2}/>
             <Route path='brief2' component={Pres02} index={3}/>
           </Route>
-          <Route path='sign' component={Wrapper} index={2} className="screen presentationPageScreen03 orangeScreen">
+          <Route path='sign' component={Wrapper} index={2} className="screen presentationPageScreen03">
             <Route path='in' component={Connexion} index={2}/>
             <Route path='up' component={Inscription} index={3}/>
           </Route>
           <Route path='signadmin' component={Wrapper} index={3} className="screen">
             <IndexRoute component={ConnexionAdmin} index={1}/>
           </Route>
-          <Route path='admin' component={Wrapper} index={1} className="screen purpleScreen">
+          <Route path='admin' component={Wrapper} index={2} className="screen">
             <IndexRedirect to={config.path('admin/maker')} />
             <Route path='maker' component={Maker} index={1}/>
           </Route>

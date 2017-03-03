@@ -8,7 +8,7 @@ import TweenMax from './greenshock/TweenMax.js';
 import TweenLite from './greenshock/TweenMax.js';
 import Media from 'react-media';
 import AppRouter from './app/router';
-import webGL from './webgl.js';
+import webGL from './webgl/webgl.js';
 
 var bg_anim;
 domready(() => {
@@ -22,7 +22,7 @@ domready(() => {
 });
 
 class Header extends React.Component{
-
+	
 	render() {
 		if (this.props.logged == 1) {
 			return (

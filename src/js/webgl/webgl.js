@@ -1,15 +1,36 @@
 'use strict';
 
 import LIBS from './libs.js';
-import config from './config.js';
+import config from '../config.js';
 
 let webGL={
 	bg_anim: null,
+	
+	
+	Particle: function(x,y,size){
+		this.x=x;
+		this.y=y;
+		this.direction=[Math.random(),Math.random()];
+		this.size=size;
+		this.anim=0;
+		this.opacity = Math.random()/3;
+		this.update=function(){
+			this.x+=this.direction[0]/300.;
+			this.y+=this.direction[1]/300.;
+			this.anim++;
+		}
+		
+	},
+	
+	
 	 Background: function(r,v,b,a){
 		this.activecol=[r,v,b,a];
 
 		this.animation=[0,0,0];
 		this.transition=0;
+		
+		this.particlesLight=[];
+		this.particlesBack=[];
 		
 		this.addActiveCol = function (r,v,b,a) {
 			this.activecol=[r,v,b,a];
@@ -25,16 +46,39 @@ let webGL={
 		this.update = function(){
 			if(this.transition <100 && this.transition>0)
 				this.transition++;
-
+			
+			if(Math.random()>0.96 && this.particlesLight.length<10){
+				this.particlesLight.push(new webGL.Particle((Math.random()-0.5)*8,(Math.random()-0.5)*3,Math.pow(Math.exp(Math.random())-1,2)));
+			}
+			for (var i = 0; i < this.particlesLight.length; i++) {
+				if(this.particlesLight[i].anim>400)
+					this.particlesLight.shift();
+				else{
+					this.particlesLight[i].update();
+				}
+			}
+			
+			if(Math.random()>0.98 && this.particlesBack.length<10){
+				this.particlesBack.push(new webGL.Particle(5.2*parseInt(Math.sign((Math.random()-0.5)))-0.2,(Math.random()-0.5),Math.random()+1));
+			}
+			if(Math.random()>0.97 && this.particlesBack.length<10){
+				this.particlesBack.push(new webGL.Particle(11*(Math.random()-0.5),2.5*parseInt(Math.sign((Math.random()-0.5)))-0.1,Math.random()+1));
+			}
+			for (var i = 0; i < this.particlesBack.length; i++) {
+				if(this.particlesBack[i].anim>400)
+					this.particlesBack.shift();
+				else{
+					this.particlesBack[i].update();
+				}
+			}
 		};
 		
 		this.animate= function(m){
 			if(this.transition!=0){
-				LIBS.translate(m,[this.animation[0]*this.transition/8. ,this.animation[1]*this.transition/10.+ this.animation[2]*this.transition/20.,0]);
+				LIBS.translate(m,[this.animation[0]*this.transition/8. ,this.animation[1]*this.transition/10.,0]);
 				LIBS.scale(m,[1+this.transition/50.,1+this.transition/50.,1]);
 				
 			}
-
 		};
 	},
 
@@ -59,13 +103,45 @@ let webGL={
 		this.print = function(GL,MOVEMATRIX, _hasColor, _Mmatrix, _UOpacity, _Color){
 			
 			GL.uniform1i(_hasColor,0);
-			GL.uniform1f(_UOpacity,1-bg.transition/100);
+			GL.uniform1f(_UOpacity,1-bg.transition/20);
 			GL.uniformMatrix4fv(_Mmatrix, false, MOVEMATRIX);
 			
 			
 			GL.drawElements(GL.TRIANGLES, 2*3, GL.UNSIGNED_SHORT, 0);
 			
 		};
+		
+		this.printParticles= function(GL,MOVEMATRIX,_Mmatrix,_UOpacity){
+			for (var i = 0; i < bg.particlesLight.length; i++) {
+				LIBS.set_I4(MOVEMATRIX);
+				LIBS.translate(MOVEMATRIX,[bg.particlesLight[i].x ,bg.particlesLight[i].y,0]);
+				if(bg.transition!=0){
+					LIBS.translate(MOVEMATRIX,[bg.animation[0]*bg.transition/8. ,bg.animation[1]*bg.transition/10.,0]);
+				}
+				LIBS.scale(MOVEMATRIX,[bg.particlesLight[i].size+Math.cos(bg.particlesLight[i].anim/100.)*0.01,bg.particlesLight[i].size+Math.sin(bg.particlesLight[i].anim/100.)*0.01,1]);
+				GL.uniform1f(_UOpacity,Math.sin(bg.particlesLight[i].anim/70)*bg.particlesLight[i].opacity-bg.transition/100);
+				GL.uniformMatrix4fv(_Mmatrix, false, MOVEMATRIX);
+				
+				
+				GL.drawElements(GL.TRIANGLES, 2*3, GL.UNSIGNED_SHORT, 0);
+			}
+		}
+		
+		this.printParticlesBack= function(GL,MOVEMATRIX,_Mmatrix,_UOpacity){
+			for (var i = 0; i < bg.particlesBack.length; i++) {
+				LIBS.set_I4(MOVEMATRIX);
+				LIBS.translate(MOVEMATRIX,[bg.particlesBack[i].x ,bg.particlesBack[i].y,0]);
+				if(bg.transition!=0){
+					LIBS.translate(MOVEMATRIX,[bg.animation[0]*bg.transition/8. ,bg.animation[1]*bg.transition/10.,0]);
+				}
+				LIBS.scale(MOVEMATRIX,[bg.particlesBack[i].size+Math.cos(bg.particlesBack[i].anim/100.)*0.01,bg.particlesBack[i].size+Math.sin(bg.particlesBack[i].anim/100.)*0.01,1]);
+				GL.uniform1f(_UOpacity,Math.sin(bg.particlesBack[i].anim/70)*(bg.particlesBack[i].opacity+0.2)/bg.particlesBack[i].size-bg.transition/100);
+				GL.uniformMatrix4fv(_Mmatrix, false, MOVEMATRIX);
+				
+				
+				GL.drawElements(GL.TRIANGLES, 2*3, GL.UNSIGNED_SHORT, 0);
+			}
+		}
 		
 
 		this.update = function(GL,MOVEMATRIX){
@@ -74,23 +150,41 @@ let webGL={
 			bg.animate(MOVEMATRIX);
 			bg.activecol[3]=1-bg.transition/100.;
 			bg2.activecol[3]=bg.transition/100.;
-			LIBS.translateX(MOVEMATRIX,-0.4);
-			LIBS.scale(MOVEMATRIX,[7.5,3,1.]);
+			LIBS.scale(MOVEMATRIX,[6.2,3,1.]);
 			
 			
 			GL.clearColor(bg.activecol[0]*bg.activecol[3] + bg2.activecol[0]*bg2.activecol[3],bg.activecol[1]*bg.activecol[3] + bg2.activecol[1]*bg2.activecol[3],bg.activecol[2]*bg.activecol[3] + bg2.activecol[2]*bg2.activecol[3],1);
 
 			if(bg.transition>=100){
 				bg=bg2;
-				bg2=new Background(Math.random(),Math.random(),Math.random(),0);
+				bg2=new webGL.Background(Math.random(),Math.random(),Math.random(),0);
 			}
 		};
 		
+		
+		this.getColor = function(){
+			return bg.activecol;
+		}
+		
+	},
+	
+	
+	randColor : function(){
+		var color = [0.4+(Math.random()-0.5)/7.,0.6+(Math.random()-0.5)/5.,0.9+(Math.random()-0.5)/10.];
+		var i = Math.floor(Math.random()*100)%3;
+		var j=(Math.random()*2-1);
+		if(j<0){
+			j=-1;
+		}
+		else
+			j=1;
+		return [color[i],color[Math.abs((i+j)%3)],color[Math.abs((i-j)%3)],1];
 	},
 
 
 	runWebGL: function(){
-		webGL.bg_anim = new this.Background_Animation(0.2,0.,0.6,1.);
+		var color = this.randColor();
+		webGL.bg_anim = new this.Background_Animation(color[0],color[1],color[2],color[3]);
 		var CANVAS=document.getElementById("your_canvas");
 	  CANVAS.width=window.innerWidth;
 	  CANVAS.height=window.innerHeight;
@@ -265,6 +359,7 @@ let webGL={
 	  };
 	  
 	  var cube_texture=get_texture(config.imagePath('background_large.png'));
+	  var particle_texture=[get_texture(config.imagePath('blur_mask_large.png')),get_texture(config.imagePath('white_blur_large.png'))];
 
 
 	  /*========================= DRAWING ========================= */
@@ -289,7 +384,6 @@ let webGL={
 			
 		GL.uniformMatrix4fv(_Pmatrix, false, PROJMATRIX);
 		GL.uniformMatrix4fv(_Vmatrix, false, VIEWMATRIX);
-		GL.uniformMatrix4fv(_Mmatrix, false, MOVEMATRIX);
 		
 			
 			if (cube_texture.webglTexture) {
@@ -304,7 +398,18 @@ let webGL={
 
 			GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, CUBE_FACES);
 		
-		webGL.bg_anim.print(GL,MOVEMATRIX, _hasColor, _Mmatrix,_UOpacity, _Color);
+			webGL.bg_anim.print(GL,MOVEMATRIX, _hasColor, _Mmatrix,_UOpacity, _Color);
+			
+			
+			if ( particle_texture[1].webglTexture) {
+				GL.bindTexture(GL.TEXTURE_2D, particle_texture[1].webglTexture);
+			}
+			webGL.bg_anim.printParticles(GL,MOVEMATRIX,_Mmatrix,_UOpacity);
+			if ( particle_texture[0].webglTexture) {
+				GL.bindTexture(GL.TEXTURE_2D, particle_texture[0].webglTexture);
+			}
+			webGL.bg_anim.printParticlesBack(GL,MOVEMATRIX,_Mmatrix,_UOpacity);
+			
 		
 		GL.flush();
 		window.requestAnimationFrame(animate);

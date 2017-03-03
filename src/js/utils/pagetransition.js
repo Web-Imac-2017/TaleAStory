@@ -1,6 +1,7 @@
 import TweenMax from '../greenshock/TweenMax.js';
 import TweenLite from '../greenshock/TweenMax.js';
 import ReactDOM from 'react-dom'
+import webGL from '../webgl/webgl.js';
 
 let animationOut, animationIn, prevRoute, nextRoute;
 let animationDuration  = 1.55;
@@ -55,6 +56,7 @@ function outUp(dom) {
 }
 
 function inUp(dom) {
+  webGL.bg_anim.move(0,1,0);
   return TweenLite.fromTo(dom, animationDuration, {y:"100%", opacity:0}, {y:"0%", opacity:1});
 }
 
@@ -63,6 +65,7 @@ function outDown(dom) {
 }
 
 function inDown(dom) {
+	webGL.bg_anim.move(0,-1,0);
   return TweenLite.fromTo(dom, animationDuration,{y:"-100%", opacity:0},{y:"0%", opacity:1});
 }
 
@@ -71,6 +74,7 @@ function outLeft(dom) {
 }
 
 function inLeft(dom) {
+  webGL.bg_anim.move(-1,0,0);
   return TweenLite.fromTo(dom, animationDuration, {x:"100%", opacity:0}, {x:"0%", opacity:1});
 }
 
@@ -79,6 +83,7 @@ function outRight(dom) {
 }
 
 function inRight(dom) {
+  webGL.bg_anim.move(1,0,0);
   return TweenLite.fromTo(dom, animationDuration,{x:"-100%", opacity:0},{x:"0%", opacity:1});
 }
 
@@ -88,6 +93,8 @@ function outDefault(dom) {
 }
 
 function inDefault(dom) {
+  if(webGL.bg_anim != null)
+	webGL.bg_anim.move(0,0,1);
   return TweenLite.fromTo(dom, animationDuration, {opacity:0}, {opacity:1});
 }
 
