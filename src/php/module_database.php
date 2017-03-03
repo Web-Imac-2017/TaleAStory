@@ -121,7 +121,10 @@ class Database {
     $values = $this->processValues($entries);
     $statement = $into.$fields.$values;
     echo "\n".$statement."\n";
-    return $this->sendInsert($statement, $entries);
+    $this->sendInsert($statement, $entries);
+    $id = $this->query($table, $entries);
+    $id = $id[0][0];
+    return $id;
   }
 
   private function sendInsert($statement, $entries) {

@@ -25,12 +25,13 @@ Class Step {
   */
   public function save() {
      $entries = array(
+       'IDStep' => "",
        'ImgPath' => $this->imgpath,
        'Body' => $this->body,
        'Question' => $this->question,
        'IDType' => $this->idType
      );
-     Database::instance()->insert(self::$table, $entries);
+     $id = Database::instance()->insert(self::$table, $entries);
      //SOLUTION TEMP POUR LES TEST - A MODIFIER lorque insert renverra directement l'ID
      $id = Database::instance()->query(self::$table, array("ImgPath" =>"$this->imgpath", "Body" =>$this->body,"Question"=>$this->question, "IDType"=>$this->idType, "IDStep"=>""));
      //var_dump($id);

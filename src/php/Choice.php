@@ -167,7 +167,9 @@ class Choice {
   Check si un joueur a le droit de faire un choix (items recquis, stats recquises par le choix)
   */
   public function checkPlayerRequirements($player){
-    $player_stats =  $player->stats();
+    $pStatsQuery =  $player->stats();
+    $player_stats = $this->arrayMap($pStatsQuery, 'Name', 'Value');
+
     $tables = array(
        array(
          "StatRequirement" => "StatRequirement.IDStat",
@@ -177,12 +179,17 @@ class Choice {
     $statsQuery = Database::instance()->query($tables,array("StatRequirement.IDChoice"=>"$this->id","StatRequirement.Value" => "", "Stat.Name"=>""));
     $requiried_stats = $this->arrayMap($statsQuery, 'Name', 'Value');
 
+    //var_dump($player_stats);
+    //var_dump($requiried_stats);
+
     foreach ($requiried_stats as $key => $value) {
       if(!isset($player_stats["$key"]) || $value>$player_stats["$key"])
         return false;
     }
 
-    $player_items =  $player->items();
+    $pItemsQuery =  $player->items();
+    $player_items = $this->arrayMap($pItemsQuery, 'Name', 'quantity');
+
     $tables = array(
        array(
          "ItemRequirement" => "ItemRequirement.IDItem",
