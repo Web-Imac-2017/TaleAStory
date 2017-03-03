@@ -177,6 +177,13 @@ class Database {
     echo "delete ok";
   }
 
+  /**
+   * [arrayMap description]
+   * @param  [type] $entry [description]
+   * @param  [string] $key   [champ de la table, si int le tableau retourné aura des index numériques incrémentés à partir de 0]
+   * @param  [type] $value [description]
+   * @return [type]        [description]
+   */
   public function arrayMap($entry, $key, $value) {
     $map = array();
     foreach($entry as $data){
