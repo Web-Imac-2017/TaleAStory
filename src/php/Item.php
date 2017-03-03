@@ -15,13 +15,22 @@ Class Item {
   public function save($name, $imgpath, $brief) {
     $table = "Item";
     $entries = array(
-      "ID" => "",
-      'name' = $this->$name;
-      'imgpath' = $this->$imgpath;
-      'brief' = $this->brief;
+      "IDItem" => "",
+      'name' => $this->name,
+      'imgpath' => $this->imgpath,
+      'brief' => $this->brief
     );
-    $db->insert($table, $entries);
+    Database::instance()->insert($table, $entries);
     }
+
+    public function delete() {
+      $table = "Item";
+      $entries = array(
+        "IDItem" => $this->id
+      );
+      Database::instance()->delete($table, $entries);
+    }
+
   }
 
 ?>

@@ -15,12 +15,22 @@ Class Achievement {
   public function save($name, $imgpath, $brief) {
     $table = "Item";
     $entries = array(
-      "ID" => "",
-      'name' = $this->$name;
-      'imgpath' = $this->$imgpath;
-      'brief' = $this->brief;
+      "IDAchievement" => "",
+      'name' => $this->name,
+      'imgpath' => $this->imgpath,
+      'brief' => $this->brief
     );
-    $db->insert($table, $entries);
+    Database::instance()->insert($table, $entries);
+    }
+
+    public function delete() {
+      $table = "PlayerAchievement";
+      $entries = array(
+        "IDAchievement" => $this->id
+      );
+      Database::instance()->delete($table, $entries);
+      $table = "Achievement";
+      Database::instance()->delete($table, $entries);
     }
   }
 
