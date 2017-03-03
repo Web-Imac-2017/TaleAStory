@@ -1,14 +1,17 @@
 <?php
 
-  require 'model_joueur.php';
-  require 'module_database.php';
+  require 'model_Player.php';
   require 'Choice.php';
 
-  $db = new Database("../../../TaleAStory/ressources/php/database_config.json");
+  $Lou = Player::connect("marcel", "inconnus");
 
-  $Lou = new Joueur($db);
-  $c = new Choice(1);
-
+  $c = new Choice("42",1,"transition text",2);
+  //var_dump($c);
+  $cId = $c->save();
+  var_dump($cId);
+  $c->id=5;
+  var_dump($c);
+  var_dump($Lou);
   $c->checkPlayerRequirements($Lou);
 
 
