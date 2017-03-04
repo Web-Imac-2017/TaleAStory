@@ -144,7 +144,7 @@ header {
 		transition : all 0.5s;
 		opacity: 0;
 		height: 250px;
-		z-index: 15;
+		z-index: 5;
 	}
 
 	.profileMenu {
@@ -162,6 +162,10 @@ header {
 			width: 20px;
 			height: 20px;
 		}
+	}
+
+	.profileLink {
+		z-index: 10;
 	}
 
 }

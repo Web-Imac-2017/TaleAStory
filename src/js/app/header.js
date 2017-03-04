@@ -48,7 +48,7 @@ class HeaderRegistered extends React.Component{
 			<header>
 				<Link to={config.path('')}><h1>Tale A Story</h1></Link>
 				<div className="links">
-					<Link to={config.path('profils/account')} onMouseOver={this.onHover}>{this.props.name + ' ' + this.props.surname}</Link>
+					<Link className="profileLink" to={config.path('profils/account')} onMouseOver={this.onHover}>{this.props.name + ' ' + this.props.surname}</Link>
 					<img className="rounded profilPic" src={config.imagePath(this.props.img)}/>
 				</div>
 				<ProfileMenu/>
