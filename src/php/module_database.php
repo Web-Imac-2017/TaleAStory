@@ -27,7 +27,7 @@ class Database {
 
   static public function instance(){
     if(is_null(self::$_instance)){
-      self::$_instance = new Database("database_config.json");
+      self::$_instance = new Database("../../ressources/php/database_config.json");
     }
     return self::$_instance;
   }
@@ -129,7 +129,7 @@ class Database {
     $id = $this->query($table, $entries);
     $id = $id[0][$champId];
     return $id;
-    
+
   }
 
   private function sendInsert($statement, $entries) {
@@ -195,7 +195,7 @@ class Database {
   public function arrayMap($entry, $key, $value) {
     $map = array();
     foreach($entry as $data){
-      $map = array_merge($map, array($data[$key]=>$data[$value]));
+      $map[$data[$key]] = $data[$value];
     }
     return $map;
   }
@@ -328,6 +328,8 @@ class Database {
     }
     return $process_set;
   }
+
+
 
 }
 

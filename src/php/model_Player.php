@@ -113,21 +113,8 @@ class Player {
   }
   */
 
-  /**
-   * [arrayMap description]
-   * @param  [type] $entry [description]
-   * @param  [string] $key   [champ de la table, si int le tableau retourné aura des index numériques incrémentés à partir de 0]
-   * @param  [type] $value [description]
-   * @return [type]        [description]
-   */
-  public function arrayMap($entry, $key, $value) {
-    $map = array();
-    foreach($entry as $data){
-      $map = array_merge($map, array($data[$key]=>$data[$value]));
-    }
-    return $map;
-  }
 
+///////------STATS------//////
   public function stats() {
     echo "stats";
     $tables = array(
@@ -137,7 +124,16 @@ class Player {
       )
     );
     $stats = Database::instance()->query($tables,array("PlayerStat.IDPlayer"=>$this->id,"PlayerStat.Value"=>"", "Stat.*" => ""));
+    $stats = Database::instance()->arrayMap($stats, "IDStat", "Value");
     return $stats;
+  }
+
+  public function alterStats($newstats){
+
+    foreach($newstats as $id => $value){
+      Database::instance()->update("PlayerStat",array("Value" => $value), array("IDPlayer" => $this->id, "IDStat"=> $id));
+    }
+
   }
 
 ///////------ITEMS------//////
@@ -214,7 +210,7 @@ class Player {
    Database::instance()->insert("PastStep",$entries);
 
   }
-
+/*
   public function alterStats($newStats){
     //$newStats = array($stats => $valeur)
 
@@ -233,7 +229,7 @@ class Player {
       }
     }
   }
-
+*/
   public function changeImage($path){
     $this->imgpath = $path;
     Database::instance()->update("Player", array("ImgPath" => $path), array("IDPlayer"=>$this->id));
@@ -271,9 +267,10 @@ class Admin {
     $player = Player::connect($login, $pwd);
     $id = Database::instance()->query("admin", array("IDAdmin"=>"", "IDPLayer"=>$player->id));
     $id = $id[0]['IDAdmin'];
-    if(!$id || !$player) {return NULL;}
-    $admin = new Admin($id, $player);
-    return $admin;
+    if(!$id && !$player) {return NULL;}
+    else if(!$id) {$admin = NULL;}
+    else {$admin = new Admin($id, $player);}
+    return array("admin"=>$admin, "player"=>$player);
   }
 }
 
