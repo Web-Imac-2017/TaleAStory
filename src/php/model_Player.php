@@ -167,6 +167,22 @@ class Player {
 
   }
 
+  public function addItems($items) {
+    foreach($items as $item) {
+      var_dump($item);
+      $quantity = Database::instance()->query("Inventory",Array("IDPlayer"=>$this->id, "IDItem"=>$item->id, "quantity"=>""));
+      $quantity = $quantity[0]['quantity'];
+      echo "<pre>".var_export($quantity, true)."</pre>";
+      if($quantity) {
+        if($quantity<10){$quantity++;}
+        Database::instance()->update("Inventory",Array("quantity"=>$quantity),Array("IDPlayer"=>$this->id, "IDItem"=>$item->id));
+      }
+        else {
+        Database::instance()->insert("Inventory", Array("IDPlayer"=>$this->id, "IDItem"=>$item->id, "quantity"=>1));
+      }
+    }
+  }
+
   public function removeItem($item) {
     $quantity = Database::instance()->query("Inventory",Array("IDPlayer"=>$this->id, "IDItem"=>$item->id, "quantity"=>""));
     $quantity = $quantity[0]['quantity'];
@@ -178,7 +194,8 @@ class Player {
       Database::instance()->delete("Inventory",Array("IDPlayer"=>$this->id, "IDItem"=>$item->id));
     }
   }
-
+  
+  ///////------ACHIEVEMENTS------//////
   public function achievements() {
     $tables = array(
       array(
@@ -188,6 +205,25 @@ class Player {
     );
     $achievements = Database::instance()->query($tables,array("PlayerAchievement.IDPlayer"=>$this->id,"PlayerAchievement.isRead"=>"", "Achievement.*" => ""));
     return $achievements;
+  }
+
+  public function addAchievement($achievement) {
+    $player_achievement = Database::instance()->query("PlayerAchievement",Array("IDPlayer"=>$this->id, "IDAchivement"=>$achievement->id, "isRead"=>""));
+    echo "<pre>".var_export($player_achievement, true)."</pre>";
+    if($player_achivement == NULL) {
+      Database::instance()->insert("PlayerAchievement", Array("IDPlayer"=>$this->id, "IDItem"=>$achievement->id, "isRead"=>false));
+    }
+  }
+
+  public function addAchievements($achievements) {
+
+    foreach($achievements as $player_achievement) {
+      $player_achievement = Database::instance()->query("PlayerAchievement",Array("IDPlayer"=>$this->id, "IDAchivement"=>$achievement->id, "isRead"=>""));
+      echo "<pre>".var_export($player_achievement, true)."</pre>";
+      if($player_achivement == NULL) {
+        Database::instance()->insert("PlayerAchievement", Array("IDPlayer"=>$this->id, "IDItem"=>$achievement->id, "isRead"=>false));
+      }
+    }
   }
 
   public function pastSteps() {
