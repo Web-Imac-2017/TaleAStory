@@ -133,18 +133,26 @@ header {
 	}
 
 	#profilePopup {
-		display: none;
+		/*display: none;*/
+		position: absolute;
+		right: -250px;
+		top: 0px;
+		width: 300px;
+		padding-top: 80px;
+		padding-right: 100px;
+		padding-left: 40px;
+		transition : all 0.5s;
+		opacity: 0;
+		height: 250px;
+		z-index: 15;
 	}
 
 	.profileMenu {
-		position: absolute;
 		background-color: rgba(0,0,0,0.50);
-		right: 4%;
-		top: 25px;
 		line-height: 2px;
 		padding: 5px;
-		z-index: 15;
-		margin: 50px;
+		margin: auto;
+		position: absolute;
 
 		div {
 			margin: 10px;
