@@ -14,21 +14,6 @@ class Choice {
    $this->idNextStep = $idNextStep;
 
   }
-  /**
-   * [arrayMap description]
-   * @param  [type] $entry [description]
-   * @param  [string] $key   [champ de la table, si int le tableau retourné aura des index numériques incrémentés à partir de 0]
-   * @param  [type] $value [description]
-   * @return [type]        [description]
-   */
-  public function arrayMap($entry, $key, $value) {
-    $map = array();
-    foreach($entry as $data){
-      //var_dump($data);
-      $map = array_merge($map, array($data[$key]=>$data[$value]));
-    }
-    return $map;
-  }
 
   /*
   @function save
@@ -108,7 +93,7 @@ class Choice {
           )
        );
        $statsQuery = Database::instance()->query($tables,array("StatRequirement.IDChoice"=>"$this->id","StatRequirement.Value" => "", "Stat.Name"=>""));
-       $requiried_stats = $this->arrayMap($statsQuery, 'Name', 'Value');
+       $requiried_stats = Database::instance()->arrayMap($statsQuery, 'Name', 'Value');
 
        //on récupère les items gagnés
        $tables = array(
@@ -118,7 +103,7 @@ class Choice {
           )
        );
        $itemsQuery = Database::instance()->query($tables,array("Earn.IDChoice"=>"$this->id","Earn.quantity" => "","Item.Name"=>""));
-       $earned_items = $this->arrayMap($itemsQuery, 'Name', 'quantity');
+       $earned_items =Database::instance()->arrayMap($itemsQuery, 'Name', 'quantity');
 
        //on récupère les items perdus
        $tables = array(
@@ -128,7 +113,7 @@ class Choice {
           )
        );
        $itemsQuery = Database::instance()->query($tables,array("ItemRequirement.IDChoice"=>"$this->id","ItemRequirement.quantity" => "","Item.Name"=>""));
-       $requiried_items = $this->arrayMap($itemsQuery, 'Name', 'quantity');
+       $requiried_items = Database::instance()->arrayMap($itemsQuery, 'Name', 'quantity');
 
        var_dump($requiried_stats);
        var_dump($requiried_items);
@@ -168,7 +153,7 @@ class Choice {
   */
   public function checkPlayerRequirements($player){
     $pStatsQuery =  $player->stats();
-    $player_stats = $this->arrayMap($pStatsQuery, 'Name', 'Value');
+    $player_stats = Database::instance()->arrayMap($pStatsQuery, 'Name', 'Value');
 
     $tables = array(
        array(
@@ -177,7 +162,7 @@ class Choice {
        )
     );
     $statsQuery = Database::instance()->query($tables,array("StatRequirement.IDChoice"=>"$this->id","StatRequirement.Value" => "", "Stat.Name"=>""));
-    $requiried_stats = $this->arrayMap($statsQuery, 'Name', 'Value');
+    $requiried_stats = Database::instance()->arrayMap($statsQuery, 'Name', 'Value');
 
     //var_dump($player_stats);
     //var_dump($requiried_stats);
@@ -188,7 +173,7 @@ class Choice {
     }
 
     $pItemsQuery =  $player->items();
-    $player_items = $this->arrayMap($pItemsQuery, 'Name', 'quantity');
+    $player_items = Database::instance()->arrayMap($pItemsQuery, 'Name', 'quantity');
 
     $tables = array(
        array(
@@ -198,7 +183,7 @@ class Choice {
     );
 
     $itemsQuery = Database::instance()->query($tables,array("ItemRequirement.IDChoice"=>"$this->id","ItemRequirement.quantity" => "","Item.Name"=>""));
-    $requiried_items = $this->arrayMap($itemsQuery, 'Name', 'quantity');
+    $requiried_items = Database::instance()->arrayMap($itemsQuery, 'Name', 'quantity');
 
     //var_dump($player_items);
     //var_dump($requiried_items);
