@@ -11,9 +11,9 @@ class RightNavigation extends React.Component{
 		return  <div className="index">
     					<div className="verticalLine"></div>
     					<div className="indexContent">
-                <Link to={config.path('home')}>01</Link>
-                <Link to={config.path('home/brief1')}>02</Link>
-                <Link to={config.path('home/brief2')}>03</Link>
+                <Link to={config.path('home')} data-content="Accueil">01</Link>
+                <Link to={config.path('home/brief1')} data-content="Présentation">02</Link>
+                <Link to={config.path('home/brief2')} data-content="L'Aventure">03</Link>
     					</div>
     				</div>
 	}
@@ -47,7 +47,7 @@ export default RouteComponent({
     <ul className="header">
       {links}
     </ul>
-    */
+    */    
     return  <div id="wrapper" className={this.props.route.className}>
               {header}
 

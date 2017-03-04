@@ -1,4 +1,5 @@
 @import './reset';
+@import './profil';
 
 $break-tiny: 340px;
 $break-small: 560px;
@@ -67,7 +68,7 @@ header {
 	padding-left: 5%;
 	padding-right: 5%;
 	padding-top: 3%;
-	height: auto;
+	height: 70px;
 	font-size: 10px;
 	font-family: 'Bjorn';
 	font-weight: lighter;
@@ -75,8 +76,7 @@ header {
 
 	h1 {
 		float: left;
-		font-size: 12px;
-		margin-bottom: 10px;
+		font-size: 10px;
 	}
 
 	.links {
@@ -88,7 +88,6 @@ header {
 			height: 32px;
 			margin: auto;
 			float: left;
-			position: absolute;
 			top: -8px;
 			left: 5px;
 		}
@@ -133,16 +132,19 @@ header {
 		transition : all 0.3s;
 	}
 
+	#profilePopup {
+		display: none;
+	}
+
 	.profileMenu {
-		width: 250px;
-		display: block;
 		position: absolute;
 		background-color: rgba(0,0,0,0.50);
-		right: 5%;
-		top: 75px;
+		right: 4%;
+		top: 25px;
 		line-height: 2px;
 		padding: 5px;
 		z-index: 15;
+		margin: 50px;
 
 		div {
 			margin: 10px;
@@ -218,7 +220,7 @@ header {
 		color: #fff;
 		font-family: 'Bjorn';
 		text-transform: uppercase;
-		font-size: 12px;
+		font-size: 10px;
 		letter-spacing: 5px;
 		text-decoration: none;
 		margin: 0px 20px 0px 0px;
@@ -296,8 +298,8 @@ header {
 	margin: auto;
 	display: flex;
 	flex-direction: row;
-	height: 60%;
-	width: 100%;
+	height: 100%;
+	width: 95%;
 }
 
 .cols {
@@ -315,7 +317,7 @@ header {
 	flex-direction: row;
 	max-width: $width-index;
 	min-width: $width-index;
-	height: 100%;
+	height: 70%;
     width: 10%;
 	margin: 0px 3%;
 
@@ -337,12 +339,12 @@ header {
    			text-decoration: none;
 			transition : all 0.4s;
 			padding: 8px;
+			font-size : 10px;
    		}
 
 
 		a:before{
 			color: rgba(255,255,255,0);
-			display: block;
 			margin: auto;
 			transform: rotate(270deg);
 			width: 200px;
@@ -352,13 +354,16 @@ header {
 			text-transform: uppercase;
 			position: absolute;
 			transition : all 0.4s;
-			left: -115px;
+			left: -90px;
    			letter-spacing: 3px;
-   			font-size: 12px;
+   			top : -15px;
+   			font-size: 10px;
+   			display : block;
+   			padding-bottom : 30px;
 		}
 
 		a:hover::before{
-			left: -135px;
+			left: -105px;
 			color: rgba(255,255,255,0.9);
 		}
 
@@ -427,7 +432,8 @@ header {
 	align-self: flex-end;
 	padding-bottom: 25px;
 	position: relative;
-	margin: auto;
+	margin: 0 auto;
+	cursor : pointer; 
 	transition : all 0.3s;
 	color: rgba(255,255,255,0.75);
 
@@ -471,7 +477,7 @@ button {
     text-decoration: none;
     display: inline-block;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 10px;
 	font-family: 'Bjorn';
 	letter-spacing: 4px;
 
@@ -555,16 +561,16 @@ button {
 
 .sectionContent {
 	display:inline-block;
-	width: 45%;
+	width: 60%;
 	color: white;
-	font-size: 12px;
+	font-size: 10px;
 	vertical-align: center;
 	margin-left: auto;
 	margin-right: auto;
 
 	p, .buttons {
 		/*width: 80%;*/
-		margin: 20px 15px;
+		margin: 20px 10px;
 		padding: 0px 5%;
 	}
 

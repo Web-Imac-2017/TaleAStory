@@ -11,6 +11,8 @@ import Pres02 from './presentation02'
 import Connexion from './connexion'
 import ConnexionAdmin from './connexionadmin'
 import Inscription from './inscription'
+import Account from './account'
+import Trophy from './trophy'
 import Maker from './storymaker'
 
 let AppRouter, routes;
@@ -40,6 +42,10 @@ AppRouter =
           <Route path='sign' component={Wrapper} index={2} className="screen presentationPageScreen03 orangeScreen">
             <Route path='in' component={Connexion} index={2}/>
             <Route path='up' component={Inscription} index={3}/>
+          </Route>
+          <Route path='profils' component={Wrapper} index={3}>
+            <Route path='account' component={Account} index={1}/>
+            <Route path='trophy' component={Trophy} index={2}/>
           </Route>
           <Route path='signadmin' component={Wrapper} index={3} className="screen">
             <IndexRoute component={ConnexionAdmin} index={1}/>
