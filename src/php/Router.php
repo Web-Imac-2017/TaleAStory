@@ -1,6 +1,6 @@
 <?php
-
 class Router {
+
     static $routes = [];
     static $webRoot = "";
     const DEFAULT_ROUTE = "__default__";
@@ -10,7 +10,6 @@ class Router {
         $script_path = $_SERVER['SCRIPT_NAME'];
         self::$webRoot = str_replace('php/index.php', '', $script_path);
     }
-
 
     public static function insert($path, $callable){
         $path = trim($path, '/');
@@ -30,10 +29,8 @@ class Router {
           }
       }
       if(self::$defaultRoute != null)
-      {
         return self::$defaultRoute->call();
-      }
-      throw new RouterException('No matching routes');
+      throw new RouterException('No matching routes',404);
   }
 
   public static function index(){
@@ -47,9 +44,12 @@ class Router {
   public static function connexion(){
     require"../connexion.html";
   }
-
+  
   public static function setJson($json_path){
     $json = file_get_contents($json_path);
+    if($json == FALSE) {
+      throw new RouterException('Json file not found', 404);
+    }
     $obj_json= json_decode($json, true);
     foreach($obj_json as $key => $value){
       self::insert($key, $value);
