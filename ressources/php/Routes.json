@@ -1,4 +1,5 @@
 {
-  "/":"Router::index",
-  "/connexion":"Router::connexion"
+  "/":"Router\\Router::index",
+  "/connexion":"Router\\Router::connexion",
+  "__default__":"Router\\Router::index"
 }

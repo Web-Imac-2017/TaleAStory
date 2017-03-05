@@ -1,4 +1,5 @@
 <?php
+namespace Router;
 class Router {
 
     static $routes = [];
@@ -34,7 +35,7 @@ class Router {
   }
 
   public static function index(){
-    Response::generateIndex((object)array('userID' => '1',
+    \Response::generateIndex((object)array('userID' => '1',
                                           'userName' => 'Marcel',
                                           'userSurname'=> 'Patulacci',
                                           'userImgPath' => 'patulacci_tiny.jpg',
@@ -44,7 +45,7 @@ class Router {
   public static function connexion(){
     require"../connexion.html";
   }
-  
+
   public static function setJson($json_path){
     $json = file_get_contents($json_path);
     if($json == FALSE) {

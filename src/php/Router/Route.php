@@ -1,4 +1,5 @@
 <?php
+namespace Router;
 class Route {
 
     private $path;

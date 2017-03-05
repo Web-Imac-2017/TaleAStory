@@ -6,7 +6,13 @@ class Autoloader{
     }
 
     static function autoload($class){
-        require $class.'.php';
+
+     $parts = preg_split('#\\\#', $class);
+     $className = array_pop($parts);
+     $path = implode(DS, $parts);
+     $file = $className.'.php';
+     $filepath = ROOT.strtolower($path).DS.$file;
+     require_once ($filepath);
     }
 }
 
