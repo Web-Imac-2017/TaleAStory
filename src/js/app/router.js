@@ -9,9 +9,11 @@ import Index from './index'
 import Pres01 from './presentation01'
 import Pres02 from './presentation02'
 import Connexion from './connexion'
+import ConnexionAdmin from './connexionadmin'
 import Inscription from './inscription'
 import Account from './account'
 import Trophy from './trophy'
+import Maker from './storymaker'
 
 let AppRouter, routes;
 
@@ -24,7 +26,6 @@ function onUpdate(){
 function createElement(Component, props) {
   return <Component {...props}/>;
 }
-
 AppRouter =
     <Router history={browserHistory} createElement={createElement} onUpdate={onUpdate}>
         <Route path={config.path('')} component={App} onChange={updateAnimation}>
@@ -42,9 +43,16 @@ AppRouter =
             <Route path='in' component={Connexion} index={2}/>
             <Route path='up' component={Inscription} index={3}/>
           </Route>
-          <Route path='profils' component={Wrapper} index={3}>
+          <Route path='profils' component={Wrapper} index={3} className="screen presentationPageScreen02 purpleScreen">
             <Route path='account' component={Account} index={1}/>
             <Route path='trophy' component={Trophy} index={2}/>
+          </Route>
+          <Route path='signadmin' component={Wrapper} index={3} className="screen">
+            <IndexRoute component={ConnexionAdmin} index={1}/>
+          </Route>
+          <Route path='admin' component={Wrapper} index={1} className="screen purpleScreen">
+            <IndexRedirect to={config.path('admin/maker')} />
+            <Route path='maker' component={Maker} index={1}/>
           </Route>
         </Route>
     </Router>
