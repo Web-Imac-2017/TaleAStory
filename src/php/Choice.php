@@ -100,6 +100,7 @@ class Choice {
           )
        );
        $itemsQuery = Database::instance()->query($tables,array("Earn.IDChoice"=>"$this->id","Earn.quantity" => "","Item.Name"=>"","Item.IDItem"=>""));
+       var_dump($itemsQuery);
        $earned_items =Database::instance()->arrayMap($itemsQuery, 'IDItem', 'quantity');
 
        //on récupère les items perdus

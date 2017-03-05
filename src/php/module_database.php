@@ -121,15 +121,16 @@ class Database {
     $values = $this->processValues($entries);
     $statement = $into.$fields.$values;
     echo "\n".$statement."\n";
-    $this->sendInsert($statement, $entries);
+    return $this->sendInsert($statement, $entries);
+    /*
     $champId = 'ID'.$table;
-    echo $champId;
+    //echo $champId;
 
     $entries = array_merge($entries, array($champId => ""));
     $id = $this->query($table, $entries);
     $id = $id[0][$champId];
     return $id;
-    
+    */
   }
 
   private function sendInsert($statement, $entries) {
@@ -195,7 +196,7 @@ class Database {
   public function arrayMap($entry, $key, $value) {
     $map = array();
     foreach($entry as $data){
-      $map = array_merge($map, array($data[$key]=>$data[$value]));
+      $map[$data[$key]] = $data[$value];
     }
     return $map;
   }
@@ -283,7 +284,7 @@ class Database {
   private function processArrayEntries($entries) {
     $tabEntries = array();
     foreach ($entries as $entry) {
-      if ($entry != NULL) {
+      if ($entry !== "") {
         array_push($tabEntries, $entry);
       }
     }
@@ -328,6 +329,8 @@ class Database {
     }
     return $process_set;
   }
+
+
 
 }
 
