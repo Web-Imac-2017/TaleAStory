@@ -44,7 +44,7 @@ AppRouter =
           <Route path='signadmin' component={Wrapper} index={3} className="screen">
             <IndexRoute component={ConnexionAdmin} index={1}/>
           </Route>
-          <Route path='admin' component={Wrapper} index={2} className="screen">
+          <Route path='admin' component={Wrapper} index={1} className="screen">
             <IndexRedirect to={config.path('admin/maker')} />
             <Route path='maker' component={Maker} index={1}/>
           </Route>

@@ -75,8 +75,8 @@ let webGL={
 		
 		this.animate= function(m){
 			if(this.transition!=0){
-				LIBS.translate(m,[this.animation[0]*this.transition*this.transition/60. ,this.animation[1]*this.transition*this.transition/100.,0]);
-				LIBS.scale(m,[1+this.transition*this.transition/500.,1+this.transition*this.transition/500.,1]);
+				// LIBS.translate(m,[this.animation[0]*this.transition*this.transition/60. ,this.animation[1]*this.transition*this.transition/100.,0]);
+				// LIBS.scale(m,[1+this.transition*this.transition/500.,1+this.transition*this.transition/500.,1]);
 				
 			}
 		};
@@ -87,11 +87,19 @@ let webGL={
 		var color = webGL.randColor();
 		var bg2 = new webGL.Background(color[0],color[1],color[2],1);
 		var landscape = Math.floor(Math.random()*6);
+		var activate_landscape = true;
 		
 		this.getTransition= function(){
 			return bg.transition;
 		};
 		
+		this.setLandscape= function(x){
+			this.activate_landscape=x;
+		}
+		
+		this.getLandscape= function(){
+			return this.activate_landscape;
+		}
 		
 		this.move=function(x,y,z){
 			bg.animation=[x,y,z];
@@ -100,11 +108,10 @@ let webGL={
 			
 		};
 		
-		
 		this.print = function(GL,MOVEMATRIX, _hasColor, _Mmatrix, _UOpacity, _Color){
 			
 			GL.uniform1i(_hasColor,0);
-			GL.uniform1f(_UOpacity,1-bg.transition*bg.transition/200);
+			GL.uniform1f(_UOpacity,1);//-bg.transition*bg.transition/200);
 			GL.uniformMatrix4fv(_Mmatrix, false, MOVEMATRIX);
 			
 			
@@ -114,14 +121,14 @@ let webGL={
 		
 		this.print_landscape = function(GL,MOVEMATRIX, _hasColor, _Mmatrix, _UOpacity, _Color){
 			LIBS.set_I4(MOVEMATRIX);
-			/*if(bg.transition!=0){
+			if(bg.transition!=0){
 				LIBS.translate(MOVEMATRIX,[bg.animation[0]*bg.transition*bg.transition/60. ,bg.animation[1]*bg.transition*bg.transition/100.,0]);
 				LIBS.scale(MOVEMATRIX,[1+bg.transition*bg.transition/500.,1+bg.transition*bg.transition/500.,1]);
 				
-			}*/
+			}
 			LIBS.scale(MOVEMATRIX,[5.5,3,1.]);
 			GL.uniform1i(_hasColor,0);
-			GL.uniform1f(_UOpacity,0.1-bg.transition*bg.transition/200);
+			GL.uniform1f(_UOpacity,0.1-bg.transition*bg.transition/500);
 			GL.uniformMatrix4fv(_Mmatrix, false, MOVEMATRIX);
 			
 			
@@ -195,7 +202,7 @@ let webGL={
 	
 	
 	randColor : function(){
-		var color = [0.2+(Math.random()-0.5)/15.,0.35+(Math.random()-0.5)/15.,0.7+(Math.random()-0.5)/15.];
+		var color = [0.1+(Math.random()-0.5)/15.,0.25+(Math.random()-0.5)/15.,0.6+(Math.random()-0.5)/15.];
 		var i = Math.floor(Math.random()*100)%3;
 		var j=(Math.random()*2-1);
 		if(j<0){
@@ -384,6 +391,7 @@ let webGL={
 		return image;
 	  };
 	  
+	  
 	  var cube_texture=[get_texture(config.imagePath('background_large.png')),get_texture(config.imagePath('background_white_large.png'))];
 	  var particle_texture=[get_texture(config.imagePath('blur_mask_large.png')),get_texture(config.imagePath('white_blur_large.png'))];
 	  
@@ -419,8 +427,6 @@ let webGL={
 			GL.vertexAttribPointer(_uv, 2, GL.FLOAT, false,4*(3+2),3*4) ;
 
 			GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, CUBE_FACES);
-			console.log(webGL.bg_anim.landscape);
-			console.log(Math.floor(Math.random()*6));
 			if (cube_texture[0].webglTexture) {
 			  GL.activeTexture(GL.TEXTURE0);
 			  GL.bindTexture(GL.TEXTURE_2D, cube_texture[0].webglTexture);
@@ -428,11 +434,12 @@ let webGL={
 			webGL.bg_anim.update(GL,MOVEMATRIX);
 			webGL.bg_anim.print(GL,MOVEMATRIX, _hasColor, _Mmatrix,_UOpacity, _Color);
 			
-			
-			if(landscape_texture[webGL.bg_anim.landscape].webglTexture){
-				GL.bindTexture(GL.TEXTURE_2D, landscape_texture[webGL.bg_anim.landscape].webglTexture);
+			if(webGL.bg_anim.activate_landscape){
+				if(landscape_texture[webGL.bg_anim.landscape].webglTexture){
+					GL.bindTexture(GL.TEXTURE_2D, landscape_texture[webGL.bg_anim.landscape].webglTexture);
+				}
+				webGL.bg_anim.print_landscape(GL,MOVEMATRIX, _hasColor, _Mmatrix,_UOpacity, _Color);
 			}
-			webGL.bg_anim.print_landscape(GL,MOVEMATRIX, _hasColor, _Mmatrix,_UOpacity, _Color);
 			
 			if ( particle_texture[1].webglTexture) {
 				GL.bindTexture(GL.TEXTURE_2D, particle_texture[1].webglTexture);

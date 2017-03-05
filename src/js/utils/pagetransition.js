@@ -66,6 +66,7 @@ function outDown(dom) {
 
 function inDown(dom) {
 	webGL.bg_anim.move(0,-1,0);
+
   return TweenLite.fromTo(dom, animationDuration,{y:"-100%", opacity:0},{y:"0%", opacity:1});
 }
 
@@ -93,8 +94,9 @@ function outDefault(dom) {
 }
 
 function inDefault(dom) {
-  if(webGL.bg_anim != null)
+  if(webGL.bg_anim != null){
 	webGL.bg_anim.move(0,0,1);
+  }
   return TweenLite.fromTo(dom, animationDuration, {opacity:0}, {opacity:1});
 }
 
