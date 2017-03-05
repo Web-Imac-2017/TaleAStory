@@ -91,6 +91,7 @@ let webGL={
 		var musics=[];
 		var sounds=[];
 		var transitions=[];
+		var mute = false;
 		
 		this.getTransition= function(){
 			return bg.transition;
@@ -109,7 +110,8 @@ let webGL={
 			if(bg.transition==0){
 				bg.transition=1;
 				bg.animation=[x,y,z];
-				transitions[0].play();
+				if(!mute)
+					transitions[0].play();
 			}
 			
 		};
@@ -123,6 +125,27 @@ let webGL={
 					this.currentTime = 0;
 					this.play();
 				}, false);
+			musics[0].play();
+			mute = false;
+		}
+		
+		this.muteAll = function(){
+			if(mute == false){
+				mute=true;
+				musics[0].pause();
+				musics[0].currentTime=0;
+				sounds.forEach(function(audio){
+					audio.pause();
+					audio.currentTime=0;
+				});
+			}
+			else{
+				this.unMuteAll();
+			}
+		}
+		
+		this.unMuteAll = function(){
+			mute=false;
 			musics[0].play();
 		}
 		
@@ -210,10 +233,12 @@ let webGL={
 				this.landscape = Math.floor(Math.random()*6);
 			}
 			var x = Math.floor(Math.random()*300)-294;
-			console.log(x);
-			if(x>=0){
-				sounds[x].play();
+			if(!mute){
+				if(x>=0){
+					sounds[x].play();
+				}
 			}
+
 		};
 		
 		
