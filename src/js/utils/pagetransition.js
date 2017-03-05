@@ -26,7 +26,7 @@ function updateAnimation(prev, next, replace, callback){
           animationOut = _animation(outLeft);
           animationIn = _animation(inLeft);
         }
-        else{
+        else if(nextRoute.index < prevRoute.index){
           animationOut = _animation(outRight);
           animationIn = _animation(inRight);
         }
@@ -40,7 +40,7 @@ function updateAnimation(prev, next, replace, callback){
           animationOut = _animation(outUp);
           animationIn = _animation(inUp);
         }
-        else{
+        else if(nextRoute.index < prevRoute.index){
           animationOut = _animation(outDown);
           animationIn = _animation(inDown);
         }

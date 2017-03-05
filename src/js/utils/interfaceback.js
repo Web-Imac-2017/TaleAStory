@@ -1,9 +1,9 @@
 class GlobalBack{
   static get(field){
     if(typeof document._globalBackValues == "undefined")
-      return '';
+      return null;
     if(!(field in document._globalBackValues))
-      return '';
+      return null;
     return document._globalBackValues[field];
   }
   static set(field, value){
