@@ -23,10 +23,10 @@ class HeaderUnregistered extends React.Component{
 	render() {
 		return (
 			<header>
-				<Link to="/"><h1>Tale A Story</h1></Link>
+				<Link to={config.path('home')}><h1>Tale A Story</h1></Link>
 				<div className="links">
-					<a href="">Inscription</a>
-					<a href="">Connexion</a>
+					<Link to={config.path('sign/up')}>Inscription</Link>
+					<Link to={config.path('sign/in')}>Connexion</Link>
 				</div>
 			</header>
 		);
@@ -46,7 +46,7 @@ class HeaderRegistered extends React.Component{
 	render() {
 		return (
 			<header>
-				<Link to={config.path('')}><h1>Tale A Story</h1></Link>
+				<Link to={config.path('home')}><h1>Tale A Story</h1></Link>
 				<div className="links">
 					<Link className="profileLink" to={config.path('profils/account')} onMouseOver={this.onHover}>{this.props.name + ' ' + this.props.surname}</Link>
 					<img className="rounded profilPic" src={config.imagePath(this.props.img)}/>

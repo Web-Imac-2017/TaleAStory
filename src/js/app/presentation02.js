@@ -30,7 +30,7 @@ export default RouteComponent({
                         ) : (
                         <div className="buttons cols">
                             <a href="" className="element button">Faites le test</a>
-                            <a href="" className="element button">Inscription</a>
+                            <Link className="element button" to={config.path('sign/up')}>Inscription</Link>
                         </div>
                         )}
                     </Media>
