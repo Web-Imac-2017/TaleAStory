@@ -30,7 +30,9 @@ class Router {
           }
       }
       if(self::$defaultRoute != null)
+      {
         return self::$defaultRoute->call();
+      }
       throw new RouterException('No matching routes');
   }
 
