@@ -284,7 +284,7 @@ class Database {
   private function processArrayEntries($entries) {
     $tabEntries = array();
     foreach ($entries as $entry) {
-      if ($entry != NULL) {
+      if ($entry !== "") {
         array_push($tabEntries, $entry);
       }
     }

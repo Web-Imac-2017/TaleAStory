@@ -25,8 +25,8 @@ $player = Player::connect("login","pwd");
 echo '///////TEST';
 //$user->changeImage("./lala.jpg");
 //$test = Database::instance()->insert("step", array("IDStep"=>"","Body" => "Lou", "IDType"=>4));
-//$player->alterStats(array(1=>7, 3=>18));
-$player->addItems(array(4=>3, 2=>2, 1=>1));
+$player->alterStats(array(1=>0, 2=>0, 3=>0, 4=>0));
+//$player->addItems(array(4=>3, 2=>2, 1=>1));
 //echo "<pre>".var_export($test, true)."</pre>";
 echo "TEST";
 

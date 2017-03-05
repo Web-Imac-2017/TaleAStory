@@ -157,7 +157,12 @@ class Player {
 
   public function alterStats($newstats){
     foreach($newstats as $id => $value){
-      Database::instance()->update("PlayerStat",array("Value" => $value), array("IDPlayer" => $this->id, "IDStat"=> $id));
+      echo "<p></br>Id = ".$id.", Valeur =".$value."</br></p>";
+      if(Database::instance()->query("PlayerStat", array("IDPlayer" => $this->id, "IDStat"=> $id))==NULL) {
+        Database::instance()->insert("PlayerStat", array("IDPlayer" => $this->id, "IDStat"=> $id, "Value" => $value));
+      } else {
+        Database::instance()->update("PlayerStat",array("Value" => $value), array("IDPlayer" => $this->id, "IDStat"=> $id));
+      }
     }
   }
 
