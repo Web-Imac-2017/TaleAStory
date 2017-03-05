@@ -88,6 +88,9 @@ let webGL={
 		var bg2 = new webGL.Background(color[0],color[1],color[2],1);
 		var landscape = Math.floor(Math.random()*6);
 		var activate_landscape = true;
+		var musics=[];
+		var sounds=[];
+		var transitions=[];
 		
 		this.getTransition= function(){
 			return bg.transition;
@@ -102,11 +105,26 @@ let webGL={
 		}
 		
 		this.move=function(x,y,z){
-			bg.animation=[x,y,z];
-			if(bg.transition==0)
+			
+			if(bg.transition==0){
 				bg.transition=1;
+				bg.animation=[x,y,z];
+				transitions[0].play();
+			}
 			
 		};
+		
+		this.load = function(){
+			landscape = Math.floor(Math.random()*6);
+			musics = [new Audio(config.soundPath('nature_1.wav'))];
+			sounds = [new Audio(config.soundPath('wind_chime1.wav')),new Audio(config.soundPath('wind_chime2.wav')),new Audio(config.soundPath('wind_chime3.wav')),new Audio(config.soundPath('wind_chime4.wav')),new Audio(config.soundPath('wind_chime5.wav')),new Audio(config.soundPath('wind_chime6.mp3'))];
+			transitions=[new Audio(config.soundPath('transition.wav'))];
+			musics[0].addEventListener('ended', function() {
+					this.currentTime = 0;
+					this.play();
+				}, false);
+			musics[0].play();
+		}
 		
 		this.print = function(GL,MOVEMATRIX, _hasColor, _Mmatrix, _UOpacity, _Color){
 			
@@ -191,6 +209,11 @@ let webGL={
 				bg.transition=-20;
 				this.landscape = Math.floor(Math.random()*6);
 			}
+			var x = Math.floor(Math.random()*300)-294;
+			console.log(x);
+			if(x>=0){
+				sounds[x].play();
+			}
 		};
 		
 		
@@ -217,7 +240,7 @@ let webGL={
 	runWebGL: function(){
 		var color = this.randColor();
 		webGL.bg_anim = new this.Background_Animation(color[0],color[1],color[2],color[3]);
-		webGL.bg_anim.landscape = Math.floor(Math.random()*6);
+		webGL.bg_anim.load();
 		var CANVAS=document.getElementById("your_canvas");
 	  CANVAS.width=window.innerWidth;
 	  CANVAS.height=window.innerHeight;
