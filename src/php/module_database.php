@@ -121,15 +121,16 @@ class Database {
     $values = $this->processValues($entries);
     $statement = $into.$fields.$values;
     echo "\n".$statement."\n";
-    $this->sendInsert($statement, $entries);
+    return $this->sendInsert($statement, $entries);
+    /*
     $champId = 'ID'.$table;
-    echo $champId;
+    //echo $champId;
 
     $entries = array_merge($entries, array($champId => ""));
     $id = $this->query($table, $entries);
     $id = $id[0][$champId];
     return $id;
-
+    */
   }
 
   private function sendInsert($statement, $entries) {
