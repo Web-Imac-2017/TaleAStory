@@ -24,7 +24,7 @@ var configRessources = {
 gulp.task('otherAll', function() {
   moveAll(configRessources.srcPath + '**/*');
   moveAll(configRessources.srcPath + '.*');
-  buildPHP(configPhp.srcPath + '*/**.php');
+  buildPHP(configPhp.srcPath + '**/*.php');
   return buildPHP(configPhp.srcPath + '*.php');
 });
 
