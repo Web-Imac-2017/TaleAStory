@@ -13,15 +13,31 @@ Class Achievement {
     $this->brief=$brief;
   }
 
-  public function save($name, $imgpath, $brief) {
+  /*
+  @function save
+  @return $id de l'achievement créé, null si erreur
+  Insère un nouvel achievement en base de données
+  */
+
+  public function save() {
     $entries = array(
-      "IDAchievement" => "",
       'name' => $this->name,
       'imgpath' => $this->imgpath,
       'brief' => $this->brief
     );
-    Database::instance()->insert(self::$table, $entries);
+    $id=Database::instance()->insert(self::$table, $entries);
+    if($id != null){
+      $this->id = $id;
+      return $id;
     }
+    return null;
+    }
+
+    /*
+    @function delete
+    @return $bool faux si erreur, vrai si ok
+    Supprime un achievement donné, ainsi que ses "mentions" dans la tables liée à l'achievement
+    */
 
     public function delete() {
       $entries = array(
@@ -38,7 +54,12 @@ Class Achievement {
       return true;
     }
 
-    }
+    /*
+    @function update
+    @param  $entries array de la forme : "Champ à modifier"=>"nouvelle valeur"
+    @return void
+    Maj un achievement
+    */
 
     public function update($entries) {
       Database::instance()->update(self::$table, $entries, array("IDAchievement"=>$this->id));
