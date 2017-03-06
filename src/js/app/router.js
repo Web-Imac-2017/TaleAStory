@@ -43,7 +43,7 @@ AppRouter =
             <Route path='in' component={Connexion} index={2}/>
             <Route path='up' component={Inscription} index={3}/>
           </Route>
-          <Route path='profils' component={Wrapper} index={3}>
+          <Route path='profils' component={Wrapper} index={3} className="screen presentationPageScreen02 purpleScreen">
             <Route path='account' component={Account} index={1}/>
             <Route path='trophy' component={Trophy} index={2}/>
           </Route>
