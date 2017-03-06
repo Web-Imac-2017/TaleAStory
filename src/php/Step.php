@@ -25,19 +25,16 @@ Class Step {
   */
   public function save() {
      $entries = array(
-       'IDStep' => "",
        'ImgPath' => $this->imgpath,
        'Body' => $this->body,
        'Question' => $this->question,
        'IDType' => $this->idType
      );
      $id = Database::instance()->insert(self::$table, $entries);
-     //SOLUTION TEMP POUR LES TEST - A MODIFIER lorque insert renverra directement l'ID
-     $id = Database::instance()->query(self::$table, array("ImgPath" =>"$this->imgpath", "Body" =>$this->body,"Question"=>$this->question, "IDType"=>$this->idType, "IDStep"=>""));
      //var_dump($id);
      if($id != null){
-       $this->id = $id[0]['IDStep'];
-       return $id[0]['IDStep'];
+       $this->id = $id;
+       return $id;
      }
      return null;
    }
@@ -48,7 +45,6 @@ Class Step {
    Maj une step
    */
    public function update($entries) {
-     //AFFICHE UN MESSAGE D'ERREUR MAIS FONCTIONNE QUAND MEME ??
      Database::instance()->update(self::$table, $entries, array("IDStep"=>$this->id));
    }
    /*
@@ -92,8 +88,10 @@ Class Step {
      //var_dump($choice);
      if($choice && $choice->checkAnswer($answer) && $choice->checkPlayerRequirements($player)) {
        $choice->alterPlayer($player);
-       //A MODIFIER - passer l'objet step à passStep()
-       $player->passStep($choice->IDNextStep);
+       $nextStepArray = Database::instance()->query("Step", array('IDStep' => "$choice->IDNextStep", 'ImgPath' => '', 'Question'=>'', 'Body'=>'', 'IDType'=>''));
+       $nextStep = new Step($nextStepArray[0]['ImgPath'],$nextStepArray[0]['Body'],$nextStepArray[0]['Question'],1,$nextStepArray[0]['IDType']);
+       $nextStep->id = $choice->iDNextStep;
+       $player->passStep($nextStep);
        return $player;
      }
      else {

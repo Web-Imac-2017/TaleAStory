@@ -27,7 +27,7 @@ class Database {
 
   static public function instance(){
     if(is_null(self::$_instance)){
-      self::$_instance = new Database("../../ressources/php/database_config.json");
+      self::$_instance = new Database("database_config.json");
     }
     return self::$_instance;
   }
