@@ -23,6 +23,20 @@ let webGL={
 		
 	},
 	
+	Bird : function(x,y,size){
+		this.x=x;
+		this.y=y;
+		this.direction=[(Math.random()+0.2)*(-Math.sign(x)),Math.random()+0.3];
+		this.size=size;
+		this.anim=0;
+		this.opacity = Math.random()*.60;
+		this.update=function(){
+			this.x+=this.direction[0]*0.75;
+			this.y+=this.direction[1]*0.75;
+			this.anim++;
+		}
+	},
+	
 	
 	 Background: function(r,v,b,a){
 		this.activecol=[r,v,b,a];
@@ -32,6 +46,7 @@ let webGL={
 		
 		this.particlesLight=[];
 		this.particlesBack=[];
+		this.bird=null;
 		
 		this.addActiveCol = function (r,v,b,a) {
 			this.activecol=[r,v,b,a];
@@ -92,6 +107,7 @@ let webGL={
 		var sounds=[];
 		var transitions=[];
 		var mute = false;
+
 		
 		this.getTransition= function(){
 			return bg.transition;
@@ -124,9 +140,9 @@ let webGL={
 		this.load = function(){
 			this.landscape = Math.floor(Math.random()*7);
 			this.activate_landscape = true;
-			sounds = [new Audio(config.soundPath('wind_chime1.wav')),new Audio(config.soundPath('wind_chime2.wav')),new Audio(config.soundPath('wind_chime3.wav')),new Audio(config.soundPath('wind_chime4.wav')),new Audio(config.soundPath('wind_chime5.wav')),new Audio(config.soundPath('wind_chime6.mp3'))];
-			transitions=[new Audio(config.soundPath('transition.wav'))];
-			webGL.music=new Audio(config.soundPath('nature_1.wav'));
+			sounds = [new Audio(config.soundPath('wind_chime1.mp3')),new Audio(config.soundPath('wind_chime2.mp3')),new Audio(config.soundPath('wind_chime3.mp3')),new Audio(config.soundPath('wind_chime4.mp3')),new Audio(config.soundPath('wind_chime5.mp3')),new Audio(config.soundPath('wind_chime6.mp3')),new Audio(config.soundPath('chirp_1.mp3')),new Audio(config.soundPath('chirp_2.mp3')),new Audio(config.soundPath('chirp_3.mp3')),new Audio(config.soundPath('chirp_4.mp3'))];
+			transitions=[new Audio(config.soundPath('transition.wav')),new Audio(config.soundPath('take_off_1.mp3')),new Audio(config.soundPath('take_off_2.mp3')),new Audio(config.soundPath('take_off_3.mp3'))];
+			webGL.music=new Audio(config.soundPath('nature_1.mp3'));
 			webGL.music.loop=true;
 			webGL.music.play();
 			mute = false;
@@ -156,7 +172,7 @@ let webGL={
 		this.print = function(GL,MOVEMATRIX, _hasColor, _Mmatrix, _UOpacity, _Color){
 			
 			GL.uniform1i(_hasColor,0);
-			GL.uniform1f(_UOpacity,1);//-bg.transition*bg.transition/200);
+			GL.uniform1f(_UOpacity,1);
 			GL.uniformMatrix4fv(_Mmatrix, false, MOVEMATRIX);
 			
 			
@@ -171,9 +187,9 @@ let webGL={
 				LIBS.scale(MOVEMATRIX,[1+bg.transition*bg.transition/500.,1+bg.transition*bg.transition/500.,1]);
 				
 			}
-			LIBS.scale(MOVEMATRIX,[5.5,3,1.]);
+			LIBS.scale(MOVEMATRIX,[5.5,5.5*window.innerHeight/window.innerWidth,1.]);
 			GL.uniform1i(_hasColor,0);
-			GL.uniform1f(_UOpacity,0.2-bg.transition*bg.transition/500);
+			GL.uniform1f(_UOpacity,0.1-bg.transition*bg.transition/500);
 			GL.uniformMatrix4fv(_Mmatrix, false, MOVEMATRIX);
 			
 			
@@ -183,7 +199,7 @@ let webGL={
 		this.printParticles= function(GL,MOVEMATRIX,_Mmatrix,_UOpacity){
 			for (var i = 0; i < bg.particlesLight.length; i++) {
 				LIBS.set_I4(MOVEMATRIX);
-				LIBS.translate(MOVEMATRIX,[bg.particlesLight[i].x ,bg.particlesLight[i].y,0]);
+				LIBS.translate(MOVEMATRIX,[bg.particlesLight[i].x ,bg.particlesLight[i].y*2*window.innerHeight/window.innerWidth,0]);
 				if(bg.transition!=0){
 					LIBS.translate(MOVEMATRIX,[bg.animation[0]*bg.transition/8. ,bg.animation[1]*bg.transition/10.,0]);
 				}
@@ -199,7 +215,7 @@ let webGL={
 		this.printParticlesBack= function(GL,MOVEMATRIX,_Mmatrix,_UOpacity){
 			for (var i = 0; i < bg.particlesBack.length; i++) {
 				LIBS.set_I4(MOVEMATRIX);
-				LIBS.translate(MOVEMATRIX,[bg.particlesBack[i].x ,bg.particlesBack[i].y,0]);
+				LIBS.translate(MOVEMATRIX,[bg.particlesBack[i].x ,bg.particlesBack[i].y*2*window.innerHeight/window.innerWidth,0]);
 				if(bg.transition!=0){
 					LIBS.translate(MOVEMATRIX,[bg.animation[0]*bg.transition/8. ,bg.animation[1]*bg.transition/10.,0]);
 				}
@@ -208,6 +224,23 @@ let webGL={
 				GL.uniformMatrix4fv(_Mmatrix, false, MOVEMATRIX);
 				
 				
+				GL.drawElements(GL.TRIANGLES, 2*3, GL.UNSIGNED_SHORT, 0);
+			}
+		}
+		
+		this.printBird=function(GL, MOVEMATRIX,_Mmatrix,_UOpacity){
+			if(bg.bird!= null){
+				LIBS.set_I4(MOVEMATRIX);
+				LIBS.translate(MOVEMATRIX,[bg.bird.x ,bg.bird.y*2*window.innerHeight/window.innerWidth,0]);
+				if(bg.transition!=0){
+					LIBS.translate(MOVEMATRIX,[bg.animation[0]*bg.transition/8. ,bg.animation[1]*bg.transition/10.,0]);
+				}
+				LIBS.rotateZ(MOVEMATRIX,bg.bird.direction[1]);
+				LIBS.scale(MOVEMATRIX,[bg.bird.size+Math.cos(bg.bird.anim/100.)*0.01,bg.bird.size+Math.sin(bg.bird.anim/100.)*0.01,1]);
+				GL.uniform1f(_UOpacity,bg.bird.opacity-bg.transition*Math.sign(bg.transition)/100);
+				GL.uniformMatrix4fv(_Mmatrix, false, MOVEMATRIX);
+					
+					
 				GL.drawElements(GL.TRIANGLES, 2*3, GL.UNSIGNED_SHORT, 0);
 			}
 		}
@@ -225,7 +258,7 @@ let webGL={
 				bg.activecol[3]=1;
 			}
 			//LIBS.scale(MOVEMATRIX,[7,3.5,1.]);
-			LIBS.scale(MOVEMATRIX,[6.5,3,1.]);
+			LIBS.scale(MOVEMATRIX,[6.5,6.5*window.innerHeight/window.innerWidth,1.]);
 			var tmp = Math.sin(bg.transition*bg.transition/(4000- 3500*Math.min(0,Math.sign(bg.transition))*Math.sign(bg.transition) )+ 0.*Math.min(0,Math.sign(bg.transition))*Math.sign(bg.transition))/5;
 			
 			GL.clearColor(bg.activecol[0]*bg.activecol[3] + bg2.activecol[0]*bg2.activecol[3] -tmp,bg.activecol[1]*bg.activecol[3] + bg2.activecol[1]*bg2.activecol[3]-tmp,bg.activecol[2]*bg.activecol[3] + bg2.activecol[2]*bg2.activecol[3]-tmp,1);
@@ -236,10 +269,25 @@ let webGL={
 				bg.transition=-20;
 				this.landscape = Math.floor(Math.random()*6);
 			}
-			var x = Math.floor(Math.random()*300)-294;
 			if(!mute){
+				var x = Math.floor(Math.random()*500)-500+sounds.length;
+
 				if(x>=0){
 					sounds[x].play();
+				}
+			}
+			
+			if(bg.bird==null){
+				if(Math.random()<0.0005){
+					bg.bird=new webGL.Bird((-4-Math.random()*3)*Math.sign(Math.random()-0.5),-3,Math.random()+0.5);
+					transitions[Math.floor(Math.random()*3)+1].play();
+				}
+			}
+			else{
+				if(bg.bird.anim>500)
+					bg.bird=null;
+				else{
+					bg.bird.update();
 				}
 			}
 
@@ -325,8 +373,8 @@ let webGL={
 		webGL.bg_anim = new this.Background_Animation(color[0],color[1],color[2],color[3]);
 		webGL.bg_anim.load();
 		var CANVAS=document.getElementById("your_canvas");
-	  CANVAS.width=window.innerWidth;
-	  CANVAS.height=window.innerHeight;
+	  CANVAS.width = window.innerWidth;
+		CANVAS.height= window.innerHeight ;
 
 	  /*========================= CAPTURE MOUSE EVENTS ========================= */
 
@@ -500,8 +548,8 @@ let webGL={
 	  
 	  var cube_texture=[get_texture(config.imagePath('background_medium.png')),get_texture(config.imagePath('background_white_medium.png'))];
 	  var particle_texture=[get_texture(config.imagePath('blur_mask_tiny.png')),get_texture(config.imagePath('white_blur_tiny.png'))];
-	  
-	  var landscape_texture=[get_texture(config.imagePath('landscape_1_tiny.png')),get_texture(config.imagePath('landscape_2_tiny.png')),get_texture(config.imagePath('landscape_3_tiny.png')),get_texture(config.imagePath('landscape_4_tiny.png')),get_texture(config.imagePath('landscape_5_tiny.png')),get_texture(config.imagePath('landscape_6_tiny.png')),get_texture(config.imagePath('landscape_7_tiny.png'))];
+	  var bird_texture=get_texture(config.imagePath('bird_tiny.png'));
+	  var landscape_texture=[get_texture(config.imagePath('landscape_1_medium.png')),get_texture(config.imagePath('landscape_2_medium.png')),get_texture(config.imagePath('landscape_3_medium.png')),get_texture(config.imagePath('landscape_4_medium.png')),get_texture(config.imagePath('landscape_5_medium.png')),get_texture(config.imagePath('landscape_6_medium.png')),get_texture(config.imagePath('landscape_7_medium.png'))];
 
 
 	  /*========================= DRAWING ========================= */
@@ -519,8 +567,8 @@ let webGL={
 
 		
 		time_old=time;
-		
-		GL.viewport(0.0, 0.0, CANVAS.width, CANVAS.height);
+		GL.viewport(0.0, 0.0, CANVAS.width,CANVAS.height );
+		PROJMATRIX=LIBS.get_projection(40,  window.innerWidth/window.innerHeight, 1, 100);
 		GL.clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
 			
 			
@@ -539,12 +587,21 @@ let webGL={
 			}
 			webGL.bg_anim.update(GL,MOVEMATRIX);
 			webGL.bg_anim.print(GL,MOVEMATRIX, _hasColor, _Mmatrix,_UOpacity, _Color);
-			console.log(webGL.bg_anim.getLandscape());
+			// var width = document.body.clientWidth;
+			// var height = document.body.clientHeight;
+			// console.log(width/height);
+
 			if(webGL.bg_anim.getLandscape()){
 				if(landscape_texture[webGL.bg_anim.getLandscapeNb()].webglTexture){
 					GL.bindTexture(GL.TEXTURE_2D, landscape_texture[webGL.bg_anim.getLandscapeNb()].webglTexture);
 				}
 				webGL.bg_anim.print_landscape(GL,MOVEMATRIX, _hasColor, _Mmatrix,_UOpacity, _Color);
+				
+				if(bird_texture.webglTexture){
+					GL.bindTexture(GL.TEXTURE_2D, bird_texture.webglTexture);
+				}
+				webGL.bg_anim.printBird(GL,MOVEMATRIX,_Mmatrix,_UOpacity);
+				
 			}
 			
 			if ( particle_texture[1].webglTexture) {

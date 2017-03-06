@@ -22,6 +22,10 @@ domready(() => {
 		
 });
 
+// window.onresize = function(event) {
+    // ...
+// };
+
 class Header extends React.Component{
 	
 	render() {
