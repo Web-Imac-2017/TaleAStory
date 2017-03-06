@@ -14,21 +14,6 @@ class Choice {
    $this->idNextStep = $idNextStep;
 
   }
-  /**
-   * [arrayMap description]
-   * @param  [type] $entry [description]
-   * @param  [string] $key   [champ de la table, si int le tableau retourné aura des index numériques incrémentés à partir de 0]
-   * @param  [type] $value [description]
-   * @return [type]        [description]
-   */
-  public function arrayMap($entry, $key, $value) {
-    $map = array();
-    foreach($entry as $data){
-      //var_dump($data);
-      $map = array_merge($map, array($data[$key]=>$data[$value]));
-    }
-    return $map;
-  }
 
   /*
   @function save
@@ -42,13 +27,11 @@ class Choice {
        'TransitionText' => $this->transitionText,
        'IDNextStep' => $this->idNextStep
      );
-     Database::instance()->insert(self::$table, $entries);
-     //SOLUTION TEMP POUR LES TEST - A MODIFIER lorque insert renverra directement l'ID
-     $id = Database::instance()->query(self::$table, array("Answer" =>"$this->answer", "TransitionText" =>$this->transitionText,"IDNextStep"=>$this->idNextStep,"IDChoice"=>""));
-     //var_dump($id);
+     $id=Database::instance()->insert(self::$table, $entries);
+     var_dump($id);
      if($id != null){
-       $this->id = $id[0]['IDChoice'];
-       return $id[0]['IDChoice'];
+       $this->id = $id;
+       return $id;
      }
      return null;
    }
@@ -59,7 +42,6 @@ class Choice {
    Maj un choix
    */
    public function update($entries) {
-     //AFFICHE UN MESSAGE D'ERREUR MAIS FONCTIONNE QUAND MEME ??
      Database::instance()->update(self::$table, $entries, array("IDChoice"=>$this->id));
    }
    /*
@@ -103,12 +85,12 @@ class Choice {
        //on récupère les stats recquises
        $tables = array(
           array(
-            "StatRequirement" => "StatRequirement.IDStat",
+            "StatAlteration" => "StatAlteration.IDStat",
             "Stat" => "Stat.IDStat"
           )
        );
-       $statsQuery = Database::instance()->query($tables,array("StatRequirement.IDChoice"=>"$this->id","StatRequirement.Value" => "", "Stat.Name"=>""));
-       $requiried_stats = $this->arrayMap($statsQuery, 'Name', 'Value');
+       $statsQuery = Database::instance()->query($tables,array("StatAlteration.IDChoice"=>"$this->id","StatAlteration.Value" => "", "Stat.Name"=>""));
+       $requiried_stats = Database::instance()->arrayMap($statsQuery, 'Name', 'Value');
 
        //on récupère les items gagnés
        $tables = array(
@@ -117,8 +99,9 @@ class Choice {
             "Item" => "Item.IDItem"
           )
        );
-       $itemsQuery = Database::instance()->query($tables,array("Earn.IDChoice"=>"$this->id","Earn.quantity" => "","Item.Name"=>""));
-       $earned_items = $this->arrayMap($itemsQuery, 'Name', 'quantity');
+       $itemsQuery = Database::instance()->query($tables,array("Earn.IDChoice"=>"$this->id","Earn.quantity" => "","Item.Name"=>"","Item.IDItem"=>""));
+       var_dump($itemsQuery);
+       $earned_items =Database::instance()->arrayMap($itemsQuery, 'IDItem', 'quantity');
 
        //on récupère les items perdus
        $tables = array(
@@ -127,20 +110,21 @@ class Choice {
             "Item" => "Item.IDItem"
           )
        );
-       $itemsQuery = Database::instance()->query($tables,array("ItemRequirement.IDChoice"=>"$this->id","ItemRequirement.quantity" => "","Item.Name"=>""));
-       $requiried_items = $this->arrayMap($itemsQuery, 'Name', 'quantity');
+       $itemsQuery = Database::instance()->query($tables,array("ItemRequirement.IDChoice"=>"$this->id","ItemRequirement.quantity" => "","Item.Name"=>"", "Item.IDItem"=>""));
+       $requiried_items = Database::instance()->arrayMap($itemsQuery, 'IDItem', 'quantity');
 
        var_dump($requiried_stats);
+       var_dump($itemsQuery);
        var_dump($requiried_items);
        var_dump($earned_items);
 
        //on modifie le joueur
-       if(!empty($requiried_stats))
+       /*if(!empty($requiried_stats))
           $player->alterStats($requiried_stats);
        if(!empty($requiried_items))
           $player->removeItems($requiried_items);
        if(!empty($earned_items))
-          $player->addItems($earned_items);
+          $player->addItems($earned_items);*/
 
     }catch (RuntimeException $e) {
         echo $e->getMessage();
@@ -168,7 +152,7 @@ class Choice {
   */
   public function checkPlayerRequirements($player){
     $pStatsQuery =  $player->stats();
-    $player_stats = $this->arrayMap($pStatsQuery, 'Name', 'Value');
+    $player_stats = Database::instance()->arrayMap($pStatsQuery, 'Name', 'Value');
 
     $tables = array(
        array(
@@ -177,7 +161,7 @@ class Choice {
        )
     );
     $statsQuery = Database::instance()->query($tables,array("StatRequirement.IDChoice"=>"$this->id","StatRequirement.Value" => "", "Stat.Name"=>""));
-    $requiried_stats = $this->arrayMap($statsQuery, 'Name', 'Value');
+    $requiried_stats = Database::instance()->arrayMap($statsQuery, 'Name', 'Value');
 
     //var_dump($player_stats);
     //var_dump($requiried_stats);
@@ -188,7 +172,7 @@ class Choice {
     }
 
     $pItemsQuery =  $player->items();
-    $player_items = $this->arrayMap($pItemsQuery, 'Name', 'quantity');
+    $player_items = Database::instance()->arrayMap($pItemsQuery, 'Name', 'quantity');
 
     $tables = array(
        array(
@@ -198,7 +182,7 @@ class Choice {
     );
 
     $itemsQuery = Database::instance()->query($tables,array("ItemRequirement.IDChoice"=>"$this->id","ItemRequirement.quantity" => "","Item.Name"=>""));
-    $requiried_items = $this->arrayMap($itemsQuery, 'Name', 'quantity');
+    $requiried_items = Database::instance()->arrayMap($itemsQuery, 'Name', 'quantity');
 
     //var_dump($player_items);
     //var_dump($requiried_items);

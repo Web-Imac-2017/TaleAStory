@@ -1,5 +1,6 @@
 <?php
 require "module_database.php";
+require "Session.php";
 
 class Player {
   public $id;
@@ -29,6 +30,7 @@ class Player {
         return NULL;
       }
       echo "signup completed";
+      Session::connectUser($player->id, true);
       return $player;
     } else {
       echo "login deja pris";
@@ -50,12 +52,37 @@ class Player {
       $player->pwd = $dataPlayer[0]["Pwd"];
       $player->mail = $dataPlayer[0]["Mail"];
       $player->imgpath = $dataPlayer[0]["ImgPath"];
-      return $player;
+
+      Session::connectUser($player->id, true);
       echo "connected";
+      return $player;
     } else {
       echo "connection failed";
       return NULL;
     }
+  }
+
+  static public function connectSession() {
+    $id = Session::getCurrentUser();
+    if($id){
+      $player = new Player();
+      $playerData = Database::instance()->query("Player", array("IDPlayer"=>$id, "*"=>""));
+      $player->id = $id;
+      $player->pseudo = $dataPlayer[0]["Pseudo"];
+      $player->login = $dataPlayer[0]["Login"];
+      $player->pwd = $dataPlayer[0]["Pwd"];
+      $player->mail = $dataPlayer[0]["Mail"];
+      $player->imgpath = $dataPlayer[0]["ImgPath"];
+      return $player;
+    } else {
+      return NULL;
+    }
+
+  }
+
+  public function disconnect(){
+    Session::disconnectUser();
+    return NULL;
   }
 
   public function save() {
@@ -113,21 +140,8 @@ class Player {
   }
   */
 
-  /**
-   * [arrayMap description]
-   * @param  [type] $entry [description]
-   * @param  [string] $key   [champ de la table, si int le tableau retourné aura des index numériques incrémentés à partir de 0]
-   * @param  [type] $value [description]
-   * @return [type]        [description]
-   */
-  public function arrayMap($entry, $key, $value) {
-    $map = array();
-    foreach($entry as $data){
-      $map = array_merge($map, array($data[$key]=>$data[$value]));
-    }
-    return $map;
-  }
 
+///////------STATS------//////
   public function stats() {
     echo "stats";
     $tables = array(
@@ -137,7 +151,19 @@ class Player {
       )
     );
     $stats = Database::instance()->query($tables,array("PlayerStat.IDPlayer"=>$this->id,"PlayerStat.Value"=>"", "Stat.*" => ""));
+    $stats = Database::instance()->arrayMap($stats, "IDStat", "Value");
     return $stats;
+  }
+
+  public function alterStats($newstats){
+    foreach($newstats as $id => $value){
+      echo "<p></br>Id = ".$id.", Valeur =".$value."</br></p>";
+      if(Database::instance()->query("PlayerStat", array("IDPlayer" => $this->id, "IDStat"=> $id))==NULL) {
+        Database::instance()->insert("PlayerStat", array("IDPlayer" => $this->id, "IDStat"=> $id, "Value" => $value));
+      } else {
+        Database::instance()->update("PlayerStat",array("Value" => $value), array("IDPlayer" => $this->id, "IDStat"=> $id));
+      }
+    }
   }
 
 ///////------ITEMS------//////
@@ -155,46 +181,48 @@ class Player {
 
   public function addItem($item) {
 
-    $quantity = Database::instance()->query("Inventory",Array("IDPlayer"=>$this->id, "IDItem"=>$item->id, "quantity"=>""));
+    $quantity = Database::instance()->query("Inventory",Array("IDPlayer"=>$this->id, "IDItem"=>key($item), "quantity"=>""));
     $quantity = $quantity[0]['quantity'];
     echo "<pre>".var_export($quantity, true)."</pre>";
     if($quantity) {
-      if($quantity<10){$quantity++;}
-      Database::instance()->update("Inventory",Array("quantity"=>$quantity),Array("IDPlayer"=>$this->id, "IDItem"=>$item->id));
+      if($quantity<10){$quantity = (($quantity+current($item))<10)?$quantity+current($item):10;}
+      Database::instance()->update("Inventory",Array("quantity"=>$quantity),Array("IDPlayer"=>$this->id, "IDItem"=>key($item)));
     } else {
-      Database::instance()->insert("Inventory", Array("IDPlayer"=>$this->id, "IDItem"=>$item->id, "quantity"=>1));
+      Database::instance()->insert("Inventory", Array("IDPlayer"=>$this->id, "IDItem"=>key($item), "quantity"=>current($item)));
     }
 
   }
 
   public function addItems($items) {
-    foreach($items as $item) {
+    foreach($items as $id => $number) {
       var_dump($item);
-      $quantity = Database::instance()->query("Inventory",Array("IDPlayer"=>$this->id, "IDItem"=>$item->id, "quantity"=>""));
+      $quantity = Database::instance()->query("Inventory",Array("IDPlayer"=>$this->id, "IDItem"=>$id, "quantity"=>""));
       $quantity = $quantity[0]['quantity'];
       echo "<pre>".var_export($quantity, true)."</pre>";
       if($quantity) {
-        if($quantity<10){$quantity++;}
-        Database::instance()->update("Inventory",Array("quantity"=>$quantity),Array("IDPlayer"=>$this->id, "IDItem"=>$item->id));
+        if($quantity<10){$quantity = (($quantity+$number)<10)?$quantity+$number:10;}
+        Database::instance()->update("Inventory",Array("quantity"=>$quantity),Array("IDPlayer"=>$this->id, "IDItem"=>$id));
       }
         else {
-        Database::instance()->insert("Inventory", Array("IDPlayer"=>$this->id, "IDItem"=>$item->id, "quantity"=>1));
+        Database::instance()->insert("Inventory", Array("IDPlayer"=>$this->id, "IDItem"=>$id, "quantity"=>$number));
       }
     }
   }
 
-  public function removeItem($item) {
-    $quantity = Database::instance()->query("Inventory",Array("IDPlayer"=>$this->id, "IDItem"=>$item->id, "quantity"=>""));
-    $quantity = $quantity[0]['quantity'];
-    echo "<pre>".var_export($quantity, true)."</pre>";
-    if($quantity >1) {
-      $quantity --;
-      Database::instance()->update("Inventory",Array("quantity"=>$quantity),Array("IDPlayer"=>$this->id, "IDItem"=>$item->id));
-    } else if ($quantity == 1) {
-      Database::instance()->delete("Inventory",Array("IDPlayer"=>$this->id, "IDItem"=>$item->id));
+  public function removeItems($items) {
+    foreach($items as $id => $number) {
+      $quantity = Database::instance()->query("Inventory",Array("IDPlayer"=>$this->id, "IDItem"=>$id, "quantity"=>""));
+      $quantity = $quantity[0]['quantity'];
+      echo "<pre>".var_export($quantity, true)."</pre>";
+      if($quantity > $number) {
+        $quantity = $quantity - $number;
+        Database::instance()->update("Inventory",Array("quantity"=>$quantity),Array("IDPlayer"=>$this->id, "IDItem"=>$id));
+      } else if ($quantity == 1) {
+        Database::instance()->delete("Inventory",Array("IDPlayer"=>$this->id, "IDItem"=>$id));
+      }
     }
   }
-  
+
   ///////------ACHIEVEMENTS------//////
   public function achievements() {
     $tables = array(
@@ -208,21 +236,26 @@ class Player {
   }
 
   public function addAchievement($achievement) {
-    $player_achievement = Database::instance()->query("PlayerAchievement",Array("IDPlayer"=>$this->id, "IDAchivement"=>$achievement->id, "isRead"=>""));
+
+    $player_achievement = Database::instance()->query("PlayerAchievement",Array("IDPlayer"=>$this->id, "IDAchievement"=>$achievement->id, "isRead"=>""));
     echo "<pre>".var_export($player_achievement, true)."</pre>";
-    if($player_achivement == NULL) {
-      Database::instance()->insert("PlayerAchievement", Array("IDPlayer"=>$this->id, "IDItem"=>$achievement->id, "isRead"=>false));
+    if($player_achievement == NULL) {
+      Database::instance()->insert("PlayerAchievement", Array("IDPlayer"=>$this->id, "IDAchievement"=>$achievement->id, "isRead"=>0));
     }
   }
 
   public function addAchievements($achievements) {
 
-    foreach($achievements as $player_achievement) {
-      $player_achievement = Database::instance()->query("PlayerAchievement",Array("IDPlayer"=>$this->id, "IDAchivement"=>$achievement->id, "isRead"=>""));
+    foreach($achievements as $achievement) {
+      /*
+      $player_achievement = Database::instance()->query("PlayerAchievement",Array("IDPlayer"=>$this->id, "IDAchievement"=>$achievement->id, "isRead"=>""));
       echo "<pre>".var_export($player_achievement, true)."</pre>";
-      if($player_achivement == NULL) {
-        Database::instance()->insert("PlayerAchievement", Array("IDPlayer"=>$this->id, "IDItem"=>$achievement->id, "isRead"=>false));
+      if($player_achievement == NULL) {
+        Database::instance()->insert("PlayerAchievement", Array("IDPlayer"=>$this->id, "IDAchievement"=>$achievement->id, "isRead"=>0));
       }
+      */
+     echo "<pre>".var_export($achievement, true)."</pre>";
+     $this->addAchievement($achievement);
     }
   }
 
@@ -237,38 +270,12 @@ class Player {
     return $pastSteps;
   }
 
-  public function passStep($perpetie){
-    $entries = array(
-      ""
-    );
-    //Database::instance()->insert("Step",$entries);
-   $peripethieID;
-   $entries = array(
-     "IDPlayer" => $this->id,
-     "IDStep" =>$peripetieID
-   );
-   Database::instance()->insert("PastStep",$entries);
-
+  public function passStep($step){
+    $currentStep = Database::instance()->query("Player", array("IDPlayer"=>$this->id, "IDCurrentStep"=>""));
+    Database::instance()->insert("paststep", array("IDPlayer"=>$this-id, "IDStep"=>$currentStep, "EndDate"=>"1994"));
+    Database::instance()->update("Player", array("IDCurrentStep"=>$step->id), array("IDPlayer"=>$this->id));
   }
 
-  public function alterStats($newStats){
-    //$newStats = array($stats => $valeur)
-
-    $tables = array(
-      array(
-        "PlayerStat" => "PlayerStat.IDStat",
-        "Stat" => "Stat.IDStat"
-      )
-    );
-    $identification = array("PlayerStat.IDPlayer" => $this->id);
-    $currentStats = $this->stats();
-    foreach($newStats as $stat => $value) {
-      if($currentStats[0][$stat]) {
-        $entries = array($stat => $value);
-        Database::instance()->update($tables, $entries, $identification);
-      }
-    }
-  }
 
   public function changeImage($path){
     $this->imgpath = $path;
@@ -277,8 +284,13 @@ class Player {
 
 
   //////////-----FORMATS ENTREES-----////////////
-  static function formatMail($entry){
 
+  static public function formatMail($email){
+    return (filter_var($email, FILTER_VALIDATE_EMAIL))?$email:NULL;
+  }
+
+  static public function validateLength($s){
+    return (strlen($s)<15)?$s:NULL;
   }
 
 }
@@ -307,9 +319,10 @@ class Admin {
     $player = Player::connect($login, $pwd);
     $id = Database::instance()->query("admin", array("IDAdmin"=>"", "IDPLayer"=>$player->id));
     $id = $id[0]['IDAdmin'];
-    if(!$id || !$player) {return NULL;}
-    $admin = new Admin($id, $player);
-    return $admin;
+    if(!$id && !$player) {return NULL;}
+    else if(!$id) {$admin = NULL;}
+    else {$admin = new Admin($id, $player);}
+    return array("admin"=>$admin, "player"=>$player);
   }
 }
 
