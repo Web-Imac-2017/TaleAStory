@@ -24,11 +24,23 @@ Class Item {
     }
 
     public function delete() {
-      $table = "Item";
       $entries = array(
         "IDItem" => $this->id
       );
-      Database::instance()->delete($table, $entries);
+      try {
+        $table = "Item";
+        Database::instance()->delete($table, $entries);
+      }catch (RuntimeException $e) {
+          echo $e->getMessage();
+          return false;
+      }
+      return true;
+      }
+
+
+    public function update($entries) {
+      //AFFICHE UN MESSAGE D'ERREUR MAIS FONCTIONNE QUAND MEME ??
+      Database::instance()->update(self::$table, $entries, array("IDItem"=>$this->id));
     }
 
   }
