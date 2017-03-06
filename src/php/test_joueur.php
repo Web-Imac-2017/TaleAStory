@@ -1,19 +1,20 @@
 <?php
-require "model_Player.php";
 require "Item.php";
 require "Achievement.php";
+require "Step.php";
+require "Admin.php";
 
 
-$arc = new Item("arc","image","brief");
-$arc->id = 1;
+$arc = new Step(".jpg", "blabla", "question?", "1", "1");
+$arc->id = 4;
 
-$arg = new Item("arg","image","brief");
+$arg = new Achievement("arg","image","brief");
 $arg->id = 2;
 
-$achiev = array($arc,$arg);
 
-//$admin = Admin::signup("Nemo", "Dori", "poisson", "sea@bulb");
-$player = Player::connect("login","pwd");
+//$player = Player::signup("Louuuu", "Louuuuu", "Lou", "lou@gmailcom");
+$test = Database::instance()->count("Player", "*", array("Mail"=>"lou@"));
+//$player = Player::connect("login","pwd");
 //$test = Database::instance()->query("Player", array("Login"=>"Dori", "IDPlayer"=>""));
 //$test = Database::instance()->arrayMap($test, "Login", "IDPlayer");
 //$test = Database::instance();
@@ -22,12 +23,12 @@ $player = Player::connect("login","pwd");
 //$user->removeItem($arc);
 //$test = $user->items();
 //echo "<pre>".var_export($player, true)."</pre>";
-echo '///////TEST';
 //$user->changeImage("./lala.jpg");
 //$test = Database::instance()->insert("step", array("IDStep"=>"","Body" => "Lou", "IDType"=>4));
-$player->alterStats(array(1=>0, 2=>0, 3=>0, 4=>0));
 //$player->addItems(array(4=>3, 2=>2, 1=>1));
-//echo "<pre>".var_export($test, true)."</pre>";
+//$player->addAchievements(array($arg, $arc));
+//$test = $player->passStep($arc);
+echo "<pre>".var_export($test, true)."</pre>";
 echo "TEST";
 
 /*

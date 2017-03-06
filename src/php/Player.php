@@ -1,6 +1,8 @@
 <?php
-require "module_database.php";
+require "Database.php";
 require "Session.php";
+const UNAVAILABLE_LOGIN = -2;
+const NON_VALID_ENTRY = -1;
 
 class Player {
   public $id;
@@ -9,55 +11,57 @@ class Player {
   public $pwd;
   public $mail;
   public $imgpath;
+  public $defaultImgpath = "../../defaultImg.jpg";
 
-  private function __construct(){
-    }
+  private function __construct($id, $pseudo, $login, $pwd, $mail, $imgpath = NULL){
+    $this->pseudo = $pseudo;
+    $this->login = $login;
+    $this->pwd = Database::instance()->encode($pwd);
+    $this->mail = $mail;
+    $this->imgpath = (is_null($imgpath)) ? $this->defaultImgpath : $imgpath;
+    $this->id = $id;
+  }
 
   static public function signup($pseudo, $login, $pwd, $mail, $imgpath = NULL) {
-    echo "SIGN UP!";
-    $defaultImgpath = "../../defaultImg.jpg";
-    //VERIFIER LE FORMAT DES CHAMPS
-    $player = new Player();
-    if(!$player->checkLogin($login)) {
-      $player->pseudo = $pseudo;
-      $player->login = $login;
-      $player->pwd = Database::instance()->encode($pwd);
-      $player->mail = $mail;
-      $player->imgpath = (is_null($imgpath)) ? $defaultImgpath : $imgpath;
+    //echo "SIGN UP!";
+    if(Player::checkLogin($login)) {return UNAVAILABLE_LOGIN;}
+    else if
+    (
+      !Player::formatMail($mail) ||
+      !Player::validateEntry($login) ||
+      !Player::validateEntry($pseudo) ||
+      !Player::validateEntry($pwd)
+    )
+    {return NON_VALID_ENTRY;}
+    else {
+      $player = new Player(0, $pseudo, $login, $pwd, $mail, $imgpath);
       $player->id = $player->save();
       if($player->id == NULL) {
-        echo "signup failed";
         return NULL;
       }
-      echo "signup completed";
-      Session::connectUser($player->id, true);
+      Session::connectUser($player->id, true, $player->login);
       return $player;
-    } else {
-      echo "login deja pris";
-      return NULL;
     }
   }
 
   static public function connect($login, $pwd) {
-    echo "CONNECT!";
-    $player = new Player();
-    $login = $player->checkLogin($login);
-    $pwd = $player->checkPwd($pwd, $login);
-    echo "<pre>".var_export($login, true).var_export($pwd, true)."</pre>";
+    //echo "CONNECT!";
+    $login = Player::checkLogin($login);
+    $pwd = Player::checkPwd($pwd, $login);
+    //echo "<pre>".var_export($login, true).var_export($pwd, true)."</pre>";
     if($login && $pwd) {
-      $dataPlayer = Database::instance()->query("player",array("Login"=>$login, "*" => ""));
-      $player->id = $dataPlayer[0]["IDPlayer"];
-      $player->pseudo = $dataPlayer[0]["Pseudo"];
-      $player->login = $dataPlayer[0]["Login"];
-      $player->pwd = $dataPlayer[0]["Pwd"];
-      $player->mail = $dataPlayer[0]["Mail"];
-      $player->imgpath = $dataPlayer[0]["ImgPath"];
-
-      Session::connectUser($player->id, true);
-      echo "connected";
+      $playerData = Database::instance()->query("player",array("Login"=>$login, "*" => ""));
+      $player = new Player(
+        $playerData[0]["IDPlayer"],
+        $playerData[0]["Pseudo"],
+        $playerData[0]["Login"],
+        $playerData[0]["Pwd"],
+        $playerData[0]["Mail"],
+        $playerData[0]["ImgPath"]
+      );
+      Session::connectUser($player->id, true, $player->login);
       return $player;
     } else {
-      echo "connection failed";
       return NULL;
     }
   }
@@ -65,19 +69,20 @@ class Player {
   static public function connectSession() {
     $id = Session::getCurrentUser();
     if($id){
-      $player = new Player();
+
       $playerData = Database::instance()->query("Player", array("IDPlayer"=>$id, "*"=>""));
-      $player->id = $id;
-      $player->pseudo = $dataPlayer[0]["Pseudo"];
-      $player->login = $dataPlayer[0]["Login"];
-      $player->pwd = $dataPlayer[0]["Pwd"];
-      $player->mail = $dataPlayer[0]["Mail"];
-      $player->imgpath = $dataPlayer[0]["ImgPath"];
+      $player = new Player(
+        $playerData[0]["IDPlayer"],
+        $playerData[0]["Pseudo"],
+        $playerData[0]["Login"],
+        $playerData[0]["Pwd"],
+        $playerData[0]["Mail"],
+        $playerData[0]["ImgPath"]
+      );
       return $player;
     } else {
       return NULL;
     }
-
   }
 
   public function disconnect(){
@@ -86,7 +91,6 @@ class Player {
   }
 
   public function save() {
-    echo "save";
     $table = "Player";
     $entries = array(
       "IDPlayer" => "",
@@ -95,16 +99,21 @@ class Player {
       "Pwd" => $this->pwd,
       "Pseudo" => $this->pseudo,
       "Mail" => $this->mail,
-      "IDCurrentStep" => NULL
+      "IDCurrentStep" => 0
     );
-    Database::instance()->insert($table, $entries);
-    echo "test";
+    try {
+      Database::instance()->insert($table, $entries);
+    }
+    catch (RuntimeException $e) {
+        echo $e->getMessage();
+        return NULL;
+    }
     $id = Database::instance()->query($table, array("IDPlayer" =>"", "Login" =>$this->login));
     return $id[0][IDPlayer];
   }
 
   public function update() {
-    echo "UPDATE";
+    //echo "UPDATE";
     $table = "Player";
     $entries = array(
       "IDPlayer" => $this->id,
@@ -116,16 +125,19 @@ class Player {
     );
     $where = array("IDPlayer" => $this->id);
     Database::instance()->update($table, $entries, $where);
-    echo "update completed";
   }
 
-  public function checkPwd($pwd, $login){
+  public function setPassword($newPwd) {
+    $this->pwd = Database::instance()->encode($newPwd);
+  }
+
+  static public function checkPwd($pwd, $login){
     $qry = Database::instance()->query("player",array("Login"=>$login, "Pwd" => ""));
     $hashed = $qry[0]["Pwd"];
     return Database::instance()->decode($pwd, $hashed);
   }
 
-  public function checkLogin($login){
+  static public function checkLogin($login){
     $qry = Database::instance()->query("player",array("Login"=>$login, "IDPlayer"=>""));
     $login = $qry[0]['Login'];
     return $login;
@@ -143,7 +155,6 @@ class Player {
 
 ///////------STATS------//////
   public function stats() {
-    echo "stats";
     $tables = array(
       array(
         "PlayerStat" => "PlayerStat.IDStat",
@@ -157,10 +168,16 @@ class Player {
 
   public function alterStats($newstats){
     foreach($newstats as $id => $value){
-      echo "<p></br>Id = ".$id.", Valeur =".$value."</br></p>";
-      if(Database::instance()->query("PlayerStat", array("IDPlayer" => $this->id, "IDStat"=> $id))==NULL) {
-        Database::instance()->insert("PlayerStat", array("IDPlayer" => $this->id, "IDStat"=> $id, "Value" => $value));
+      $stat = Database::instance()->query("PlayerStat", array("IDPlayer" => $this->id, "IDStat"=> $id, "Value"=>""));
+      if($stat==NULL) {
+        if($value >=0) {
+          Database::instance()->insert("PlayerStat", array("IDPlayer" => $this->id, "IDStat"=> $id, "Value" => $value));
+        } else {
+          Database::instance()->insert("PlayerStat", array("IDPlayer" => $this->id, "IDStat"=> $id, "Value" => 0));
+        }
       } else {
+        $currentValue = $stat[0]['Value'];
+        $value = ($value+$currentValue>=0)?$value+$currentValue: 0;
         Database::instance()->update("PlayerStat",array("Value" => $value), array("IDPlayer" => $this->id, "IDStat"=> $id));
       }
     }
@@ -183,7 +200,6 @@ class Player {
 
     $quantity = Database::instance()->query("Inventory",Array("IDPlayer"=>$this->id, "IDItem"=>key($item), "quantity"=>""));
     $quantity = $quantity[0]['quantity'];
-    echo "<pre>".var_export($quantity, true)."</pre>";
     if($quantity) {
       if($quantity<10){$quantity = (($quantity+current($item))<10)?$quantity+current($item):10;}
       Database::instance()->update("Inventory",Array("quantity"=>$quantity),Array("IDPlayer"=>$this->id, "IDItem"=>key($item)));
@@ -198,7 +214,6 @@ class Player {
       var_dump($item);
       $quantity = Database::instance()->query("Inventory",Array("IDPlayer"=>$this->id, "IDItem"=>$id, "quantity"=>""));
       $quantity = $quantity[0]['quantity'];
-      echo "<pre>".var_export($quantity, true)."</pre>";
       if($quantity) {
         if($quantity<10){$quantity = (($quantity+$number)<10)?$quantity+$number:10;}
         Database::instance()->update("Inventory",Array("quantity"=>$quantity),Array("IDPlayer"=>$this->id, "IDItem"=>$id));
@@ -213,7 +228,7 @@ class Player {
     foreach($items as $id => $number) {
       $quantity = Database::instance()->query("Inventory",Array("IDPlayer"=>$this->id, "IDItem"=>$id, "quantity"=>""));
       $quantity = $quantity[0]['quantity'];
-      echo "<pre>".var_export($quantity, true)."</pre>";
+      //echo "<pre>".var_export($quantity, true)."</pre>";
       if($quantity > $number) {
         $quantity = $quantity - $number;
         Database::instance()->update("Inventory",Array("quantity"=>$quantity),Array("IDPlayer"=>$this->id, "IDItem"=>$id));
@@ -225,6 +240,7 @@ class Player {
 
   ///////------ACHIEVEMENTS------//////
   public function achievements() {
+    Database::instance()->update("PlayerAchievement", array("isRead"=>1), array("isRead"=>0, "IDPlayer"=>$this->id));
     $tables = array(
       array(
         "PlayerAchievement" => "PlayerAchievement.IDAchievement",
@@ -238,7 +254,6 @@ class Player {
   public function addAchievement($achievement) {
 
     $player_achievement = Database::instance()->query("PlayerAchievement",Array("IDPlayer"=>$this->id, "IDAchievement"=>$achievement->id, "isRead"=>""));
-    echo "<pre>".var_export($player_achievement, true)."</pre>";
     if($player_achievement == NULL) {
       Database::instance()->insert("PlayerAchievement", Array("IDPlayer"=>$this->id, "IDAchievement"=>$achievement->id, "isRead"=>0));
     }
@@ -247,18 +262,11 @@ class Player {
   public function addAchievements($achievements) {
 
     foreach($achievements as $achievement) {
-      /*
-      $player_achievement = Database::instance()->query("PlayerAchievement",Array("IDPlayer"=>$this->id, "IDAchievement"=>$achievement->id, "isRead"=>""));
-      echo "<pre>".var_export($player_achievement, true)."</pre>";
-      if($player_achievement == NULL) {
-        Database::instance()->insert("PlayerAchievement", Array("IDPlayer"=>$this->id, "IDAchievement"=>$achievement->id, "isRead"=>0));
-      }
-      */
-     echo "<pre>".var_export($achievement, true)."</pre>";
      $this->addAchievement($achievement);
     }
   }
 
+  ///////------STEPS------//////
   public function pastSteps() {
     $tables = array(
       array(
@@ -271,12 +279,15 @@ class Player {
   }
 
   public function passStep($step){
+    date_default_timezone_set('Europe/Paris');
+    $today = date("y.m.d");
     $currentStep = Database::instance()->query("Player", array("IDPlayer"=>$this->id, "IDCurrentStep"=>""));
-    Database::instance()->insert("paststep", array("IDPlayer"=>$this-id, "IDStep"=>$currentStep, "EndDate"=>"1994"));
+    $currentStep = $currentStep[0]['IDCurrentStep'];
+    Database::instance()->insert("paststep", array("IDPlayer"=>$this->id, "IDStep"=>$currentStep, "EndDate"=>$today));
     Database::instance()->update("Player", array("IDCurrentStep"=>$step->id), array("IDPlayer"=>$this->id));
   }
 
-
+  ///////------IMAGE------//////
   public function changeImage($path){
     $this->imgpath = $path;
     Database::instance()->update("Player", array("ImgPath" => $path), array("IDPlayer"=>$this->id));
@@ -289,41 +300,11 @@ class Player {
     return (filter_var($email, FILTER_VALIDATE_EMAIL))?$email:NULL;
   }
 
-  static public function validateLength($s){
-    return (strlen($s)<15)?$s:NULL;
+  static public function validateEntry($s){
+    $regex = "#^\w{1,60}$#";
+    return preg_match($regex,$s);
   }
 
-}
-
-class Admin {
-  public $id;
-  public $player;
-
-  public function __construct($id, $player){
-    $this->id = $id;
-    $this->player = $player;
-  }
-
-  static public function signup($pseudo, $login, $pwd, $mail, $imgpath = NULL){
-    $player = Player::signup($pseudo, $login, $pwd, $mail, $imgpath = NULL);
-    echo "<pre>".var_export($player, true)."</pre>";
-    Database::instance()->insert("admin", array("IDAdmin"=>"", "IDPLayer"=>$player->id));
-    $id = Database::instance()->query("admin", array("IDPLayer"=>$player->id, "IDAdmin"=>""));
-    $id = $id[0]['IDAdmin'];
-    if(!$id || !$player) {return NULL;}
-    $admin = new Admin($id, $player);
-    return $admin;
-  }
-
-  static public function connect($login, $pwd) {
-    $player = Player::connect($login, $pwd);
-    $id = Database::instance()->query("admin", array("IDAdmin"=>"", "IDPLayer"=>$player->id));
-    $id = $id[0]['IDAdmin'];
-    if(!$id && !$player) {return NULL;}
-    else if(!$id) {$admin = NULL;}
-    else {$admin = new Admin($id, $player);}
-    return array("admin"=>$admin, "player"=>$player);
-  }
 }
 
  ?>
