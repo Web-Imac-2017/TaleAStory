@@ -19,6 +19,7 @@ domready(() => {
 		);*/
 		ReactDOM.render(AppRouter, document.getElementById('root'));
 		webGL.runWebGL();
+		
 });
 
 class Header extends React.Component{
@@ -255,3 +256,4 @@ class HomePageRegisterScreen extends React.Component{
 function imagesPath() {
 	return 'assets/images/';
 }
+

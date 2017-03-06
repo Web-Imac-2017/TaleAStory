@@ -5,8 +5,9 @@ import config from '../config.js';
 
 let webGL={
 	bg_anim: null,
-	
-	
+	sound_visual: null,
+	music : null,
+	analyser : null,
 	Particle: function(x,y,size){
 		this.x=x;
 		this.y=y;
@@ -88,7 +89,6 @@ let webGL={
 		var bg2 = new webGL.Background(color[0],color[1],color[2],1);
 		var landscape = Math.floor(Math.random()*6);
 		var activate_landscape = true;
-		var musics=[];
 		var sounds=[];
 		var transitions=[];
 		var mute = false;
@@ -116,37 +116,36 @@ let webGL={
 			
 		};
 		
+		
 		this.load = function(){
 			landscape = Math.floor(Math.random()*6);
-			musics = [new Audio(config.soundPath('nature_1.wav'))];
 			sounds = [new Audio(config.soundPath('wind_chime1.wav')),new Audio(config.soundPath('wind_chime2.wav')),new Audio(config.soundPath('wind_chime3.wav')),new Audio(config.soundPath('wind_chime4.wav')),new Audio(config.soundPath('wind_chime5.wav')),new Audio(config.soundPath('wind_chime6.mp3'))];
 			transitions=[new Audio(config.soundPath('transition.wav'))];
-			musics[0].addEventListener('ended', function() {
-					this.currentTime = 0;
-					this.play();
-				}, false);
-			musics[0].play();
+			webGL.music=new Audio(config.soundPath('nature_1.wav'));
+			webGL.music.loop=true;
+			webGL.music.play();
 			mute = false;
 		}
+		
 		
 		this.muteAll = function(){
 			if(mute == false){
 				mute=true;
-				musics[0].pause();
-				musics[0].currentTime=0;
+				webGL.music.pause();
+				webGL.music.currentTime=0;
 				sounds.forEach(function(audio){
 					audio.pause();
 					audio.currentTime=0;
 				});
 			}
 			else{
-				this.unMuteAll();
+				webGL.bg_anim.unMuteAll();
 			}
 		}
 		
 		this.unMuteAll = function(){
 			mute=false;
-			musics[0].play();
+			webGL.music.play();
 		}
 		
 		this.print = function(GL,MOVEMATRIX, _hasColor, _Mmatrix, _UOpacity, _Color){
@@ -244,7 +243,61 @@ let webGL={
 		
 		this.getColor = function(){
 			return bg.activecol;
+		};
+		
+		this.getSounds= function(){
+			return sounds;
+		};
+		
+		this.getTransitions= function(){
+			return transitions;
 		}
+		
+		
+	},
+	
+	
+	Sound_Visualizer: function(){
+		var context, canvas,source,ctx,fbc_array, bars, bar_x,bar_width,bar_height;
+		
+		
+		this.load= function(audio,context){
+			canvas = document.getElementById('analyser');
+			ctx = canvas.getContext('2d');
+			source = context.createMediaElementSource(webGL.music);
+			source.connect(webGL.analyser);
+			for(var i=0; i<webGL.bg_anim.getSounds().length;i++){
+				source = context.createMediaElementSource(webGL.bg_anim.getSounds()[i]);
+				source.connect(webGL.analyser);
+			}
+			for(var i=0; i<webGL.bg_anim.getTransitions().length;i++){
+				source = context.createMediaElementSource(webGL.bg_anim.getTransitions()[i]);
+				source.connect(webGL.analyser);
+			}
+			webGL.analyser.connect(context.destination);
+			
+			
+			var frameLooper=function(){
+				fbc_array = new Uint8Array(webGL.analyser.frequencyBinCount);
+				webGL.analyser.getByteFrequencyData(fbc_array);
+				ctx.clearRect(0,0,canvas.width,canvas.height);
+				ctx.fillStyle = '#FFFFFF';
+				bars = 4;
+				
+				for(var i =0; i<bars;i++){
+					bar_x=10+i*canvas.width/3.5;
+					bar_width=16;
+					bar_height = -(fbc_array[(i+1)*2]/2);
+					ctx.fillRect(bar_x,canvas.height,bar_width,bar_height -20);
+				}
+				window.requestAnimationFrame(frameLooper);
+			}
+			frameLooper();
+			
+		};
+		
+	
+		
 		
 	},
 	
@@ -266,6 +319,7 @@ let webGL={
 		var color = this.randColor();
 		webGL.bg_anim = new this.Background_Animation(color[0],color[1],color[2],color[3]);
 		webGL.bg_anim.load();
+		
 		var CANVAS=document.getElementById("your_canvas");
 	  CANVAS.width=window.innerWidth;
 	  CANVAS.height=window.innerHeight;
@@ -504,6 +558,13 @@ let webGL={
 		window.requestAnimationFrame(animate);
 	  };
 	  animate(0);
+	  var context = new AudioContext();
+	  webGL.analyser = context.createAnalyser();
+		
+	  webGL.sound_visual = new webGL.Sound_Visualizer();
+		
+	  webGL.sound_visual.load(webGL.music, context);
+	  document.getElementById('analyser').onclick = webGL.bg_anim.muteAll;
 	},
 };
 export default webGL;
