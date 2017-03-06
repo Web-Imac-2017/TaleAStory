@@ -123,7 +123,7 @@ let webGL={
 		
 		this.load = function(){
 			this.landscape = Math.floor(Math.random()*7);
-			this.activate_landscape = false;
+			this.activate_landscape = true;
 			sounds = [new Audio(config.soundPath('wind_chime1.wav')),new Audio(config.soundPath('wind_chime2.wav')),new Audio(config.soundPath('wind_chime3.wav')),new Audio(config.soundPath('wind_chime4.wav')),new Audio(config.soundPath('wind_chime5.wav')),new Audio(config.soundPath('wind_chime6.mp3'))];
 			transitions=[new Audio(config.soundPath('transition.wav'))];
 			webGL.music=new Audio(config.soundPath('nature_1.wav'));
@@ -173,7 +173,7 @@ let webGL={
 			}
 			LIBS.scale(MOVEMATRIX,[5.5,3,1.]);
 			GL.uniform1i(_hasColor,0);
-			GL.uniform1f(_UOpacity,0.1-bg.transition*bg.transition/500);
+			GL.uniform1f(_UOpacity,0.2-bg.transition*bg.transition/500);
 			GL.uniformMatrix4fv(_Mmatrix, false, MOVEMATRIX);
 			
 			
@@ -498,10 +498,10 @@ let webGL={
 	  };
 	  
 	  
-	  var cube_texture=[get_texture(config.imagePath('background_large.png')),get_texture(config.imagePath('background_white_large.png'))];
-	  var particle_texture=[get_texture(config.imagePath('blur_mask_large.png')),get_texture(config.imagePath('white_blur_large.png'))];
+	  var cube_texture=[get_texture(config.imagePath('background_medium.png')),get_texture(config.imagePath('background_white_medium.png'))];
+	  var particle_texture=[get_texture(config.imagePath('blur_mask_tiny.png')),get_texture(config.imagePath('white_blur_tiny.png'))];
 	  
-	  var landscape_texture=[get_texture(config.imagePath('landscape_1_medium.png')),get_texture(config.imagePath('landscape_2_medium.png')),get_texture(config.imagePath('landscape_3_medium.png')),get_texture(config.imagePath('landscape_4_medium.png')),get_texture(config.imagePath('landscape_5_medium.png')),get_texture(config.imagePath('landscape_6_medium.png')),get_texture(config.imagePath('landscape_7_medium.png'))];
+	  var landscape_texture=[get_texture(config.imagePath('landscape_1_tiny.png')),get_texture(config.imagePath('landscape_2_tiny.png')),get_texture(config.imagePath('landscape_3_tiny.png')),get_texture(config.imagePath('landscape_4_tiny.png')),get_texture(config.imagePath('landscape_5_tiny.png')),get_texture(config.imagePath('landscape_6_tiny.png')),get_texture(config.imagePath('landscape_7_tiny.png'))];
 
 
 	  /*========================= DRAWING ========================= */
