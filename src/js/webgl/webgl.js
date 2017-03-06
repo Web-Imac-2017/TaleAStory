@@ -87,7 +87,7 @@ let webGL={
 		var bg = new webGL.Background(r,v,b,a);
 		var color = webGL.randColor();
 		var bg2 = new webGL.Background(color[0],color[1],color[2],1);
-		var landscape = Math.floor(Math.random()*6);
+		var landscape = Math.floor(Math.random()*7);
 		var activate_landscape = true;
 		var sounds=[];
 		var transitions=[];
@@ -105,6 +105,10 @@ let webGL={
 			return this.activate_landscape;
 		}
 		
+		this.getLandscapeNb= function(){
+			return this.landscape;
+		}
+		
 		this.move=function(x,y,z){
 			
 			if(bg.transition==0){
@@ -118,7 +122,8 @@ let webGL={
 		
 		
 		this.load = function(){
-			landscape = Math.floor(Math.random()*6);
+			this.landscape = Math.floor(Math.random()*7);
+			this.activate_landscape = false;
 			sounds = [new Audio(config.soundPath('wind_chime1.wav')),new Audio(config.soundPath('wind_chime2.wav')),new Audio(config.soundPath('wind_chime3.wav')),new Audio(config.soundPath('wind_chime4.wav')),new Audio(config.soundPath('wind_chime5.wav')),new Audio(config.soundPath('wind_chime6.mp3'))];
 			transitions=[new Audio(config.soundPath('transition.wav'))];
 			webGL.music=new Audio(config.soundPath('nature_1.wav'));
@@ -319,7 +324,6 @@ let webGL={
 		var color = this.randColor();
 		webGL.bg_anim = new this.Background_Animation(color[0],color[1],color[2],color[3]);
 		webGL.bg_anim.load();
-		
 		var CANVAS=document.getElementById("your_canvas");
 	  CANVAS.width=window.innerWidth;
 	  CANVAS.height=window.innerHeight;
@@ -497,7 +501,7 @@ let webGL={
 	  var cube_texture=[get_texture(config.imagePath('background_large.png')),get_texture(config.imagePath('background_white_large.png'))];
 	  var particle_texture=[get_texture(config.imagePath('blur_mask_large.png')),get_texture(config.imagePath('white_blur_large.png'))];
 	  
-	  var landscape_texture=[get_texture(config.imagePath('landscape_1_large.png')),get_texture(config.imagePath('landscape_2_large.png')),get_texture(config.imagePath('landscape_3_large.png')),get_texture(config.imagePath('landscape_4_large.png')),get_texture(config.imagePath('landscape_5_large.png')),get_texture(config.imagePath('landscape_6_large.png'))];
+	  var landscape_texture=[get_texture(config.imagePath('landscape_1_medium.png')),get_texture(config.imagePath('landscape_2_medium.png')),get_texture(config.imagePath('landscape_3_medium.png')),get_texture(config.imagePath('landscape_4_medium.png')),get_texture(config.imagePath('landscape_5_medium.png')),get_texture(config.imagePath('landscape_6_medium.png')),get_texture(config.imagePath('landscape_7_medium.png'))];
 
 
 	  /*========================= DRAWING ========================= */
@@ -535,10 +539,10 @@ let webGL={
 			}
 			webGL.bg_anim.update(GL,MOVEMATRIX);
 			webGL.bg_anim.print(GL,MOVEMATRIX, _hasColor, _Mmatrix,_UOpacity, _Color);
-			
-			if(webGL.bg_anim.activate_landscape){
-				if(landscape_texture[webGL.bg_anim.landscape].webglTexture){
-					GL.bindTexture(GL.TEXTURE_2D, landscape_texture[webGL.bg_anim.landscape].webglTexture);
+			console.log(webGL.bg_anim.getLandscape());
+			if(webGL.bg_anim.getLandscape()){
+				if(landscape_texture[webGL.bg_anim.getLandscapeNb()].webglTexture){
+					GL.bindTexture(GL.TEXTURE_2D, landscape_texture[webGL.bg_anim.getLandscapeNb()].webglTexture);
 				}
 				webGL.bg_anim.print_landscape(GL,MOVEMATRIX, _hasColor, _Mmatrix,_UOpacity, _Color);
 			}
