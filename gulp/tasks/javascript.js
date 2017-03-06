@@ -57,7 +57,7 @@ function buildJS(jsSrc) {
   var array = [];
 
 	return b
-		.transform(stringify,{ appliesTo: { includeExtensions: ['.html'] }, minify: true })
+		//.transform(stringify,{ appliesTo: { includeExtensions: ['.html'] }, minify: true })
 		.transform(babelify, {presets: ["es2015", "react"]}) // Babel, pour l'ES6
 		.bundle()
 		.on('error', mapError)                   // Map error reporting
@@ -68,7 +68,7 @@ function buildJS(jsSrc) {
 			path.extname = ".min.js";
 		}))
 		.pipe(sourcemaps.init({loadMaps: true})) // Extract the inline sourcemaps
-    .pipe(uglify(minifyOption))                    // Minify the build file
+   // .pipe(uglify(minifyOption))                    // Minify the build file
 		.pipe(sourcemaps.write('./'))            // Set folder for sourcemaps to output to
 		.pipe(gulp.dest(configJS.outputDir))       // Set the output folder
 		.pipe(notify({
