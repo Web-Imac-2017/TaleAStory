@@ -23,10 +23,10 @@ class HeaderUnregistered extends React.Component{
 	render() {
 		return (
 			<header>
-				<Link to="/"><h1>Tale A Story</h1></Link>
+				<Link to={config.path('home')}><h1>Tale A Story</h1></Link>
 				<div className="links">
-					<a href="">Inscription</a>
-					<a href="">Connexion</a>
+					<Link to={config.path('sign/up')}>Inscription</Link>
+					<Link to={config.path('sign/in')}>Connexion</Link>
 				</div>
 			</header>
 		);
@@ -39,16 +39,16 @@ class HeaderUnregistered extends React.Component{
 */
 class HeaderRegistered extends React.Component{
 	onHover() {
-        document.getElementById("profilePopup").style.display = 'block';
+        document.getElementById("profilePopup").style.opacity = 1;
+        document.getElementById("profilePopup").style.right = "0px";
     }
 
 	render() {
-		let tmpName = "Marcel Patulacci";
 		return (
 			<header>
-				<Link to={config.path('')}><h1>Tale A Story</h1></Link>
+				<Link to={config.path('home')}><h1>Tale A Story</h1></Link>
 				<div className="links">
-					<Link to={config.path('profils/account')} onMouseOver={this.onHover}>{this.props.name + ' ' + this.props.surname}</Link>
+					<Link className="profileLink" to={config.path('profils/account')} onMouseOver={this.onHover}>{this.props.name + ' ' + this.props.surname}</Link>
 					<img className="rounded profilPic" src={config.imagePath(this.props.img)}/>
 				</div>
 				<ProfileMenu/>
@@ -60,23 +60,26 @@ class HeaderRegistered extends React.Component{
 class ProfileMenu extends React.Component{
 
 	hide() {
-        document.getElementById("profilePopup").style.display = 'none';
+        document.getElementById("profilePopup").style.opacity = 0;
+        document.getElementById("profilePopup").style.right = "-250px";
     }
 
 	render() {
 		return (
-				<div id="profilePopup" className="profileMenu rows" onMouseLeave={this.hide}>
-					<div className="cols">
-						<img src={config.imagePath('profil.svg')}/>
-						<a href="">Mon Profil</a>
-					</div>
-					<div className="cols">
-						<img src={config.imagePath('trophy.svg')}/>
-						<a href="">Mes Trophées</a>
-					</div>
-					<div className="cols">
-						<img src={config.imagePath('deco.svg')}/>
-						<a href="">Déconnexion</a>
+				<div id="profilePopup" onMouseLeave={this.hide}>
+					<div className="profileMenu rows" >
+						<div className="cols">
+							<img src={config.imagePath('profil.svg')}/>
+							<a href="">Mon Profil</a>
+						</div>
+						<div className="cols">
+							<img src={config.imagePath('trophy.svg')}/>
+							<a href="">Mes Trophées</a>
+						</div>
+						<div className="cols">
+							<img src={config.imagePath('deco.svg')}/>
+							<a href="">Déconnexion</a>
+						</div>
 					</div>
 				</div>
 		);

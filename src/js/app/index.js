@@ -11,7 +11,7 @@ export default RouteComponent({
               <div className="columnsContainer">
                 <div className="content">
                   <img className="picto element" src={config.imagePath('pictoMountains_large.png')}/>
-                  <img className="element" src={config.imagePath('wave_large.png')}/>
+                  <img className="element wave" src={config.imagePath('wave_large.png')}/>
                   <h1 className="pageTitle element">Tale A Story</h1>
                   <a href="" className="element button">Commencer l'aventure</a>
                 </div>
