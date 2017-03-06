@@ -36,8 +36,7 @@ class Router {
 
   public static function index(){
     Response::generateIndex((object)array('userID' => '1',
-                                          'userName' => 'Marcel',
-                                          'userSurname'=> 'Patulacci',
+                                          'userPseudo' => 'Marcel Patulacci',
                                           'userImgPath' => 'patulacci_tiny.jpg',
                                           'time' => '16h45'));
   }
