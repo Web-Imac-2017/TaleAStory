@@ -15,6 +15,7 @@ var config       = require('../config');
 var configSass = {
   srcPath    : './src/scss/',         // Les fichiers à watch
   outputDir : config.outputDir + '/assets/css',     // Le dossier ou le build sera généré
+  node_path : './node_modules/'
 };
 
 // La tache pour générer le build scss.
@@ -27,13 +28,21 @@ gulp.task('watchSASS', ['sassAll'], function(){
 	gulp.watch(configSass.srcPath + '*.scss', function(event){
 		buildSass(event.path);
 	});
+  gulp.watch(configSass.srcPath + '**/*.scss', function(event){
+		buildSass(configSass.srcPath + '*.scss');
+	});
 });
 
 function buildSass(sassSrc) {
   console.log('compile '+ sassSrc + '...');
   return gulp.src(sassSrc)
     .pipe(sourcemaps.init({ loadMaps: true }))
-    .pipe(sass())
+    .pipe(sass({
+                style: 'compressed',
+                includePaths: [
+                  configSass.srcPath,
+                  'C:/wamp/TaleAStory/node_modules/bootstrap-sass/assets/stylesheets'
+                ]}))
     .on('error', mapError)
     .pipe(rename(function (path) {
 		    path.extname = ".min.css";

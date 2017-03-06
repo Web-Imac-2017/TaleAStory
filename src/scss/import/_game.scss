@@ -1,0 +1,52 @@
+#app .game-container {
+	transform: matrix(1, 0, 0, 1, 0, 0);
+	opacity: 1;
+	display: flex;
+	text-align: justify;
+	align-items: center;
+	flex-direction: row;
+	width: 80%;
+	margin-left: 5%;
+	margin-right: 10%;
+  > span{
+    position: relative;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-content: center;
+    flex-direction: column;
+    overflow: visible;
+  }
+  .game-component {
+    padding: 50px;
+  }
+
+	.game-wrapper {
+		position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+	}
+
+  .button.story-answer{
+    margin: 10px auto;
+    opacity: 0;
+  }
+}
+
+.story-text{
+  margin: 15px 10px;
+  letter-spacing: 3px;
+  opacity: 0;
+}
+
+.button.small{
+  padding: 12px 5px;
+	margin-top: 20px;
+  min-width: 0;
+}

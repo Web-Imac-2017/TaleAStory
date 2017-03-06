@@ -12,6 +12,7 @@ import Connexion from './connexion'
 import ConnexionAdmin from './connexionadmin'
 import Inscription from './inscription'
 import Maker from './storymaker'
+import Game from './game'
 
 let AppRouter, routes;
 
@@ -30,9 +31,9 @@ AppRouter =
           <IndexRedirect to={config.path('home')} />
           <Route path='home' component={Wrapper} className="screen presentationPageScreen01 blueScreen"
               indexComponent={Index} index={1}
-              links={[{'path' :'home', 'label' : 'Home'},
-                      {'path' :'home/connexion', 'label' : 'Connexion'},
-                      {'path' :'sign/in', 'label' : 'Inscription'}]}>
+              links={[{'path' :'home', 'label' : 'Accueil'},
+                      {'path' :'home/brief1', 'label' : 'Presentation'},
+                      {'path' :'home/brief2', 'label' : 'Aventure'}]}>
             <IndexRoute component={Index} index={1}/>
             <Route path='brief1' component={Pres01} index={2}/>
             <Route path='brief2' component={Pres02} index={3}/>
@@ -47,6 +48,13 @@ AppRouter =
           <Route path='admin' component={Wrapper} index={1} className="screen purpleScreen">
             <IndexRedirect to={config.path('admin/maker')} />
             <Route path='maker' component={Maker} index={1}/>
+          </Route>
+          <Route path='step' component={Wrapper} index={1} className="screen purpleScreen">
+            <IndexRedirect to={config.path('admin/maker')} />
+            <Route path='maker' component={Maker} index={1}/>
+          </Route>
+          <Route path='game' component={Wrapper} index={1} className="screen orangeScreen">
+            <IndexRoute component={Game} index={1}/>
           </Route>
         </Route>
     </Router>
