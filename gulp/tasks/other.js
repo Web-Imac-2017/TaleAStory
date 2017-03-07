@@ -24,10 +24,14 @@ var configRessources = {
 gulp.task('otherAll', function() {
   moveAll(configRessources.srcPath + '**/*');
   moveAll(configRessources.srcPath + '.*');
+  buildPHP(configPhp.srcPath + '**/*.php');
   return buildPHP(configPhp.srcPath + '*.php');
 });
 
 gulp.task('watchOTHER', ['otherAll'], function(){
+	gulp.watch(configPhp.srcPath + '**/*.php', function(event){
+		buildPHP(event.path);
+	});
 	gulp.watch(configPhp.srcPath + '*.php', function(event){
 		buildPHP(event.path);
 	});
