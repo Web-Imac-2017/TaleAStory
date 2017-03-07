@@ -267,6 +267,18 @@ class Player {
   }
 
   ///////------STEPS------//////
+
+  public function currentStep() {
+    $tables = array(
+      array(
+        "Player" => "Player.IDCurrentStep",
+        "Step" => "Step.IDStep"
+      )
+    );
+    $currentStep = Database::instance()->query($tables, array("Player.IDPlayer"=>$this->id, "Step.*"=> ""));
+    return $currentStep;
+  }
+
   public function pastSteps() {
     $tables = array(
       array(
