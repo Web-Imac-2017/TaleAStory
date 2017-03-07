@@ -5,10 +5,9 @@ import config from '../config';
 class Header extends React.Component{
 
 	render() {
-		if (this.props.name) {
+		if (this.props.pseudo) {
 			return (
-				<HeaderRegistered name={this.props.name}
-                          surname={this.props.surname}
+				<HeaderRegistered pseudo={this.props.pseudo}
                           img={this.props.imgpath}/>
 			);
 		} else {
@@ -48,7 +47,7 @@ class HeaderRegistered extends React.Component{
 			<header>
 				<Link to={config.path('home')}><h1>Tale A Story</h1></Link>
 				<div className="links">
-					<Link className="profileLink" to={config.path('profils/account')} onMouseOver={this.onHover}>{this.props.name + ' ' + this.props.surname}</Link>
+					<Link className="profileLink" to={config.path('profils/account')} onMouseOver={this.onHover}>{this.props.pseudo}</Link>
 					<img className="rounded profilPic" src={config.imagePath(this.props.img)}/>
 				</div>
 				<ProfileMenu/>

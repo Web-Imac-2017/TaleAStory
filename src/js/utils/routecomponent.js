@@ -20,12 +20,12 @@ function animationOutDom(callback){
 
 function componentWillEnter(callback){
   this._componentWillEnter();
-  animationInDom(callback);
+  animationInDom.call(this, callback);
 }
 
 function componentWillLeave(callback){
   this._componentWillLeave();
-  animationOutDom(callback);
+  animationOutDom.call(this, callback);
 }
 
 function callOnEnter(){
@@ -36,7 +36,7 @@ function callOnEnter(){
 
 function componentWillMount(){
   this._componentWillMount();
-  callOnEnter();
+  this.callOnEnter();
 }
 
 export default function(spec){
@@ -61,6 +61,7 @@ export default function(spec){
   if(typeof spec.componentWillMount != "undefined"){
     classSpec._componentWillMount = spec.componentWillMount;
     classSpec.componentWillMount = componentWillMount;
+    classSpec.callOnEnter = callOnEnter;
   }
   else{
     classSpec.componentWillMount = callOnEnter;

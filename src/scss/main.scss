@@ -1,174 +1,11 @@
-@import './reset';
-@import './profil';
-
-$break-tiny: 340px;
-$break-small: 560px;
-$break-medium: 900px;
-$break-large: 1200px;
-
-$width-index: 80px;
-
-html, body, #root, #app, #app > span, #wrapper {
-  max-height: 100%;
-  max-width: 100%;
-  overflow: hidden;
-}
-
-.route-component{
-  width:100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  display : flex;
-  flex-direction : column;
-  height : 100%;
-}
-
-html, body, #root, #app{
-  background-color: black;
-}
-
-#wrapper {
-  display: flex;
-  flex-direction: column;
-}
-
-html {
-	font-family: 'Bjorn';
-}
-
-
-@font-face {
-    font-family: 'Bjorn';
-    src: url('../fonts/Bjorn Light.otf');
-    font-weight: lighter;
-}
-
-@font-face {
-    font-family: 'Bjorn';
-    src: url('../fonts/Bjorn Regular.otf');
-}
-
-@font-face {
-    font-family: 'OpenSans';
-    src: url('../fonts/OpenSans-Regular.ttf');
-}
-
-@font-face {
-    font-family: 'OpenSans';
-    src: url('../fonts/OpenSans-Bold.ttf');
-    font-weight: bold;
-}
-
-
-
-/* *** Header - General *** */
-header {
-	width: 100%;
-	padding-left: 5%;
-	padding-right: 5%;
-	padding-top: 3%;
-	height: 70px;
-	font-size: 10px;
-	font-family: 'Bjorn';
-	font-weight: lighter;
-	position: relative;
-
-	h1 {
-		float: left;
-		font-size: 10px;
-	}
-
-	.links {
-		float: right;
-		height: 100%;
-
-		.profilPic {
-			width: 32px;
-			height: 32px;
-			margin: auto;
-			float: left;
-			top: -8px;
-			left: 5px;
-		}
-
-	}
-
-	a, a:visited, p {
-		text-decoration: none;
-		padding-left: 18px;
-		padding-right: 18px;
-		padding-bottom: 6px;
-		margin-top: 10px;
-		display: block;
-		float: left;
-		vertical-align: middle;
-		transition: all 0.25s;
-		border-bottom: 0px solid rgba(255,255,255,0.75);
-		position: relative;
-	}
-
-	a:hover{
-		color: white !important;
-	}
-
-	a:before{
-		width: 0%;
-		height: 1px;
-		content: '';
-		background: rgba(255,255,255,0.75);
-		position: absolute;
-		transition : all 0.4s;
-		bottom: 0;
-		left: 20%;
-	}
-
-	a:hover::before{
-		width: 60%;
-		height: 1px;
-		content: '';
-		background: rgba(255,255,255,1);
-		position: absolute;
-		transition : all 0.3s;
-	}
-
-	#profilePopup {
-		/*display: none;*/
-		position: absolute;
-		right: -250px;
-		top: 0px;
-		width: 300px;
-		padding-top: 80px;
-		padding-right: 100px;
-		padding-left: 40px;
-		transition : all 0.5s;
-		opacity: 0;
-		height: 250px;
-		z-index: 5;
-	}
-
-	.profileMenu {
-		background-color: rgba(0,0,0,0.50);
-		line-height: 2px;
-		padding: 5px;
-		margin: auto;
-		position: absolute;
-
-		div {
-			margin: 10px;
-		}
-
-		img {
-			width: 20px;
-			height: 20px;
-		}
-	}
-
-	.profileLink {
-		z-index: 10;
-	}
-
-}
+@import './import/reset';
+@import 'bootstrap';
+@import './import/common';
+@import './import/profil';
+@import './import/fonts';
+@import './import/app';
+@import './import/dialog';
+@import './import/game';
 
 /* *** Blue background *** */
 
@@ -230,7 +67,7 @@ header {
 		display: block;
 		position: relative;
 		color: #fff;
-		font-family: 'Bjorn';
+    @include defaultFont();
 		text-transform: uppercase;
 		font-size: 10px;
 		letter-spacing: 5px;
@@ -488,7 +325,7 @@ button {
     color: white;
     border-style: solid;
     border-color: white;
-    border-size: 1px;
+    border-width: 1px;
     padding: 12px 25px;
     text-align: center;
     text-decoration: none;
@@ -614,7 +451,7 @@ form {
 		font-family: Bjorn;
 		border-style: solid;
 		border-color: white;
-		border-size: 1px;
+		border-width: 1px;
 		background-color: Transparent;
 	}
 }
@@ -749,20 +586,6 @@ form {
 	background: rgba(255,255,255,1);
 	position: absolute;
 	transition : all 0.3s;
-}
-
-#app .caca{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  height: 100%;
-  > span {
-    display: flex;
-    position: relative;
-    width : 100%;
-    height: 100%;
-    overflow: hidden;
-  }
 }
 
 .presentationPageScreen02{

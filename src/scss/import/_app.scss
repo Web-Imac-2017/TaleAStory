@@ -1,0 +1,213 @@
+html, body, #root, #app, #app span, #wrapper {
+  max-height: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+html {
+	@include defaultFont();
+}
+
+.route-component{
+  width:100%;
+  height : 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display : flex;
+  flex-direction : column;
+}
+
+html, body, #root, #app{
+  background-color: black;
+}
+
+#wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.scroller{
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+}
+
+#app .caca{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 100%;
+  > .scroller > span {
+    display: flex;
+    position: relative;
+    width : 100%;
+		overflow-x: hidden;
+		overflow-y: auto;
+		margin-left: 5%;
+		max-height: 100%;
+		height: 100%;
+		.route-component {
+			height: 103%;
+			padding-bottom: 10px;
+		}
+  }
+}
+
+/* *** Header - General *** */
+header {
+	width: 100%;
+	padding-left: 5%;
+	padding-right: 5%;
+	padding-top: 3%;
+	height: auto;
+	font-size: 10px;
+	font-family: 'Bjorn';
+	font-weight: lighter;
+	position: relative;
+
+	h1 {
+		float: left;
+		font-size: 12px;
+		margin-bottom: 10px;
+	}
+
+  .links {
+  		float: right;
+  		height: 100%;
+
+  		.profilPic {
+  			width: 32px;
+  			height: 32px;
+  			margin: auto;
+  			float: left;
+  			top: -8px;
+  			left: 5px;
+  		}
+
+  }
+
+	a, a:visited, p {
+		text-decoration: none;
+		padding-left: 18px;
+		padding-right: 18px;
+		padding-bottom: 6px;
+		margin-top: 10px;
+		display: block;
+		float: left;
+		vertical-align: middle;
+		transition: all 0.25s;
+		border-bottom: 0px solid rgba(255,255,255,0.75);
+		position: relative;
+	}
+
+	a:hover{
+		color: white !important;
+	}
+
+	a:before{
+		width: 0%;
+		height: 1px;
+		content: '';
+		background: rgba(255,255,255,0.75);
+		position: absolute;
+		transition : all 0.4s;
+		bottom: 0;
+		left: 20%;
+	}
+
+	a:hover::before{
+		width: 60%;
+		height: 1px;
+		content: '';
+		background: rgba(255,255,255,1);
+		position: absolute;
+		transition : all 0.3s;
+	}
+
+	.profileMenu {
+		width: 250px;
+		display: block;
+		position: absolute;
+		background-color: rgba(0,0,0,0.50);
+		right: 5%;
+		top: 75px;
+		line-height: 2px;
+		padding: 5px;
+		z-index: 15;
+
+		div {
+			margin: 10px;
+		}
+
+		img {
+			width: 20px;
+			height: 20px;
+		}
+	}
+
+}
+
+/** Right Navigation **/
+.index{
+	display: flex;
+	flex-direction: row;
+	max-width: $width-index;
+	min-width: $width-index;
+	height: 100%;
+    width: 10%;
+	margin: 0px 3%;
+
+	@media screen and (max-width: $break-small) {
+    	display: none;
+    }
+
+   .indexContent {
+   		display: flex;
+   		flex-direction: column;
+   		height: 100%;
+
+   		li {
+        position: relative;
+        margin: auto 10px;
+        transition : all 0.4s;
+        padding: 8px;
+        font-family: OpenSans;
+        font-weight: bold;
+        color: rgba(255,255,255,0.5);
+        list-style: none;
+        a{
+          text-decoration: none;
+        }
+   		}
+
+
+		li:before{
+      color: rgba(255,255,255,0);
+      display: block;
+      margin: auto;
+      transform: rotate(270deg);
+      width: 200px;
+      height: 30px;
+      text-align: center;
+      content: attr(data-content);
+      text-transform: uppercase;
+      position: absolute;
+      transition : all 0.4s;
+      left: -115px;
+      letter-spacing: 3px;
+      font-size: 12px;
+		}
+
+		li:hover::before{
+			left: -135px;
+			color: rgba(255,255,255,0.9);
+		}
+
+		li:hover {
+			color: rgba(255,255,255,0.9);
+		}
+
+   }
+
+}

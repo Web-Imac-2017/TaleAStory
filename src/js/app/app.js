@@ -1,9 +1,33 @@
 import React from 'react';
 import {Link} from 'react-router'
 import config from '../config';
+import {currentUser} from '../model/user';
+import {User} from '../model/user';
 import TransitionGroup from 'react-addons-transition-group';
 
-export default class App extends React.Component{
+class App extends React.Component{
+  constructor(props) {
+    super(props);
+    let that = this;
+    this.state = {
+      user: null,
+      setUser : function(user){
+        that.setState({'user': user});
+      }
+    };
+  }
+
+  componentDidMount(){
+    let response = currentUser();
+    let that = this;
+    response.then(function(user){
+      that.setState({'user': user});
+    });
+  }
+
+  getChildContext() {
+    return this.state;
+  }
 
   render(){
     let children = React.cloneElement(this.props.children, {
@@ -16,3 +40,10 @@ export default class App extends React.Component{
             </div>
   }
 };
+
+App.childContextTypes = {
+  user: React.PropTypes.objectOf(User),
+  setUser: React.PropTypes.func
+};
+
+export default App;
