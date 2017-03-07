@@ -1,8 +1,9 @@
+
 {
   "database" : {
-    "name" : "fauves",
+    "name" : "TaleAstory",
     "server" : "localhost",
     "user" : "root",
-    "password" : "root"
+    "password" : ""
   }
 }

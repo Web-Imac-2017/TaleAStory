@@ -22,22 +22,34 @@ Class Session {
   static public function getCurrentUser(){
     if(isset($_SESSION["userid"]))
       return $_SESSION["userid"];
-    else if (isset($_COOKIE["userid"]) && isset($_COOKIE["hash_id"]))
-      return password_verify($_COOKIE["userid"],$_COOKIE["hash_id"])==true?$_COOKIE["userid"]:null;
+    else if (isset($_COOKIE["userid"]) && isset($_COOKIE["hash_id"])){
+        $userid = $_COOKIE["userid"];
+        $userlogin = Database::instance()->query("Player",array("IDPlayer"=>$userid,"login"=>""));
+        if($userlogin)
+          $userlogin = $userlogin[0]['login'];
+        else
+          return null;
+        $userid = $userlogin.$userid;
+        return password_verify($userid,$_COOKIE["hash_id"])==true?$_COOKIE["userid"]:null;
+    }
     else
       return null;
   }
   /*
   @function connectUser
   @param  $userid
+  @param  $keepconnection bool, enregistre l'user dans les cookies si vrai
   @return void
   Enregistre l'id de l'user dans $_SESSION et $_COOKIE
   */
-  static public function connectUser($userid){
+  static public function connectUser($userid, $keepconnection, $userlogin){
     $_SESSION["userid"]=$userid;
-    setcookie("userid",$userid);
-    $hashed_id = password_hash($userid,PASSWORD_DEFAULT);
-    setcookie("hash_id",$hashed_id);
+    if($keepconnection){
+      setcookie("userid",$userid);
+      $userid=$userlogin.$userid;
+      $hashed_id = password_hash($userid,PASSWORD_DEFAULT);
+      setcookie("hash_id",$hashed_id);
+    }
   }
   /*
   @function disconnectUser
