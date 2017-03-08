@@ -1,9 +1,8 @@
 <?php
 const FAILED_CONNECTION = -3;
+require_once('Admin.php');
+require_once('Response.php');
 class SignInController{
-
-  public function __construct(){
-  }
 
   static public function signIn(){
     $data;
@@ -18,6 +17,7 @@ class SignInController{
       $userData['imgpath']= $user[0]['ImgPath'];
       $userData['mail']= $user[0]['Mail'];
       $json = array('success', $userData);
+      Response::jsonResponse($json);
 
     }
 

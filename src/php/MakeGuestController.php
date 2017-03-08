@@ -1,7 +1,7 @@
 <?php
 require('Player.php');
 
-class MakeGuestControler{
+class MakeGuestController{
 
   public function __construct(){
   }
