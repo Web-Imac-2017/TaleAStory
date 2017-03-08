@@ -13,7 +13,12 @@ $arg->id = 2;
 
 
 //$player = Player::signup("Louuuu", "Louuuuu", "Lou", "lou@gmailcom");
-$test = Database::instance()->count("Player", "*", array("Mail"=>"lou@"));
+$test = Database::instance()->query("Player", array("*"=>""));
+$test1 = Database::instance()->dataClean($test, false, array(3,5));
+echo "<pre>".var_export($test1, true)."</pre>";
+echo "//////////////TEST////////////";
+$test2 = Database::instance()->dataClean($test, true, array('Pseudo', 'Login', 'Mail'));
+echo "<pre>".var_export($test2, true)."</pre>";
 //$player = Player::connect("login","pwd");
 //$test = Database::instance()->query("Player", array("Login"=>"Dori", "IDPlayer"=>""));
 //$test = Database::instance()->arrayMap($test, "Login", "IDPlayer");
@@ -28,7 +33,7 @@ $test = Database::instance()->count("Player", "*", array("Mail"=>"lou@"));
 //$player->addItems(array(4=>3, 2=>2, 1=>1));
 //$player->addAchievements(array($arg, $arc));
 //$test = $player->passStep($arc);
-echo "<pre>".var_export($test, true)."</pre>";
+//echo "<pre>".var_export($test, true)."</pre>";
 echo "TEST";
 
 /*
