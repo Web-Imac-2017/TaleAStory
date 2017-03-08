@@ -12,12 +12,12 @@ class SignInController{
     } else {
       $user = ($user[0]==NULL)?$user[1]:$user[0];
       $userData = array();
-      $userData['id']= $user[0]['IDPlayer'];
-      $userData['pseudo']= $user[0]['Pseudo'];
-      $userData['imgpath']= $user[0]['ImgPath'];
-      $userData['mail']= $user[0]['Mail'];
+      $userData['id']= $user->id;
+      $userData['pseudo']= $user->pseudo;
+      $userData['imgpath']= $user->imgpath;
+      $userData['mail']= $user->mail;
       $json = array('success', $userData);
-      Response::jsonResponse($json);
+      return Response::jsonResponse($json);
 
     }
 

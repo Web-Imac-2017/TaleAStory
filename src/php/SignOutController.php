@@ -1,8 +1,8 @@
 <?php
 
 require_once('Response.php');
-
-class SignOutControlers{
+require_once('Player.php');
+class SignOutControllers{
 
 
   static public signout() {

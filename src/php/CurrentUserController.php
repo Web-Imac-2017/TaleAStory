@@ -10,6 +10,7 @@ class CurrentUserController{
     if(!$player) return ERR_NOT_CONNECTED;}
     else {
       $stats = $player->stats();
+      $stats = Database::instance()->arrayMap($stats, 'Name', 'Value');
       return Response::jsonResponse($stats);
     }
   }
@@ -19,6 +20,7 @@ class CurrentUserController{
     if(!$player) {return ERR_NOT_CONNECTED;}
     else {
       $items = $player->items();
+      $items = Database::instance()->dataClean($items, true);
       return Response::jsonResponse($items);
     }
   }
@@ -28,6 +30,7 @@ class CurrentUserController{
     if(!$player) {return ERR_NOT_CONNECTED;}
     else {
       $current_step = $player->currentStep();
+      $current_step = Database::instance()->dataClean($current_step, true);
       return Response::jsonResponse($current_step);
     }
   }
@@ -37,6 +40,7 @@ class CurrentUserController{
     if(!$player) {return ERR_NOT_CONNECTED;}
     else {
       $story = $player->pastStep();
+      $story = Database::instance()->dataClean($story, true);
       return Response::jsonResponse($story);
     }
   }
