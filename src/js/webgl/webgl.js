@@ -563,7 +563,7 @@ let webGL={
 	  var cube_texture=[get_texture(config.imagePath('background_medium.png')),get_texture(config.imagePath('background_white_medium.png'))];
 	  var particle_texture=[get_texture(config.imagePath('blur_mask_tiny.png')),get_texture(config.imagePath('white_blur_tiny.png'))];
 	  var bird_texture=get_texture(config.imagePath('bird_tiny.png'));
-	  var landscape_texture=[get_texture(config.imagePath('landscape_1_medium.png')),get_texture(config.imagePath('landscape_2_medium.png')),get_texture(config.imagePath('landscape_3_medium.png')),get_texture(config.imagePath('landscape_4_medium.png')),get_texture(config.imagePath('landscape_5_medium.png')),get_texture(config.imagePath('landscape_6_medium.png')),get_texture(config.imagePath('landscape_7_medium.png'))];
+	  var landscape_texture=[get_texture(config.imagePath('landscape_1_tiny.png')),get_texture(config.imagePath('landscape_2_tiny.png')),get_texture(config.imagePath('landscape_3_tiny.png')),get_texture(config.imagePath('landscape_4_tiny.png')),get_texture(config.imagePath('landscape_5_tiny.png')),get_texture(config.imagePath('landscape_6_tiny.png')),get_texture(config.imagePath('landscape_7_tiny.png'))];
 
 
 	  /*========================= DRAWING ========================= */
