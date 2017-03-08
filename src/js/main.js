@@ -8,12 +8,12 @@ import TweenMax from './greenshock/TweenMax.js';
 import TweenLite from './greenshock/TweenMax.js';
 import Media from 'react-media';
 import AppRouter from './app/router';
-import webGL from './webgl.js';
+import webGL from './webgl/webgl.js';
 
 var bg_anim;
 domready(() => {
+		webGL.runWebGL();
 		ReactDOM.render(AppRouter, document.getElementById('root'));
-		//webGL.runWebGL();
 });
 
 class HomePageConnectionScreen extends React.Component{

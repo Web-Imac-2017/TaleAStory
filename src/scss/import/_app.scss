@@ -59,8 +59,8 @@ header {
 	width: 100%;
 	padding-left: 5%;
 	padding-right: 5%;
-	padding-top: 3%;
-	height: auto;
+	padding-top: 0%;
+	height: 10%;
 	font-size: 10px;
 	font-family: 'Bjorn';
 	font-weight: lighter;
@@ -99,6 +99,7 @@ header {
 		transition: all 0.25s;
 		border-bottom: 0px solid rgba(255,255,255,0.75);
 		position: relative;
+		color: black;
 	}
 
 	a:hover{
@@ -123,6 +124,21 @@ header {
 		background: rgba(255,255,255,1);
 		position: absolute;
 		transition : all 0.3s;
+	}
+	
+	#profilePopup {
+		/*display: none;*/
+		position: absolute;
+		right: -250px;
+		top: 0px;
+		width: 300px;
+		padding-top: 80px;
+		padding-right: 100px;
+		padding-left: 40px;
+		transition : all 0.5s;
+		opacity: 0;
+		height: 250px;
+		z-index: 5;
 	}
 
 	.profileMenu {
