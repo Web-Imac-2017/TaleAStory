@@ -41,7 +41,7 @@ function buildSass(sassSrc) {
                 style: 'compressed',
                 includePaths: [
                   configSass.srcPath,
-                  'C:/wamp/TaleAStory/node_modules/bootstrap-sass/assets/stylesheets'
+                  configSass.node_path+ 'bootstrap-sass/assets/stylesheets'
                 ]}))
     .on('error', mapError)
     .pipe(rename(function (path) {
