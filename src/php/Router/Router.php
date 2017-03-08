@@ -63,7 +63,14 @@ class Router {
   *
   */
   public static function connexion(){
-    require"../connexion.html";
+    echo var_dump((object)array('post' => $_POST,
+                                          'userPseudo' => 'Marcel Patulacci',
+                                          'userImgPath' => 'patulacci_tiny.jpg',
+                                          'time' => '16h45'));/*
+    \Response::jsonResponse((object)array('post' => var_dump($_POST),
+                                          'userPseudo' => 'Marcel Patulacci',
+                                          'userImgPath' => 'patulacci_tiny.jpg',
+                                          'time' => '16h45'));*/
   }
 
 /**

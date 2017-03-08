@@ -44,11 +44,11 @@ gulp.task('watchOTHER', ['otherAll'], function(){
 });
 
 function buildPHP(phpSrc) {
-  return gulp.src(phpSrc)
+  return gulp.src(phpSrc, {base: configPhp.srcPath})
         .pipe(gulp.dest(configPhp.outputDir));
 }
 
 function moveAll(src){
-  return gulp.src(src)
+  return gulp.src(src, {base: configRessources.srcPath})
         .pipe(gulp.dest(configRessources.outputDir));
 }

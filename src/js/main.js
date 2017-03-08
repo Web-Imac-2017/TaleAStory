@@ -4,59 +4,60 @@ import domready  from 'domready';
 import {GlobalBack} from './utils/interfaceback';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import TweenMax from './greenshock/TweenMax.js';
-import TweenLite from './greenshock/TweenMax.js';
-import Media from 'react-media';
-import AppRouter from './app/router';
+//import TweenMax from './greenshock/TweenMax.js';
+//import TweenLite from './greenshock/TweenMax.js';
+//import AppRouter from './app/router';
 import webGL from './webgl.js';
+import config from './config';
+import fetch from 'isomorphic-fetch';
+import Promise from 'es6-promise';
 
 var bg_anim;
+
+class Test extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = { text : "" };
+	}
+
+	componentDidMount(){
+		let that = this;
+			fetch(config.path('connexion'), {
+                        method: 'post',
+                        headers: {
+                        },
+												body: JSON.stringify({
+													yolo : "bonjour",
+													lol : 5
+												})
+                      }
+          ).then(function(response){
+						return response.text();
+          }, function(error) {
+					  that.setState({ text : error.message});
+					}).then(function(texte){
+						let dom = ReactDOM.findDOMNode(that);
+						dom.innerHTML = texte;
+						that.setState({ text : texte});
+					});
+	}
+
+	shouldComponentUpdate(nextProps, nextState){
+			console.log(this, this.state);
+			if(this.state.text){
+				console.log(this, this.state);
+				return true;
+			}
+			return true;
+	}
+
+	render(){
+		return <div style={{backgroundColor:"white"}}>
+				</div>
+	}
+}
+
 domready(() => {
-		ReactDOM.render(AppRouter, document.getElementById('root'));
-		//webGL.runWebGL();
+		const test = <Test></Test>
+		ReactDOM.render(test, document.getElementById('root'));
 });
-
-class HomePageConnectionScreen extends React.Component{
-	render(){
-		this.onAction = "";
-		return  <div className="screen homePageConnectionScreen orangeScreen">
-					<HeaderUnregistered/>
-					<div className="content">
-						<div className="block">
-							<h1>Connexion</h1>
-							<form onSubmit={this.onAction}>
-								<input type="text" className="formField" placeholder="Login" ref="login" />
-								<input type="text" className="formField" placeholder="Password" ref="password" />
-								<input className="submit" type="submit" value="Submit"/>
-							</form>
-							<p>Pas encore de compte ? <a href="">Inscrivez-vous !</a></p>
-						</div>
-					</div>
-				</div>;
-	}
-}
-
-class HomePageRegisterScreen extends React.Component{
-	render(){
-		this.onAction = "";
-		return  <div className="screen homePageRegisterScreen orangeScreen">
-					<HeaderUnregistered/>
-					<div className="content">
-						<div className="block">
-							<h1>Connexion</h1>
-							<form onSubmit={this.onAction}>
-								<input type="text" className="formField" placeholder="Nom d'utilisateur" ref="username" />
-								<input type="text" className="formField" placeholder="Email" ref="email" />
-								<input type="text" className="formField" placeholder="Password" ref="password" />
-								<input type="text" className="formField" placeholder="Confirmation Password" ref="confirmPassword" />
-								<input type="submit" value="Inscription"/>
-							</form>
-						</div>
-					</div>
-				</div>;
-	}
-}
-
-function imagesPath() {
-	return 'assets/images/';
-}
