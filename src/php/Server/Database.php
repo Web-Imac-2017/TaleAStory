@@ -352,9 +352,11 @@ class Database {
   private function processUPDATE($entries) {
     $process_set;
     foreach ($entries as $field => $entry) {
-      $process_set .= $field." = ?";
-      if($entry != end($entries)) {
-        $process_set .=", ";
+      if($entry !== ""){
+        $process_set .= $field." = ?";
+        if($entry != end($entries)) {
+          $process_set .=", ";
+        }
       }
     }
     return $process_set;

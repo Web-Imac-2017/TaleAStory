@@ -1,9 +1,10 @@
 <?php
+namespace Controller;
 use \Server\Database;
 use \Model\Admin;
 use \Server\Response;
 use \Server\Form;
-namespace Controller;
+
 const FAILED_CONNECTION = -3;
 class SignInController{
 

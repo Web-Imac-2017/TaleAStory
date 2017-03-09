@@ -30,7 +30,7 @@ class Test extends React.Component{
 										credentials: "same-origin",
 										body: JSON.stringify({
 											login : "bonjour",
-											password : "test"
+											password : 5
 										})
 		              }
 				  ).then(

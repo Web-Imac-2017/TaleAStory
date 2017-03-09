@@ -1,7 +1,8 @@
 <?php
+namespace Model;
 use \Server\Database;
 use \Model\Player;
-namespace Model;
+
 class Admin {
   public $id;
   public $player;
