@@ -26,7 +26,7 @@ class Player {
   static public function getPlayer($id) {
     $playerData = Database::instance()->query("Player", array("IDPlayer"=>$id, "*"=>""));
 
-    if ($PlayerData != NULL) {
+    if ($playerData != NULL) {
         $player = new Player(
           $playerData[0]["IDPlayer"],
           $playerData[0]["Pseudo"],
@@ -294,7 +294,7 @@ class Player {
       )
     );
     $currentStep = Database::instance()->query($tables, array("Player.IDPlayer"=>$this->id, "Step.*"=> ""));
-    return $currentStep;
+    return new Step($currentStep[0]['ImgPath'], $currentStep[0]['Body'], $currentStep[0]['Question'], $currentStep[0]['IDType']);
   }
 
   public function pastSteps() {

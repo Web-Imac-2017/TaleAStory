@@ -15,11 +15,10 @@ Class Step {
   public $idType;
   public static $table = "Step";
 
-  public function __construct($imgpath, $body, $question, $accepted, $idType) {
+  public function __construct($imgpath, $body, $question,  $idType) {
     $this->imgpath=$imgpath;
     $this->body=$body;
     $this->question=$question;
-    $this->accepted=$accepted;
     $this->idType=$idType;
   }
   /*
