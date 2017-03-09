@@ -142,15 +142,11 @@ header {
 	}
 
 	.profileMenu {
-		width: 250px;
-		display: block;
-		position: absolute;
 		background-color: rgba(0,0,0,0.50);
-		right: 5%;
-		top: 75px;
 		line-height: 2px;
 		padding: 5px;
-		z-index: 15;
+		margin: auto;
+		position: absolute;
 
 		div {
 			margin: 10px;
@@ -161,6 +157,11 @@ header {
 			height: 20px;
 		}
 	}
+
+	.profileLink {
+		z-index: 10;
+	}
+
 
 }
 
