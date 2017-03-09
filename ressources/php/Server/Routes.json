@@ -1,5 +1,6 @@
 {
   "/":"Server\\Router::index",
   "/connexion":"Server\\Router::connexion",
-  "__default__":"Server\\Router::index"
+  "__default__":"Server\\Router::index",
+  "/addChoice":"ChoiceControler::addChoice"
 }
