@@ -22,23 +22,30 @@ class Test extends React.Component{
 
 	componentDidMount(){
 		let that = this;
-			fetch(config.path('connexion'), {
-                        method: 'post',
-                        headers: {
-                        },
-												body: JSON.stringify({
-													yolo : "bonjour",
-													lol : 5
-												})
-                      }
-          ).then(function(response){
-						return response.text();
-          }, function(error) {
-					  that.setState({ text : error.message});
-					}).then(function(texte){
-						let dom = ReactDOM.findDOMNode(that);
-						dom.innerHTML = texte;
-						that.setState({ text : texte});
+		fetch(config.path('connexion'), {
+		                method: 'post',
+		                headers: {
+											'Content-Type' : 'application/json'
+		                },
+										credentials: "same-origin",
+										body: JSON.stringify({
+											yolo : "bonjour",
+											lol : 5
+										})
+		              }
+				  ).then(
+						function(response){
+							return response.json();
+				  	},
+						function(error) {
+					  	that.setState({ text : error.message});
+						}
+					).then(
+						function(json){
+							let dom = ReactDOM.findDOMNode(that);
+							dom.innerHTML = JSON.stringify(json);
+							that.setState({ text : JSON.stringify(json)});
+							console.log(json);
 					});
 	}
 

@@ -1,5 +1,5 @@
 <?php
-namespace Router;
+namespace Server;
 class Router {
 
     static $routes = [];
@@ -12,7 +12,6 @@ class Router {
 */
     public static function init() {
         $script_path = $_SERVER['SCRIPT_NAME'];
-        var_dump($script_path);
         self::$webRoot = str_replace('php/index.php', '', $script_path);
     }
 
@@ -52,7 +51,7 @@ class Router {
 *
 */
   public static function index(){
-    \Response::generateIndex((object)array('userID' => '1',
+    Response::generateIndex((object)array('userID' => '1',
                                           'userPseudo' => 'Marcel Patulacci',
                                           'userImgPath' => 'patulacci_tiny.jpg',
                                           'time' => '16h45'));
@@ -63,14 +62,11 @@ class Router {
   *
   */
   public static function connexion(){
-    echo var_dump((object)array('post' => $_POST,
+    Response::jsonResponse((object)array( 'post_converted' => json_decode(file_get_contents('php://input'), true),
+                                          'post' => $_POST,
                                           'userPseudo' => 'Marcel Patulacci',
                                           'userImgPath' => 'patulacci_tiny.jpg',
-                                          'time' => '16h45'));/*
-    \Response::jsonResponse((object)array('post' => var_dump($_POST),
-                                          'userPseudo' => 'Marcel Patulacci',
-                                          'userImgPath' => 'patulacci_tiny.jpg',
-                                          'time' => '16h45'));*/
+                                          'time' => '16h45'));
   }
 
 /**
