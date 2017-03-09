@@ -1,4 +1,5 @@
 <?php
+namespace Server;
 class Database {
   public $pdo;
   protected $server;
@@ -6,22 +7,30 @@ class Database {
   protected $password;
   protected $dbName;
   protected $options;
+  static private $_instance = NULL;
 
   /**
    * Constructeur : configure la connexion avec la base de donnée
    * @param [string] $path [chemin vers le fichier de configuration]
    */
-  public function __construct($path){
+  private function __construct($path){
     //$path = "../../../TaleAStory/src/php/database_config.json"
     $config_json = file_get_contents($path);
     $config_data = json_decode($config_json, TRUE);
-    $this->server = $config_data[database][server];
-    $this->userName = $config_data[database][user];
-    $this->password = $config_data[database][password];
-    $this->dbName = $config_data[database][name];
+    $this->server = $config_data['database']['server'];
+    $this->userName = $config_data['database']['user'];
+    $this->password = $config_data['database']['password'];
+    $this->dbName = $config_data['database']['name'];
     $this->options = array(
       PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
     );
+  }
+
+  static public function instance(){
+    if(is_null(self::$_instance)){
+      self::$_instance = new Database("Server/database_config.json");
+    }
+    return self::$_instance;
   }
 
   /**
@@ -40,7 +49,7 @@ class Database {
           die('Erreur : '.$e->getMessage());
       }
     }
-    echo 'connexion bdd OK';
+    //echo 'connexion bdd OK';
     return $this->pdo;
   }
 
@@ -70,7 +79,7 @@ class Database {
   /**
    * query : envoie une query et récupère les données. Utilise des fonctions tierces pour traiter les tableaux reçus,
    * concaténer les informations dans une string au format query, puis sendQuery pour l'envoyer au serveur
-   * @param  [array de strings] $tables  [ [0...n] => "table"]
+   * @param  [array de strings] $tables  voir fonction processFROM
    * @param  [array de strings] $entries [ "champ" => "entrée utilisateur"/peut etre vide]
    * @return [array]          [contient toutes les données retournées par la requête]
    */
@@ -86,7 +95,7 @@ class Database {
       $statement .= " ".$addEndStatement;
     }
     $array_entries = $this->processArrayEntries($entries);
-    echo $statement;
+    //echo $statement;
     return $this->sendQuery($statement, $array_entries);
   }
 
@@ -97,12 +106,17 @@ class Database {
    * @return [array]          [contient toutes les données retournées par la requête]
    */
   private function sendQuery($statement, $array_entries) {
-    $qry = $this->getPDO()->prepare($statement);
-    $qry->execute($array_entries) or die(print_r($qry->errorInfo()));
     $data = array();
-    while($d = $qry->fetch()) {
-      array_push($data, $d);
+    try {
+      $qry = $this->getPDO()->prepare($statement);
+      $qry->execute($array_entries) or die(print_r($qry->errorInfo()));
     }
+    catch(Exception $e){
+        die('Erreur : '.$e->getMessage());
+        return NULL;
+    }
+    $data = array();
+    while($d = $qry->fetch()) {array_push($data, $d);}
     $qry->closeCursor();
     return $data;
     }
@@ -112,16 +126,32 @@ class Database {
     $fields = $this->processFields($entries);
     $values = $this->processValues($entries);
     $statement = $into.$fields.$values;
-    echo "\n".$statement."\n";
+    //echo "\n".$statement."\n";
     return $this->sendInsert($statement, $entries);
   }
 
   private function sendInsert($statement, $entries) {
+    //echo '<pre>' . var_export($entries, true) . '</pre>';
+    try {
     $insert = $this->getPDO()->prepare($statement);
     $insert->execute($entries) or die(print_r($insert->errorInfo()));
-    echo "insert ok";
+    $id = $this->getPDO()->lastInsertId();
+    }
+    catch(Exception $e){
+        die('Erreur : '.$e->getMessage());
+        return NULL;
+    }
+    //echo "insert ok";
+    return $id;
   }
 
+  /**
+   * [update description]
+   * @param  [type] $table          voir fonction processFROM
+   * @param  [type] $entries        [description]
+   * @param  [type] $identification [description]
+   * @return [type]                 [description]
+   */
   public function update($table, $entries, $identification) {
     $update = "UPDATE ";
     $from = $this->processFROM($table);
@@ -130,14 +160,19 @@ class Database {
     $where = $this->processWHERE($identification);
     $array_entries = array_merge($this->processArrayEntries($entries), $this->processArrayEntries($identification));
     $statement = $update.$from.$set.$where;
-    echo "\n".$statement."\n";
+    //echo "\n".$statement."\n";
     return $this->sendUpdate($statement, $array_entries);
   }
 
   private function sendUpdate($statement, $array_entries) {
-    $update = $this->getPDO()->prepare($statement);
-    $update->execute($array_entries) or die(print_r($update->errorInfo()));
-    echo "update ok";
+    try {
+      $update = $this->getPDO()->prepare($statement);
+      $update->execute($array_entries) or die(print_r($update->errorInfo()));
+    }
+    catch(Exception $e){
+        die('Erreur : '.$e->getMessage());
+    }
+    //echo "update ok";
   }
 
   public function delete($table, $identification) {
@@ -148,17 +183,53 @@ class Database {
     $array_entries = $this->processArrayEntries($identification);
     echo $statement;
     if (strstr($statement, "WHERE") == FALSE) {
-      echo "BUG DELETE";
+      //echo "BUG DELETE";
       return 0;
     }
     return $this->sendDelete($statement, $array_entries);
   }
 
   private function sendDelete($statement, $array_entries){
-    $delete = $this->getPDO()->prepare($statement);
-    $delete->execute($array_entries) or die(print_r($delete->errorInfo()));
-    echo "delete ok";
+    try {
+      $delete = $this->getPDO()->prepare($statement);
+      $delete->execute($array_entries) or die(print_r($delete->errorInfo()));
+    }
+    catch(Exception $e){
+        die('Erreur : '.$e->getMessage());
+    }
   }
+
+  /**
+   * [arrayMap description]
+   * @param  [type] $entry [description]
+   * @param  [string] $key   [champ de la table, si int le tableau retourné aura des index numériques incrémentés à partir de 0]
+   * @param  [type] $value [description]
+   * @return [type]        [description]
+   */
+  public function arrayMap($entry, $key, $value) {
+    $map = array();
+    foreach($entry as $data){
+      $map[$data[$key]] = $data[$value];
+    }
+    return $map;
+  }
+
+  public function count($table, $count, $entries = NULL){
+    $count = 'SELECT COUNT('.$count.')';
+    $from = $this->processFROM($table);
+    $statement = $count.$from;
+    if($entries) {
+      $where = $this->processWHERE($entries);
+      $statement .= $where;
+    }
+    $array_entries = $this->processArrayEntries($entries);
+    //echo $statement;
+    $data = $this->sendQuery($statement, $array_entries);
+    return $data[0][0];
+  }
+
+
+
 
   //////////*****TRAITEMENTS DES PARAMETRES POUR LA CONSTRUCTION DES REQUETES******//////////
 
@@ -193,7 +264,7 @@ class Database {
    */
   private function processFROM($tables) {
     $process_from = " FROM ";
-    echo $tables;
+    //echo $tables;
     if (!is_array($tables)) {
       $process_from .= $tables;
     } else if (count($tables) == 1 && !is_array(current($tables))){
@@ -243,7 +314,7 @@ class Database {
   private function processArrayEntries($entries) {
     $tabEntries = array();
     foreach ($entries as $entry) {
-      if ($entry != NULL) {
+      if ($entry !== "") {
         array_push($tabEntries, $entry);
       }
     }
@@ -288,6 +359,8 @@ class Database {
     }
     return $process_set;
   }
+
+
 
 }
 

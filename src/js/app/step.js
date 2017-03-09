@@ -6,7 +6,6 @@ import Scroll from '../utils/scroll';
 import {RightNavigation} from './wrapper';
 
 export default RouteComponent({
-  name : 'brief1',
   render(){
     return  <div>
               <div className="columnsContainer">

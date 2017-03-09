@@ -3,7 +3,7 @@ import TweenLite from '../greenshock/TweenMax.js';
 import ReactDOM from 'react-dom'
 
 let animationOut, animationIn, prevRoute, nextRoute;
-let animationDuration  = 1.55;
+let animationDuration  = 1.22;
 function _animation(animationFunc){
   return (component, callback) => {
     let dom = ReactDOM.findDOMNode(component);
@@ -51,7 +51,7 @@ function updateAnimation(prev, next, replace, callback){
 }
 
 function outUp(dom) {
-  return TweenLite.to(dom, animationDuration,{y:"-100%", opacity:0});
+  return TweenLite.to(dom, animationDuration*0.7,{y:"-100%", opacity:0});
 }
 
 function inUp(dom) {
@@ -59,7 +59,7 @@ function inUp(dom) {
 }
 
 function outDown(dom) {
-  return TweenLite.to(dom, animationDuration, {y:"100%", opacity:0});
+  return TweenLite.to(dom, animationDuration*0.7, {y:"100%", opacity:0});
 }
 
 function inDown(dom) {
@@ -67,7 +67,7 @@ function inDown(dom) {
 }
 
 function outLeft(dom) {
-  return TweenLite.to(dom, animationDuration,{x:"-100%", opacity:0});
+  return TweenLite.to(dom, animationDuration*0.7,{x:"-100%", opacity:0});
 }
 
 function inLeft(dom) {
@@ -75,7 +75,7 @@ function inLeft(dom) {
 }
 
 function outRight(dom) {
-  return TweenLite.to(dom, animationDuration, {x:"100%", opacity:0});
+  return TweenLite.to(dom, animationDuration*0.7, {x:"100%", opacity:0});
 }
 
 function inRight(dom) {
