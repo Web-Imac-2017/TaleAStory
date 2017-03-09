@@ -9,6 +9,7 @@ class SignOutControllers{
     $player = Player::connectSession();
     if(!$player) {return Response::redirect("taleastory/");}
     else {
+        echo "test";
         $player->disconnect();
         return Response::redirect("taleastory/");
     }

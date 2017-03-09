@@ -3,11 +3,12 @@ use \Server\Database;
 use \Model\Admin;
 use \Server\Response;
 use \Server\Form;
-//namespace Controller;
+namespace Controller;
 const FAILED_CONNECTION = -3;
 class SignInController{
 
   static public function signIn(){
+
     $login = Form::getField('login');
     $pwd = Form::getField('password');
     $user = Admin::connect($login, $pwd);
@@ -27,6 +28,7 @@ class SignInController{
       return Response::jsonResponse($json);
     }
 
+   echo 'Sign In';
   }
 
 }

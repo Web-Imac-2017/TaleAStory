@@ -22,7 +22,7 @@ class Test extends React.Component{
 
 	componentDidMount(){
 		let that = this;
-		fetch(config.path('connexion'), {
+		fetch(config.path('signin'), {
 		                method: 'post',
 		                headers: {
 											'Content-Type' : 'application/json'
