@@ -623,3 +623,36 @@ canvas#analyser {
 		cursor: hand;
 	}
 }
+
+div#landscape-activ{
+		img{
+			height:32px;
+			width:32px;
+	
+		}
+		position:fixed;
+		bottom:15%;
+		right:5.3%;
+	&:hover{
+			cursor: hand;
+			opacity:1;
+		}
+	}
+	
+div#swap{
+	img{
+		height:32px;
+		width:25px;
+		
+	}
+	position:fixed;
+	bottom:5%;
+	right:3.2%;
+	
+}
+
+.analysHover{
+	z-index:-3;
+	
+	opacity:0;
+}

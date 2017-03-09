@@ -177,6 +177,24 @@ let webGL={
 			}
 		}
 		
+		this.changeVolume = function(x){
+			
+				var volume = webGL.music.volume+x;
+				if(volume>1){
+					volume=1;
+				}else if(volume<0.1){
+					volume=0.1;
+				}
+				webGL.music.volume=volume;
+				sounds.forEach(function(audio){
+					audio.volume=volume;
+				});
+				transitions.forEach(function(audio){
+					audio.volume=volume;
+				});
+				
+		}
+		
 		this.unMuteAll = function(){
 			mute=false;
 			webGL.music.play();
@@ -387,7 +405,48 @@ let webGL={
 		webGL.bg_anim = new this.Background_Animation(color[0],color[1],color[2],color[3]);
 		webGL.bg_anim.load();
 		var CANVAS=document.getElementById("your_canvas");
-	  CANVAS.width = window.innerWidth;
+		
+		var add= document.createElement('div');
+
+		add.innerHTML =  '<img id="img1" src ="'+config.imagePath('disableLandscape_tiny.png')+'">';
+
+		document.getElementById("landscape-activ").appendChild(add);
+		
+		document.getElementById('landscape-activ').onmouseover = function(){
+		  TweenLite.to(document.getElementById('landscape-activ'), 1,{opacity:1,zIndex:2});
+		};
+		document.getElementById('landscape-activ').onmouseleave = function(){
+		  TweenLite.to(document.getElementById('landscape-activ'), 0.7,{opacity:0,zIndex:0});
+		};
+		
+		document.getElementById('landscape-activ').onclick = function(){
+		  document.getElementById('landscape-activ').removeChild(document.getElementById('img1').parentNode);
+		  if(webGL.bg_anim.getLandscape()==true){
+			  webGL.bg_anim.setLandscape(false);
+			  var add= document.createElement('div');
+
+			  add.innerHTML =  '<img id="img1" src ="'+config.imagePath('enableLandscape_tiny.png')+'">';
+
+			  document.getElementById("landscape-activ").appendChild(add);
+		  }
+		  else{
+			  webGL.bg_anim.setLandscape(true);
+			  var add= document.createElement('div');
+
+			  add.innerHTML =  '<img id="img1" src ="'+config.imagePath('disableLandscape_tiny.png')+'">';
+
+			  document.getElementById("landscape-activ").appendChild(add);
+		  }
+		};
+		
+		add= document.createElement('div');
+		add.innerHTML =  '<img id="img2" src ="'+config.imagePath('swap_tiny.png')+'">';
+		document.getElementById("swap").appendChild(add);
+		
+		
+		
+		
+	    CANVAS.width = window.innerWidth;
 		CANVAS.height= window.innerHeight ;
 
 	  /*========================= CAPTURE MOUSE EVENTS ========================= */
@@ -640,6 +699,20 @@ let webGL={
 		
 	  webGL.sound_visual.load(webGL.music, context);
 	  document.getElementById('analyser').onclick = webGL.bg_anim.muteAll;
+	  document.getElementById('analyser').onmouseleave = function(){
+		  TweenLite.to(document.getElementById('landscape-activ'), 0.7,{opacity:0,zIndex:0})
+		  TweenLite.to(document.getElementById('swap'), 0.5,{opacity:0,zIndex:0})
+	  };
+	   document.getElementById('analyser').onmouseover = function(){
+		  TweenLite.to(document.getElementById('landscape-activ'), 2,{opacity:1,zIndex:2})
+		  TweenLite.to(document.getElementById('swap'), 1.3,{opacity:1,zIndex:2})
+	  };
+
+	  document.getElementById('analyser').onwheel = function(e){
+		  webGL.bg_anim.changeVolume(-Math.sign(e.deltaY)*0.01);
+
+	  };
+
 	},
 };
 export default webGL;
