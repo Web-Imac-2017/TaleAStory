@@ -1,5 +1,6 @@
 <?php
-require('Player.php');
+use \Model\Player;
+use \Server\Database;
 const FAILED_SIGNUP = -5;
 class MakeGuestController{
 

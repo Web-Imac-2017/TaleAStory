@@ -4,6 +4,7 @@ use \Server\Response;
 use \Model\Player;
 use \Server\Database;
 namespace Model;
+
 Class Step {
   public $id;
   public $imgpath;

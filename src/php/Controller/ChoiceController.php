@@ -24,13 +24,14 @@ class ChoiceController {
   }
 
   public static function updateChoice() {
-    $id = Form::getField("id");
-    $answer = Form::getField("answer");
-    $idStep = Form::getField("idStep");
-    $transitionText = Form::getField("transitionText");
-    $idNextStep = Form::getField("idNextStep");
+    $data = Form::getForm();
     $entries = array();
-
+    $fields = array_keys($data);
+    foreach ($fields as $field) {
+      if($data[$field] == NULL) {
+        $entries[$field]=" ";
+      }
+    }
     $choice = new Choice($answer, $idStep, $transitionText, $idNextStep);
     $choice->id = "id";
     $choice->update($entries);
@@ -39,10 +40,10 @@ class ChoiceController {
   public static function deleteChoice() {
     $id = Form::getField("id");
     $choice = new Choice("", "", "", "");
-    $item->id = $id;
-    $item->delete();
+    $choice->id = $id;
+    $choice->delete();
   }
 
 }
 
- ?>
+?>

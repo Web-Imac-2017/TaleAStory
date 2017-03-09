@@ -8,20 +8,25 @@ use \Model\Step;
 
 class StepController {
   public static function addStep() {
-    echo var_dump($_POST, $_SERVER, $_GET);
-    $imgpath = "truc";
+    $imgpath = Form::uploadFile("stepImg");
     $body = Form::getField("body");
     $question = Form::getField("question");
     $accepted = Form::getField("accepted");
     $idType = Form::getField("idType");
-    $item = new Step($imgpath, $body, $question, $accepted, $idType);
-    //$item->save();
-    Response::jsonResponse(???);
-    Response::jsonResponse($_POST);
+    if ($imgpath == NULL || $body == NULL || $question == NULL || $accepted == NULL || $idType == NULL)
+    return Response::jsonResponse(array(
+      'status' => "error",
+      'message' => "ta race tu ne peux pas ajouter ce step !"
+    ));
+    $step = new Step($imgpath, $body, $question, $accepted, $idType);
+    $step->save();
+    Response::jsonResponse($step);
   }
 
   public static function updateStep() {
+    $tmp = $imgpath;
     $imgpath = Form::uploadFile("stepImg");
+    // récupérer 1 obj avec soit statut "error" ou "ok", selon le statut : message d'erreur ou nom de l'image (faire des if)
     $body = Form::getField("body");
     $question = Form::getField("question");
     $accepted = Form::getField("accepted");
@@ -44,13 +49,11 @@ class StepController {
 
   public static function deleteStep() {
     $id = Form::getField("id");
-    $item = new Step("", "", "", "","");
-    $item->id = $id;
-    $item->delete();
+    $step = new Step("", "", "", "","");
+    $step->id = $id;
+    $step->delete();
   }
 
-  echo var_dump($_POST);
+}
 
-  }
-
- ?>
+?>

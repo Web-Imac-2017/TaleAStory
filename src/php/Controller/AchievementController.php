@@ -9,19 +9,21 @@ use \Model\Achievement;
 class AchievementController {
 
   public static function addAchievement() {
-    echo var_dump($_POST, $_SERVER, $_GET);
     $name = Form::getField("name");
-    /*var_dump($name);
-    exit();*/
-    $imgpath = "truc";
+    $imgpath = Form::uploadFile("achievementImg");
     $brief = Form::getField("brief");
-    $item = new Achievement($name, $imgpath, $brief);
-    //$item->save();
-    Response::jsonResponse($name);
-    Response::jsonResponse($_POST);
+    if ($name == NULL || $imgpath == NULL || $brief == NULL)
+    return Response::jsonResponse(array(
+      'status' => "error",
+      'message' => "ta race tu ne peux pas ajouter cet achievement !"
+    ));
+    $achievement = new Achievement($name, $imgpath, $brief);
+    $achievement->save();
+    Response::jsonResponse($achievement);
   }
 
   public static function updateAchievement() {
+    $tmp = $imgpath;
     $name = Form::getField("name");
     $imgpath = Form::uploadFile("achievementImg");
     $brief = Form::getField("brief");
@@ -40,15 +42,11 @@ class AchievementController {
 
   public static function deleteAchievement() {
     $id = Form::getField("id");
-    $item = new Achievement("", "", "");
-    $item->id = $id;
-    $item->delete();
+    $achievement = new Achievement("", "", "");
+    $achievement->id = $id;
+    $achievement->delete();
   }
 
 }
 
-echo var_dump($_POST);
-
-//
-
- ?>
+?>

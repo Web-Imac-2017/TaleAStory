@@ -9,20 +9,21 @@ use \Model\Item;
 class ItemController {
 
   public static function addItem() {
-    echo var_dump($_POST, $_SERVER, $_GET);
     $name = Form::getField("name");
-    /*var_dump($name);
-    exit();*/
-    //$imgpath = Form::uploadFile($file_input);
-    $imgpath = "truc";
+    $imgpath = Form::uploadFile("itemImg");
     $brief = Form::getField("brief");
+    if ($name == NULL || $imgpath == NULL || $brief == NULL)
+    return Response::jsonResponse(array(
+      'status' => "error",
+      'message' => "ta race tu ne peux pas ajouter cet item !"
+    ));
     $item = new Item($name, $imgpath, $brief);
-    //$item->save();
-    Response::jsonResponse($name);
-    Response::jsonResponse($_POST);
-  }
+    $item->save();
+    Response::jsonResponse($item);
+    }
 
   public static function updateItem() {
+    $tmp = $imgpath;
     $name = Form::getField("name");
     $imgpath = Form::uploadFile("itemImg");
     $brief = Form::getField("brief");
@@ -45,8 +46,6 @@ class ItemController {
     $item->id = $id;
     $item->delete();
   }
-
-  echo var_dump($_POST);
 
 }
 

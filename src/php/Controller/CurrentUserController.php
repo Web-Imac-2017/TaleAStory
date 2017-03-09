@@ -1,13 +1,14 @@
 <?php
 const ERR_NOT_CONNECTED = -4;
-require_once('Model/Player.php');
-require_once('Response.php');
+use \Model\Player;
+use \Server\Response;
+use \Server\Database;
 class CurrentUserController{
 
 
   static public function stats(){
     $player = Player::connectSession();
-    if(!$player) return ERR_NOT_CONNECTED;}
+    if(!$player) return ERR_NOT_CONNECTED;
     else {
       $stats = $player->stats();
       $stats = Database::instance()->arrayMap($stats, 'Name', 'Value');
@@ -45,6 +46,15 @@ class CurrentUserController{
     }
   }
 
-
+  static public function currentUser() {
+    $id = Session::getCurrentUser();
+    if ($id == NULL)
+    return Response::jsonResponse(array(
+      'status' => "error",
+      'message' => "ta race il n'y a aucun utilisateur connecté !"
+    ));
+    else
+      //demander à Lou
+  }
 }
 ?>

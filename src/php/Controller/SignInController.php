@@ -1,7 +1,7 @@
 <?php
 const FAILED_CONNECTION = -3;
-require_once('Admin.php');
-require_once('Response.php');
+use \Model\Admin;
+use \Server\Response;
 class SignInController{
 
   static public function signIn(){
