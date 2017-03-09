@@ -4,6 +4,6 @@
   "__default__":"Server\\Router::index",
   "/currentuser/stats":"Controller\\CurrentUserController::stats",
   "/signin":"Controller\\SignInController::signIn",
-  "/addchoice":"Controller\\ChoiceController::addChoice"
-
+  "/addchoice":"Controller\\ChoiceController::addChoice",
+  "/achievements":"Controller\\CurrentUserController::achievements"
 }
