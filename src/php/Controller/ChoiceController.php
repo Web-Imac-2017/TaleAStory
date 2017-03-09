@@ -1,12 +1,15 @@
 <?php
 
+namespace Controller;
+
 use \Server\Database;
 use \Server\Form;
 use \Model\Choice;
 
-class ChoiceControler {
+class ChoiceController {
   public static function addChoice() {
     $answer = Form::getField("answer");
+    var_dump($answer);
     $idStep = Form::getField("idStep");
     $transitionText = Form::getField("transitionText");
     $idNextStep = Form::getField("idNextStep");
