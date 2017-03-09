@@ -7,7 +7,6 @@ class MakeGuestController{
   }
 
   static public function MakeGuest(){
-    //générer pseudo aléatoire où incrémentation sur pseudo guest
     $login = random_int(1000, 100000);
     while(Database::instance()->query("Player", array('Login'=>strval($login)))) {
       $login++;

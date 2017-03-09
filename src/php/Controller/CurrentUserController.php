@@ -1,6 +1,6 @@
 <?php
 const ERR_NOT_CONNECTED = -4;
-require_once('Player.php');
+require_once('Model/Player.php');
 require_once('Response.php');
 class CurrentUserController{
 
