@@ -2,13 +2,18 @@
 namespace Server;
 class Form {
 
+  static public function updatePOST(){
+    if($_POST)
+      $_POST = json_decode(file_get_contents('php://input'), true);
+  }
+
   static public function getField($field){
-    $data = json_decode(file_get_contents('php://input'), true);
-    //$_POST = array_merge($data, $_POST);
+    self::updatePOST();
+    // = array_merge($data, $_POST);
     //var_dump($_POST);
-    if(isset($data[$field]))
-      return $data[$field];
-      
+    if(isset($_POST[$field]))
+      return $_POST[$field];
+
     return null;
   }
 
@@ -20,6 +25,7 @@ class Form {
   Vérifie et retourne les données entrées par l'user et envoyées via $_POST
   */
   static public function getFormPost($form,$index) {
+    self::updatePOST();
     $this->_getForm($form, $index, $_POST);
   }
   /*
@@ -92,6 +98,7 @@ class Form {
     // check if a session is started and a token is transmitted, if not return an error
     if(!isset($_SESSION[$form.'_token']))
     return false;
+    self::updatePOST();
     // check if the form is sent with token in it
     if(!isset($_POST['token']))
     return false;

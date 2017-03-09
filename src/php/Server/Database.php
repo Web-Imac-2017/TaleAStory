@@ -22,7 +22,7 @@ class Database {
     $this->password = $config_data['database']['password'];
     $this->dbName = $config_data['database']['name'];
     $this->options = array(
-      PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
+      \PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
     );
   }
 
@@ -40,9 +40,9 @@ class Database {
   private function getPDO() {
     if($this->pdo === null) {
       try{
-        $pdo = new PDO('mysql:host='.$this->server.';dbname='.$this->dbName,$this->userName,$this->password,$this->options);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+        $pdo = new \PDO('mysql:host='.$this->server.';dbname='.$this->dbName,$this->userName,$this->password,$this->options);
+        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $pdo->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
         $this->pdo = $pdo;
       }
       catch(Exception $e){
@@ -100,7 +100,7 @@ class Database {
   }
 
   /**
-   * sendQuery : prépare la query puis l'execute en utilisant un objet PDO
+   * sendQuery : prépare la query puis l'execute en utilisant un objet \PDO
    * @param  [string] $statement     [texte de la query: variables de type "?"]
    * @param  [array] $array_entries [[0...n] => "variables à executer dans la query"]
    * @return [array]          [contient toutes les données retournées par la requête]

@@ -1,8 +1,10 @@
 <?php
 
-require_once 'Achievement.php';
-require_once 'Form.php';
-require_once 'module_database.php';
+namespace Controller;
+
+use \Server\Database;
+use \Server\Form;
+use \Model\Achievement;
 
 class AchievementController {
 
