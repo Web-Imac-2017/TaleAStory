@@ -22,15 +22,14 @@ class Test extends React.Component{
 
 	componentDidMount(){
 		let that = this;
-		fetch(config.path('connexion'), {
+		fetch(config.path('stepCount'), {
 		                method: 'post',
 		                headers: {
 											'Content-Type' : 'application/json'
 		                },
 										credentials: "same-origin",
 										body: JSON.stringify({
-											yolo : "bonjour",
-											lol : 5
+											
 										})
 		              }
 				  ).then(
