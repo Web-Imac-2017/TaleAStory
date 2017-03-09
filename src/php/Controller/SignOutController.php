@@ -5,10 +5,11 @@ use \Server\Response;
 class SignOutControllers{
 
 
-  static public signout() {
+  static public function signOut() {
     $player = Player::connectSession();
     if(!$player) {return Response::redirect("taleastory/");}
     else {
+        echo "test";
         $player->disconnect();
         return Response::redirect("taleastory/");
     }

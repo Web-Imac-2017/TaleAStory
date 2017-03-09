@@ -1,6 +1,7 @@
 <?php
 namespace Model;
 
+
 class SpecificChoice extends Choice {
 
   public function __construct($answer,$idStep,$transitionText,$idNextStep){

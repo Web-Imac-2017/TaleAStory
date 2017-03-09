@@ -17,8 +17,9 @@ class Form {
     return null;
   }
 
-  static public function getForm(){
+  static public function getFullForm(){
     self::updatePOST();
+    return $_POST;
   }
 
   /*

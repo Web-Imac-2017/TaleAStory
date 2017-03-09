@@ -1,9 +1,10 @@
 <?php
+namespace Model;
+
 use \Model\Choice;
 use \Server\Response;
 use \Model\Player;
 use \Server\Database;
-namespace Model;
 
 Class Step {
   public $id;

@@ -22,9 +22,11 @@ class MakeGuestController{
       $guestData['imgpath']= $guest->imgpath;
       $guestData['mail']= $guest->mail;
       $json = array('success', $guestData);
+      echo "blabla";
       return Response::jsonResponse($json);
     }
   }
+
 
 }
 
