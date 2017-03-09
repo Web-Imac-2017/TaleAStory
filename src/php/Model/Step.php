@@ -1,4 +1,7 @@
 <?php
+use \Model\Choice;
+use \Server\Response;
+use \Model\Player;
 use \Server\Database;
 namespace Model;
 Class Step {
