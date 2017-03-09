@@ -1,5 +1,7 @@
 {
   "/":"Server\\Router::index",
   "/connexion":"Server\\Router::connexion",
-  "__default__":"Server\\Router::index"
+  "__default__":"Server\\Router::index",
+  "/currentuser/stats":"Controller\\CurrentUserController::stats",
+  "/signin":"SignInController::signIn"
 }

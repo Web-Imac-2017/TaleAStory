@@ -5,7 +5,7 @@ require_once('Player.php');
 class SignOutControllers{
 
 
-  static public signout() {
+  static public function signOut() {
     $player = Player::connectSession();
     if(!$player) {return Response::redirect("taleastory/");}
     else {

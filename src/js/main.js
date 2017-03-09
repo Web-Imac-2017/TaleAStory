@@ -29,8 +29,8 @@ class Test extends React.Component{
 		                },
 										credentials: "same-origin",
 										body: JSON.stringify({
-											yolo : "bonjour",
-											lol : 5
+											login : "bonjour",
+											password : "test"
 										})
 		              }
 				  ).then(

@@ -44,6 +44,7 @@ gulp.task('watchOTHER', ['otherAll'], function(){
 });
 
 function buildPHP(phpSrc) {
+  console.log(phpSrc);
   return gulp.src(phpSrc, {base: configPhp.srcPath})
         .pipe(gulp.dest(configPhp.outputDir));
 }

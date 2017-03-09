@@ -16,6 +16,7 @@ try {
 } catch (RouterException $error) {
   $error->send();
 }
+echo "test";
 
 
 ?>
