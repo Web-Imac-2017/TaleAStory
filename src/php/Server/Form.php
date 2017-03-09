@@ -3,7 +3,7 @@ namespace Server;
 class Form {
 
   static public function updatePOST(){
-    if($_POST)
+    if(empty($_POST))
       $_POST = json_decode(file_get_contents('php://input'), true);
   }
 
@@ -15,6 +15,10 @@ class Form {
       return $_POST[$field];
 
     return null;
+  }
+
+  static public function getFullForm(){
+    self::updatePOST();
   }
 
   /*

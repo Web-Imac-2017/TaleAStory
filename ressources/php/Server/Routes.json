@@ -2,6 +2,8 @@
   "/":"Server\\Router::index",
   "/connexion":"Server\\Router::connexion",
   "__default__":"Server\\Router::index",
-  "/addchoice":"Controller\\ChoiceController::addChoice",
-  "/stepCount":"Controller\\stepController::stepCount"
+  "/currentuser/stats":"Controller\\CurrentUserController::stats",
+  "/signin":"Controller\\SignInController::signIn",
+  "/addchoice":"Controller\\ChoiceController::addChoice"
+
 }

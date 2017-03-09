@@ -22,14 +22,16 @@ class Test extends React.Component{
 
 	componentDidMount(){
 		let that = this;
-		fetch(config.path('stepCount'), {
+
+		fetch(config.path('signin'), {
 		                method: 'post',
 		                headers: {
 											'Content-Type' : 'application/json'
 		                },
 										credentials: "same-origin",
 										body: JSON.stringify({
-											
+											login : "bonjour",
+											password : 5
 										})
 		              }
 				  ).then(

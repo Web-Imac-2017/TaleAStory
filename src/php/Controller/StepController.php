@@ -59,20 +59,35 @@ class stepController {
 
 
   public static function addStep() {
-    echo var_dump($_POST, $_SERVER, $_GET);
-    $imgpath = "truc";
+    $imgpath = Form::uploadFile("stepImg");
     $body = Form::getField("body");
     $question = Form::getField("question");
     $accepted = Form::getField("accepted");
     $idType = Form::getField("idType");
+<<<<<<< HEAD
     $item = new Step($imgpath, $body, $question, $accepted, $idType);
     //$item->save();
   //  Response::jsonResponse(???);
     Response::jsonResponse($_POST);
+=======
+    if ($imgpath == NULL || $body == NULL || $question == NULL || $accepted == NULL || $idType == NULL)
+    return Response::jsonResponse(array(
+      'status' => "error",
+      'message' => "ta race tu ne peux pas ajouter ce step !"
+    ));
+    $step = new Step($imgpath, $body, $question, $accepted, $idType);
+    $step->save();
+    Response::jsonResponse($step);
+>>>>>>> 402e841861e9e8a1c47c15e4aace1e517667bb0e
   }
 }
 
+<<<<<<< HEAD
 /*  public static function updateStep() {
+=======
+  public static function updateStep() {
+    $tmp = $imgpath;
+>>>>>>> 402e841861e9e8a1c47c15e4aace1e517667bb0e
     $imgpath = Form::uploadFile("stepImg");
     $body = Form::getField("body");
     $question = Form::getField("question");
@@ -96,13 +111,17 @@ class stepController {
 
   public static function deleteStep() {
     $id = Form::getField("id");
-    $item = new Step("", "", "", "","");
-    $item->id = $id;
-    $item->delete();
+    $step = new Step("", "", "", "","");
+    $step->id = $id;
+    $step->delete();
   }
 
+<<<<<<< HEAD
   //echo var_dump($_POST);
 
 }*/
+=======
+}
+>>>>>>> 402e841861e9e8a1c47c15e4aace1e517667bb0e
 
- ?>
+?>

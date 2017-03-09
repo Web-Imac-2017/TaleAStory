@@ -1,6 +1,7 @@
 <?php
-use \Server\Database;
 namespace Model;
+use \Server\Database;
+
 const UNAVAILABLE_LOGIN = -2;
 const NON_VALID_ENTRY = -1;
 

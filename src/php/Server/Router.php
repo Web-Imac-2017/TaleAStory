@@ -1,5 +1,6 @@
 <?php
 namespace Server;
+var_dump($_GET);
 class Router {
 
     static $routes = [];
