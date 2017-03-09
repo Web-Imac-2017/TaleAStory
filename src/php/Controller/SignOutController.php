@@ -1,7 +1,7 @@
 <?php
 
-require_once('Response.php');
-require_once('Player.php');
+use \Model\Player;
+use \Server\Response;
 class SignOutControllers{
 
 

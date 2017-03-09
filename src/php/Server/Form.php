@@ -19,6 +19,7 @@ class Form {
 
   static public function getFullForm(){
     self::updatePOST();
+    return $_POST;
   }
 
   /*
@@ -131,14 +132,16 @@ class Form {
   /*
   @function uploadFile
   @param  $file  nom de l'input qui upload le fichier
-  @return $filename nom du fichier
+  @return un objet avec un statut (soit "error", soit "ok"), avec soit un message d'erreur soit le nom de l'image dans un champ result
   Gestion uploads fichiers
+  Si No file, renvoyer une chaine de caractère vide
   */
   static public function uploadFile($file_input){
     $whitelist = array('image/jpg', 'image/jpeg','image/png','image/gif','image/bmp');
     try {
         if(!isset($_FILES["$file_input"]))
-            throw new RuntimeException('No file.');
+            //throw new RuntimeException('No file.');
+            return array('statut' => 'ok', 'result' => '');
         //Extension
         if(empty($_FILES[$file_input]['tmp_name'])
             || !in_array($_FILES[$file_input]['type'], $whitelist))

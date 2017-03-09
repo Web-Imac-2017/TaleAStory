@@ -89,6 +89,7 @@ class stepController {
     $tmp = $imgpath;
 >>>>>>> 402e841861e9e8a1c47c15e4aace1e517667bb0e
     $imgpath = Form::uploadFile("stepImg");
+    // récupérer 1 obj avec soit statut "error" ou "ok", selon le statut : message d'erreur ou nom de l'image (faire des if)
     $body = Form::getField("body");
     $question = Form::getField("question");
     $accepted = Form::getField("accepted");
