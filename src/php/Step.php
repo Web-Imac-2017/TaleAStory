@@ -92,15 +92,25 @@ Class Step {
        $nextStep = new Step($nextStepArray[0]['ImgPath'],$nextStepArray[0]['Body'],$nextStepArray[0]['Question'],1,$nextStepArray[0]['IDType']);
        $nextStep->id = $choice->iDNextStep;
        $player->passStep($nextStep);
-       return $player;
+       return array(
+         'status' => "succeed",
+         'message' => "Le choix a bien été enregistré"
+       );
      }
      else {
-       return Response::jsonResponse(array(
+       return array(
          'status' => "error",
-         'message' => "ta race tu ne peux pas faire ce choix !"
-       ));
+         'message' => "Ta race tu ne peux pas faire ce choix !"
+       );
      }
    }
+
+
+   public static function countSteps(){
+     return Database::instance()->count('Step','IDStep');
+   }
+
+
 
 }
 ?>

@@ -180,5 +180,14 @@ class Form {
     return preg_replace('/\\.[^.\\s]{3,4}$/', '', $source_name)."_tiny.jpg";
   }
 
+  //POUR LES FORM
+  static public function getField($field) {
+    if(isset($_POST[$field]))
+      return $_POST[$field];
+    if(isset($_GET[$field]))
+      return $_GET[$field];
+    return null;
+  }
+
 }
 ?>
