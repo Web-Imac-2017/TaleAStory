@@ -1,10 +1,12 @@
 <?php
 
-require_once 'Step.php';
-require_once 'Form.php';
-require_once 'module_database.php';
+namespace Controller;
 
-class StepControler {
+use \Server\Database;
+use \Server\Form;
+use \Model\Step;
+
+class StepController {
   public static function addStep() {
     echo var_dump($_POST, $_SERVER, $_GET);
     $imgpath = "truc";

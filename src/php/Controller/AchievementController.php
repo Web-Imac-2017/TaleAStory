@@ -1,10 +1,12 @@
 <?php
 
-require_once 'Achievement.php';
-require_once 'Form.php';
-require_once 'module_database.php';
+namespace Controller;
 
-class AchievementControler {
+use \Server\Database;
+use \Server\Form;
+use \Model\Achievement;
+
+class AchievementController {
 
   public static function addAchievement() {
     echo var_dump($_POST, $_SERVER, $_GET);

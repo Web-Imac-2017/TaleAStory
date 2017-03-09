@@ -1,10 +1,12 @@
 <?php
 
-require_once 'Item.php';
-require_once 'Form.php';
-require_once 'module_database.php';
+namespace Controller;
 
-class ItemControler {
+use \Server\Database;
+use \Server\Form;
+use \Model\Item;
+
+class ItemController {
 
   public static function addItem() {
     echo var_dump($_POST, $_SERVER, $_GET);
