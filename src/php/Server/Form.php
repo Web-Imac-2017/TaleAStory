@@ -1,5 +1,17 @@
 <?php
+namespace Server;
 class Form {
+
+  static public function getField($field){
+    $data = json_decode(file_get_contents('php://input'), true);
+    //$_POST = array_merge($data, $_POST);
+    //var_dump($_POST);
+    if(isset($data[$field]))
+      return $data[$field];
+      
+    return null;
+  }
+
   /*
   @function getFormPost
   @param string form  id du form concerné

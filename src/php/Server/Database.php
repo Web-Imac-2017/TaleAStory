@@ -1,4 +1,5 @@
 <?php
+namespace Server;
 class Database {
   public $pdo;
   protected $server;
@@ -27,7 +28,7 @@ class Database {
 
   static public function instance(){
     if(is_null(self::$_instance)){
-      self::$_instance = new Database("database_config.json");
+      self::$_instance = new Database("Server/database_config.json");
     }
     return self::$_instance;
   }
@@ -94,7 +95,7 @@ class Database {
       $statement .= " ".$addEndStatement;
     }
     $array_entries = $this->processArrayEntries($entries);
-    echo $statement;
+    //echo $statement;
     return $this->sendQuery($statement, $array_entries);
   }
 
@@ -125,12 +126,12 @@ class Database {
     $fields = $this->processFields($entries);
     $values = $this->processValues($entries);
     $statement = $into.$fields.$values;
-    echo "\n".$statement."\n";
+    //echo "\n".$statement."\n";
     return $this->sendInsert($statement, $entries);
   }
 
   private function sendInsert($statement, $entries) {
-    echo '<pre>' . var_export($entries, true) . '</pre>';
+    //echo '<pre>' . var_export($entries, true) . '</pre>';
     try {
     $insert = $this->getPDO()->prepare($statement);
     $insert->execute($entries) or die(print_r($insert->errorInfo()));
@@ -159,7 +160,7 @@ class Database {
     $where = $this->processWHERE($identification);
     $array_entries = array_merge($this->processArrayEntries($entries), $this->processArrayEntries($identification));
     $statement = $update.$from.$set.$where;
-    echo "\n".$statement."\n";
+    //echo "\n".$statement."\n";
     return $this->sendUpdate($statement, $array_entries);
   }
 
@@ -222,7 +223,7 @@ class Database {
       $statement .= $where;
     }
     $array_entries = $this->processArrayEntries($entries);
-    echo $statement;
+    //echo $statement;
     $data = $this->sendQuery($statement, $array_entries);
     return $data[0][0];
   }

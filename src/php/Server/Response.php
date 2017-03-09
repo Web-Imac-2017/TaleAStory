@@ -1,5 +1,5 @@
 <?php
-
+namespace Server;
 class Response
 {
 
@@ -8,7 +8,7 @@ class Response
 * Attend en paramètre un objet contenant les infos sur l'utilisateur courant
 */
   public static function generateIndex($param){
-    require"./header.php";
+    require"./View/header.php";
     require"../body.html";
     exit();
   }

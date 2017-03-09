@@ -1,5 +1,6 @@
 <?php
-
+use \Server\Database;
+namespace Model;
 Class Achievement {
   public $id;
   public $name;
