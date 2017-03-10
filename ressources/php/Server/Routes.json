@@ -5,5 +5,8 @@
   "/currentuser/stats":"Controller\\CurrentUserController::stats",
   "/signin":"Controller\\SignInController::signIn",
   "/addchoice":"Controller\\ChoiceController::addChoice",
+  "/step/list/:start/:count":"Controller\\StepController::getStepsList",
+  "step/count/":"Controller\\StepController::stepCount",
+  "currentstep/response":"Controller\\StepController::stepResponse",
   "/achievements":"Controller\\CurrentUserController::achievements"
 }

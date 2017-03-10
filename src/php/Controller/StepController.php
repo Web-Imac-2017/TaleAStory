@@ -1,12 +1,62 @@
 <?php
-
 namespace Controller;
-
 use \Server\Database;
 use \Server\Form;
 use \Model\Step;
-
 class StepController {
+
+  public static function stepCount() {
+    return Step::countSteps();
+  }
+
+  public static function getStepsList($start, $count) {
+      $stepParam = Database::instance()->query("Step", Array("IDStep"=> "",
+                                                            "ImgPath"=>"",
+                                                            "Body"=>"",
+                                                            "Question"=>"",
+                                                            "IDType"=>""),
+                                                          "LIMIT ".$count." OFFSET ".$start);
+
+    response::jsonResponse($stepParam);
+  }
+
+  public static function getTenStepsList($start) {
+    $stepParam = Database::instance()->query("Step", Array("IDStep"=> "",
+                                                          "ImgPath"=>"",
+                                                          "Body"=>"",
+                                                          "Question"=>"",
+                                                          "IDType"=>""),
+                                                        "LIMIT 10 OFFSET ".$start);
+
+    response::jsonResponse($stepParam);
+  }
+
+  public static function getStep() { //récuperer les options grâce au module global : Form.php ->
+    Form::getFormPost( );
+
+  }
+
+  public static function stepResponse(){
+    $answer = \Server\Form::getField("answer");
+    echo $answer;
+    $id = 2; //\Server\Session::getCurrentUser();
+    $player = \Model\Player::getPlayer($id);
+    var_dump($player);
+
+
+    if ($player == NULL) {
+      echo "Joueur introuvable, IDPlayer incorrect.";
+    }
+    else {
+        $CurrentStep = $player->currentStep();
+        var_dump($CurrentStep);
+
+        $array = $CurrentStep->processAnswer($player,$answer);
+        var_dump($array);
+    }
+  }
+
+
   public static function addStep() {
     $imgpath = Form::uploadFile("stepImg");
     $body = Form::getField("body");
@@ -22,7 +72,6 @@ class StepController {
     $step->save();
     Response::jsonResponse($step);
   }
-
   public static function updateStep() {
     $tmp = $imgpath;
     $imgpath = Form::uploadFile("stepImg");
@@ -46,14 +95,11 @@ class StepController {
       array_push($entries, $name);
     $item->update($entries);
   }
-
   public static function deleteStep() {
     $id = Form::getField("id");
     $step = new Step("", "", "", "","");
     $step->id = $id;
     $step->delete();
   }
-
 }
-
 ?>

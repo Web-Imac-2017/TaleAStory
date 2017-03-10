@@ -23,6 +23,23 @@ class Player {
     $this->id = $id;
   }
 
+  static public function getPlayer($id) {
+    $playerData = Database::instance()->query("Player", array("IDPlayer"=>$id, "*"=>""));
+
+    if ($playerData != NULL) {
+        $player = new Player(
+          $playerData[0]["IDPlayer"],
+          $playerData[0]["Pseudo"],
+          $playerData[0]["Login"],
+          $playerData[0]["Pwd"],
+          $playerData[0]["Mail"],
+          $playerData[0]["ImgPath"]
+        );
+        return $player;
+    }
+    else return NULL;
+  }
+
   static public function signup($pseudo, $login, $pwd, $mail, $imgpath = NULL) {
     //echo "SIGN UP!";
     if(Player::checkLogin($login)) {return UNAVAILABLE_LOGIN;}
@@ -277,7 +294,7 @@ class Player {
       )
     );
     $currentStep = Database::instance()->query($tables, array("Player.IDPlayer"=>$this->id, "Step.*"=> ""));
-    return $currentStep;
+    return new Step($currentStep[0]['ImgPath'], $currentStep[0]['Body'], $currentStep[0]['Question'], $currentStep[0]['IDType']);
   }
 
   public function pastSteps() {
