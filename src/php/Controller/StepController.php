@@ -49,10 +49,8 @@ class StepController {
     }
     else {
         $CurrentStep = $player->currentStep();
-        var_dump($CurrentStep);
-
         $array = $CurrentStep->processAnswer($player,$answer);
-        var_dump($array);
+        var_dump($array);return Response:jsonResponse($array);
     }
   }
 

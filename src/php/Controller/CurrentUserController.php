@@ -1,8 +1,11 @@
 <?php
-const ERR_NOT_CONNECTED = -4;
+namespace Controller;
 
-require_once('Model/Player.php');
-require_once('Server/Response.php');
+use \Model\Player;
+use \Server\Database;
+use \Server\Response;
+use \Server\Session;
+const ERR_NOT_CONNECTED = -4;
 
 class CurrentUserController{
 
@@ -47,7 +50,7 @@ class CurrentUserController{
     }
   }
 
-<<<<<<< Updated upstream
+
   static public function currentUser() {
     $id = Session::getCurrentUser();
     if ($id == NULL)
@@ -55,18 +58,19 @@ class CurrentUserController{
       'status' => "error",
       'message' => "ta race il n'y a aucun utilisateur connecté !"
     ));
-    else
+    else{
       //demander à Lou
+    }
   }
   static public function achievements(){
     $userId = Session::getCurrentUser();
-    $achievements = Database::instance()->query("PlayerAchievement",array("IDPlayer"=>$userId, "Achievement.*" => ""));
+    $achievements = Database::instance()->query("PlayerAchievement",array("IDPlayer"=>$userId, "*" => ""));
     return Response::jsonResponse($achievements);
   }
 
   static public function unreadachievements(){
     $userId = Session::getCurrentUser();
-    $achievements = Database::instance()->query("PlayerAchievement",array("IDPlayer"=>$userId, "isRead"=>"0", "Achievements.*" => ""));
+    $achievements = Database::instance()->query("PlayerAchievement",array("IDPlayer"=>$userId, "isRead"=>0, "*" => ""));
     return Response::jsonResponse($achievements);
   }
 }
