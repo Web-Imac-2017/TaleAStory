@@ -199,6 +199,21 @@ class Database {
     }
   }
 
+  public function count($table, $count, $entries = NULL){
+    $count = 'SELECT COUNT('.$count.')';
+    $from = $this->processFROM($table);
+    $statement = $count.$from;
+    $array_entries = [];
+    if($entries) {
+      $where = $this->processWHERE($entries);
+      $statement .= $where;
+      $array_entries = $this->processArrayEntries($entries);
+    }
+    //echo $statement;
+    $data = $this->sendQuery($statement, $array_entries);
+    return $data[0][0];
+  }
+
   /**
    * [arrayMap description]
    * @param  [type] $entry [description]
@@ -214,22 +229,43 @@ class Database {
     return $map;
   }
 
-  public function count($table, $count, $entries = NULL){
-      $count = 'SELECT COUNT('.$count.')';
-      $from = $this->processFROM($table);
-      $statement = $count.$from;
-      $array_entries = [];
-      if($entries) {
-        $where = $this->processWHERE($entries);
-        $statement .= $where;
-        $array_entries = $this->processArrayEntries($entries);
+
+
+  public function arrayClean($array ,$key_alpha, $relevant=0){
+    $array_clean = array();
+    if (!$key_alpha) {
+      foreach($array as $key=>$value) {
+        if(is_int($key)){
+          if($relevant) {
+            if(in_array($key, $relevant)){array_push($array_clean, $value);}
+          } else {array_push($array_clean, $value);}
+        }
       }
-      //echo $statement;
-      $data = $this->sendQuery($statement, $array_entries);
-      return $data[0][0];
+    } else {
+      foreach($array as $key=>$value) {
+        if(!is_int($key)){
+          if($relevant) {
+            if(in_array($key, $relevant)){$array_clean[$key] = $value;}
+          } else {$array_clean[$key] = $value;}
+        }
+      }
     }
-
-
+    return $array_clean;
+  }
+  /**
+   * [dataClean Nettoie la réponse d'une query]
+   * @param  [array]  $query_response [réponse envoyée par la query]
+   * @param  [booléen]  $key_alpha        [true : ne garde que les index alphabétiques, false : ne garde que les index numériques]
+   * @param  [array] $relevant       [facultatif, liste des champs à conserver]
+   * @return [array]                  [une liste de tableaux soit indexés (!$key_alpha) soit associatif ($key_alpha)]
+   */
+  public function dataClean($query_response, $key_alpha, $relevant=0){
+    $data_clean = array();
+    foreach($query_response as $array) {
+      array_push($data_clean, $this->arrayClean($array, $key_alpha, $relevant));
+    }
+    return $data_clean;
+  }
 
 
   //////////*****TRAITEMENTS DES PARAMETRES POUR LA CONSTRUCTION DES REQUETES******//////////

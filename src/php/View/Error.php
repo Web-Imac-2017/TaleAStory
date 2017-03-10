@@ -5,12 +5,12 @@ class Error {
 /**
 * Permet de définir une erreur comme étant un message, un code et un status initialisé a "error"
 */
-  public static $status = "error";
+  public static $etat = "error";
 
   public function __construct($message,$code = 0) {
-      $this->message = $message;
+      $this->message = json_encode($message);
       $this->code = $code;
-      $this->status = self:$status;
+      $this->status = self::$etat;
   }
 
 }

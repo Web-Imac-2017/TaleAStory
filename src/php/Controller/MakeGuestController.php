@@ -1,7 +1,9 @@
 <?php
+namespace Controller;
 use \Model\Player;
 use \Server\Database;
 const FAILED_SIGNUP = -5;
+
 class MakeGuestController{
 
   public function __construct(){

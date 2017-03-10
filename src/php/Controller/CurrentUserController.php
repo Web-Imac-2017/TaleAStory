@@ -10,6 +10,7 @@ const ERR_NOT_CONNECTED = -4;
 class CurrentUserController{
 
 
+
   static public function stats(){
     $player = Player::connectSession();
     if(!$player) return ERR_NOT_CONNECTED;
@@ -21,11 +22,12 @@ class CurrentUserController{
   }
 
   static public function items(){
-    $player = Player::connectSession();
+    //$player = Player::connectSession();
+    $player = Player::connect("login","pwd");
     if(!$player) {return ERR_NOT_CONNECTED;}
     else {
       $items = $player->items();
-      $items = Database::instance()->dataClean($items, true);
+      $items = Database::instance()->dataClean($items, true, array('Brief', 'ImgPath', 'Name', 'quantity'));
       return Response::jsonResponse($items);
     }
   }

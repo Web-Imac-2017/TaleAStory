@@ -1,6 +1,7 @@
 <?php
 namespace Model;
 use \Server\Database;
+use \Server\Session;
 
 const UNAVAILABLE_LOGIN = -2;
 const NON_VALID_ENTRY = -1;
@@ -12,6 +13,7 @@ class Player {
   public $pwd;
   public $mail;
   public $imgpath;
+  public $admin;
   public $defaultImgpath = "../../defaultImg.jpg";
 
   private function __construct($id, $pseudo, $login, $pwd, $mail, $imgpath = NULL){
@@ -151,13 +153,13 @@ class Player {
 
   static public function checkPwd($pwd, $login){
     $qry = Database::instance()->query("player",array("Login"=>$login, "Pwd" => ""));
-    $hashed = $qry[0]["Pwd"];
+    $hashed = current($qry)["Pwd"];
     return Database::instance()->decode($pwd, $hashed);
   }
 
   static public function checkLogin($login){
     $qry = Database::instance()->query("player",array("Login"=>$login, "IDPlayer"=>""));
-    $login = $qry[0]['Login'];
+    $login = current($qry)['Login'];
     return $login;
   }
   /*

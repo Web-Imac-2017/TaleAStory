@@ -8,5 +8,6 @@
   "/step/list/:start/:count":"Controller\\StepController::getStepsList",
   "step/count/":"Controller\\StepController::stepCount",
   "currentstep/response":"Controller\\StepController::stepResponse",
-  "currentuser/achievements":"Controller\\CurrentUserController::achievements"
+  "currentuser/achievements":"Controller\\CurrentUserController::achievements",
+  "currentuser/items":"Controller\\CurrentUserController::items"
 }
