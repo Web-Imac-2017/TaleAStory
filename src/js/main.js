@@ -22,23 +22,15 @@ class Test extends React.Component{
 
 	componentDidMount(){
 		let that = this;
-<<<<<<< Updated upstream
-		fetch(config.path('signin'), {
-=======
 		fetch(config.path('achievements'), {
->>>>>>> Stashed changes
 		                method: 'post',
 		                headers: {
 											'Content-Type' : 'application/json'
 		                },
 										credentials: "same-origin",
 										body: JSON.stringify({
-<<<<<<< Updated upstream
 											login : "bonjour",
 											password : 5
-=======
-
->>>>>>> Stashed changes
 										})
 		              }
 				  ).then(

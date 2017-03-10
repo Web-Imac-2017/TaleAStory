@@ -1,13 +1,9 @@
 <?php
 const ERR_NOT_CONNECTED = -4;
-<<<<<<< Updated upstream
-use \Model\Player;
-use \Server\Response;
-use \Server\Database;
-=======
+
 require_once('Model/Player.php');
 require_once('Server/Response.php');
->>>>>>> Stashed changes
+
 class CurrentUserController{
 
 
@@ -62,7 +58,6 @@ class CurrentUserController{
     else
       //demander à Lou
   }
-=======
   static public function achievements(){
     $userId = Session::getCurrentUser();
     $achievements = Database::instance()->query("PlayerAchievement",array("IDPlayer"=>$userId, "Achievement.*" => ""));
@@ -74,8 +69,5 @@ class CurrentUserController{
     $achievements = Database::instance()->query("PlayerAchievement",array("IDPlayer"=>$userId, "isRead"=>"0", "Achievements.*" => ""));
     return Response::jsonResponse($achievements);
   }
-
-
->>>>>>> Stashed changes
 }
 ?>
