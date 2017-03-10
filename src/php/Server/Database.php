@@ -215,18 +215,19 @@ class Database {
   }
 
   public function count($table, $count, $entries = NULL){
-    $count = 'SELECT COUNT('.$count.')';
-    $from = $this->processFROM($table);
-    $statement = $count.$from;
-    if($entries) {
-      $where = $this->processWHERE($entries);
-      $statement .= $where;
+      $count = 'SELECT COUNT('.$count.')';
+      $from = $this->processFROM($table);
+      $statement = $count.$from;
+      $array_entries = [];
+      if($entries) {
+        $where = $this->processWHERE($entries);
+        $statement .= $where;
+        $array_entries = $this->processArrayEntries($entries);
+      }
+      //echo $statement;
+      $data = $this->sendQuery($statement, $array_entries);
+      return $data[0][0];
     }
-    $array_entries = $this->processArrayEntries($entries);
-    //echo $statement;
-    $data = $this->sendQuery($statement, $array_entries);
-    return $data[0][0];
-  }
 
 
 
@@ -352,9 +353,11 @@ class Database {
   private function processUPDATE($entries) {
     $process_set;
     foreach ($entries as $field => $entry) {
-      $process_set .= $field." = ?";
-      if($entry != end($entries)) {
-        $process_set .=", ";
+      if($entry !== ""){
+        $process_set .= $field." = ?";
+        if($entry != end($entries)) {
+          $process_set .=", ";
+        }
       }
     }
     return $process_set;

@@ -19,18 +19,15 @@ class Test extends React.Component{
 		super(props);
 		this.state = { text : "" };
 	}
-
 	componentDidMount(){
 		let that = this;
-		fetch(config.path('signin'), {
+		fetch(config.path('currentuser/unreadachievements'), {
 		                method: 'post',
 		                headers: {
 											'Content-Type' : 'application/json'
 		                },
 										credentials: "same-origin",
 										body: JSON.stringify({
-											login : "bonjour",
-											password : 5
 										})
 		              }
 				  ).then(

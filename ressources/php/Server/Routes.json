@@ -9,6 +9,9 @@
   "/updatechoice":"Controller\\ChoiceController::updateChoice",
   "/addstep":"Controller\\StepController::addStep",
   "/deletestep":"Controller\\StepController::deleteStep",
-  "/updatestep":"Controller\\StepController::updateStep"
-
+  "/updatestep":"Controller\\StepController::updateStep",
+  "/step/list/:start/:count":"Controller\\StepController::getStepsList",
+  "step/count/":"Controller\\StepController::stepCount",
+  "currentstep/response":"Controller\\StepController::stepResponse",
+  "currentuser/achievements":"Controller\\CurrentUserController::achievements"
 }

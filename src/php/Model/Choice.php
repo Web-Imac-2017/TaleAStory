@@ -69,7 +69,6 @@ class Choice {
 
        Database::instance()->delete(self::$table, $entries);
      }catch (RuntimeException $e) {
-         echo $e->getMessage();
          return false;
      }
      return true;
@@ -115,21 +114,20 @@ class Choice {
        $itemsQuery = Database::instance()->query($tables,array("ItemRequirement.IDChoice"=>"$this->id","ItemRequirement.quantity" => "","Item.Name"=>"", "Item.IDItem"=>""));
        $requiried_items = Database::instance()->arrayMap($itemsQuery, 'IDItem', 'quantity');
 
-       var_dump($requiried_stats);
+       /*var_dump($requiried_stats);
        var_dump($itemsQuery);
        var_dump($requiried_items);
-       var_dump($earned_items);
+       var_dump($earned_items);*/
 
        //on modifie le joueur
-       /*if(!empty($requiried_stats))
+       if(!empty($requiried_stats))
           $player->alterStats($requiried_stats);
        if(!empty($requiried_items))
           $player->removeItems($requiried_items);
        if(!empty($earned_items))
-          $player->addItems($earned_items);*/
+          $player->addItems($earned_items);
 
     }catch (RuntimeException $e) {
-        echo $e->getMessage();
         return false;
     }
     return true;
@@ -143,7 +141,7 @@ class Choice {
   public function checkAnswer($answer){
     $tables = array(self::$table=>"IDChoice");
     $choiceAnswer = Database::instance()->query($tables,array("Choice.Answer"=>"","IDChoice"=>$this->id));
-    var_dump($choiceAnswer);
+    //var_dump($choiceAnswer);
     return $choiceAnswer[0]['Answer'] == $answer ? true:false;
   }
   /*
