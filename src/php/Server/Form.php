@@ -1,5 +1,8 @@
 <?php
 namespace Server;
+
+use \Server\RouterException;
+
 class Form {
 
   static public function updatePOST(){
@@ -19,6 +22,7 @@ class Form {
 
   static public function getFullForm(){
     self::updatePOST();
+    return $_POST;
   }
 
   /*
@@ -135,31 +139,45 @@ class Form {
   Gestion uploads fichiers
   */
   static public function uploadFile($file_input){
+    var_dump("OK DEBUT");
     $whitelist = array('image/jpg', 'image/jpeg','image/png','image/gif','image/bmp');
-    try {
-        if(!isset($_FILES["$file_input"]))
-            throw new RuntimeException('No file.');
-        //Extension
-        if(empty($_FILES[$file_input]['tmp_name'])
-            || !in_array($_FILES[$file_input]['type'], $whitelist))
-              throw new RuntimeException('Bad file extension...');
-        //Taille > 10 MO
-        if ($_FILES[$file_input]['size'] > 1000000)
-              throw new RuntimeException('Exceeded filesize limit.');
-        //Nom du fichier
-        $ext = strtolower(pathinfo($_FILES[$file_input]['name'],PATHINFO_EXTENSION));
-        do{
-          $filename = sprintf('../assets/images/%s.%s',md5(uniqid(microtime(), true)),$ext);
-        }while(file_exists($filename));
-        //Upload
-        if (!move_uploaded_file($_FILES["$file_input"]['tmp_name'], $filename))
-            throw new RuntimeException('Failed to move uploaded file.');
-        self::createTinyImg($filename);
-      }catch (RuntimeException $e) {
-          echo $e->getMessage();
-          return '';
+
+    if(!isset($_FILES["$file_input"])){
+      $e = new error("Pas de fichier.");
+      $e->send();
+      return null;
+    }
+      var_dump("OK FICHIER");
+    //Extension
+    if(empty($_FILES[$file_input]['tmp_name'])
+        || !in_array($_FILES[$file_input]['type'], $whitelist))
+      {
+        $e = new error("Mauvaise extension de fichier.");
+        $e->send();
+        return null;
       }
-      return $filename;
+    //Taille > 10 MO
+    if ($_FILES[$file_input]['size'] > 1000000)
+    {
+      $e = new error("Taille du fichier > 10MO.");
+      $e->send();
+      return null;
+    }
+    //Nom du fichier
+    $ext = strtolower(pathinfo($_FILES[$file_input]['name'],PATHINFO_EXTENSION));
+    do{
+      $filename = sprintf('../assets/images/%s.%s',md5(uniqid(microtime(), true)),$ext);
+    }while(file_exists($filename));
+    //Upload
+    if (!move_uploaded_file($_FILES["$file_input"]['tmp_name'], $filename))
+    {
+      $e = new error("Impossible d'uploader le fichier.");
+      $e->send();
+      return null;
+    }
+    self::createTinyImg($filename);
+
+    return $filename;
   }
 
   /*

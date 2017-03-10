@@ -5,6 +5,7 @@ use \Model\Choice;
 use \Server\Response;
 use \Model\Player;
 use \Server\Database;
+use \Server\RouterException;
 
 Class Step {
   public $id;
@@ -99,10 +100,9 @@ Class Step {
        return $player;
      }
      else {
-       return Response::jsonResponse(array(
-         'status' => "error",
-         'message' => "ta race tu ne peux pas faire ce choix !"
-       ));
+       $e = new error("Tu ne peux pas effectuer ce choix.");
+       $e->send();
+       return null;
      }
    }
 

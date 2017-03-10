@@ -4,6 +4,11 @@
   "__default__":"Server\\Router::index",
   "/currentuser/stats":"Controller\\CurrentUserController::stats",
   "/signin":"Controller\\SignInController::signIn",
-  "/addchoice":"Controller\\ChoiceController::addChoice"
+  "/addchoice":"Controller\\ChoiceController::addChoice",
+  "/deletechoice":"Controller\\ChoiceController::deleteChoice",
+  "/updatechoice":"Controller\\ChoiceController::updateChoice",
+  "/addstep":"Controller\\StepController::addStep",
+  "/deletestep":"Controller\\StepController::deleteStep",
+  "/updatestep":"Controller\\StepController::updateStep"
 
 }

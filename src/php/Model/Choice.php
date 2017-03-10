@@ -31,7 +31,6 @@ class Choice {
        'IDNextStep' => $this->idNextStep
      );
      $id=Database::instance()->insert(self::$table, $entries);
-     var_dump($id);
      if($id != null){
        $this->id = $id;
        return $id;
