@@ -50,7 +50,7 @@ class Requester {
   }
 
   static testCurrentUser(){
-    return fetch(config.path('currentuser/stats/'), {
+    return fetch(config.path('currentuser'), {
               method: 'post',
               headers: {
                 'Content-Type' : 'application/json'
