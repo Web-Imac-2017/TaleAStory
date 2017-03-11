@@ -3,8 +3,9 @@ namespace Model;
 use \Server\Database;
 use \Server\Session;
 
-const UNAVAILABLE_LOGIN = -2;
-const NON_VALID_ENTRY = -1;
+const ERR_LOGIN = -1;
+const ERR_PWD = -2;
+const NON_VALID_ENTRY = -3;
 
 class Player {
   public $id;
@@ -69,9 +70,9 @@ class Player {
   static public function connect($login, $pwd) {
     //echo "CONNECT!";
     $login = Player::checkLogin($login);
+    if(!$login){return ERR_LOGIN;}
     $pwd = Player::checkPwd($pwd, $login);
-    //echo "<pre>".var_export($login, true).var_export($pwd, true)."</pre>";
-    if($login && $pwd) {
+    if(!$pwd){return ERR_PWD;}
       $playerData = Database::instance()->query("player",array("Login"=>$login, "*" => ""));
       $player = new Player(
         $playerData[0]["IDPlayer"],
@@ -81,12 +82,13 @@ class Player {
         $playerData[0]["Mail"],
         $playerData[0]["ImgPath"]
       );
+      if(!$player){return NULL;}
       $player->admin = $player->isAdmin();
       Session::connectUser($player->id, true, $player->login);
       return $player;
-    } else {
+    /*} else {
       return NULL;
-    }
+    }*/
   }
 
   static public function connectSession() {
