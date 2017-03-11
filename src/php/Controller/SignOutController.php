@@ -1,5 +1,5 @@
 <?php
-
+namespace Controller;
 use \Model\Player;
 use \Server\Response;
 class SignOutControllers{

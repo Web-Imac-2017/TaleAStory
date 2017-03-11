@@ -3,24 +3,36 @@ namespace Server;
 
 use \Server\RouterException;
 use \View\Error;
+use \View\Success;
 
 class Form {
-
+  /*
+  @function updatePOST
+  @return void
+  update la variable $_POST avec les données envoyées au serveur
+  */
   static public function updatePOST(){
     if(empty($_POST))
       $_POST = json_decode(file_get_contents('php://input'), true);
   }
-
+  /*
+  @function getField
+  @param string field nom du champ demande
+  @return string  valeur correspondant au champ demande, null si non trouvée
+  Verifie et retourne les donnees entrees par l'user et envoyees via $_POST
+  */
   static public function getField($field){
     self::updatePOST();
-    // = array_merge($data, $_POST);
-    //var_dump($_POST);
     if(isset($_POST[$field]))
       return $_POST[$field];
 
     return null;
   }
-
+  /*
+  @function getFullForm
+  @return $_POST
+  retourne toutes les données d'un formulaire
+  */
   static public function getFullForm(){
     self::updatePOST();
     return $_POST;
@@ -132,6 +144,61 @@ class Form {
     file_put_contents('hacklog.log', $logging, FILE_APPEND);
   }
 
+  /**
+   * Parse raw HTTP request data
+   * Pass in $a_data as an array. This is done by reference to avoid copying
+   * the data around too much.
+   * Any files found in the request will be added by their field name to the
+   * $data['files'] array.
+   * @param   array  Empty array to fill with data
+   * @return  array  Associative array of request data
+   */
+  public static function parse_raw_http_request(array &$a_data)
+  {
+    // read incoming data
+    $input = file_get_contents('php://input');
+    var_dump($input);
+    // grab multipart boundary from content type header
+    preg_match('/boundary=(.*)$/', $_SERVER['CONTENT_TYPE'], $matches);
+
+    // content type is probably regular form-encoded
+    if (!count($matches))
+    {
+      // we expect regular puts to containt a query string containing data
+      parse_str(urldecode($input), $a_data);
+      return $a_data;
+    }
+
+    $boundary = $matches[1];
+
+    // split content by boundary and get rid of last -- element
+    $a_blocks = preg_split("/-+$boundary/", $input);
+    array_pop($a_blocks);
+
+    // loop data blocks
+    foreach ($a_blocks as $id => $block)
+    {
+      if (empty($block))
+        continue;
+
+      // you'll have to var_dump $block to understand this and maybe replace \n or \r with a visibile char
+
+      // parse uploaded files
+      if (strpos($block, 'application/octet-stream') !== FALSE)
+      {
+        // match "name", then everything after "stream" (optional) except for prepending newlines
+        preg_match("/name=\"([^\"]*)\".*stream[\n|\r]+([^\n\r].*)?$/s", $block, $matches);
+        $a_data['files'][$matches[1]] = $matches[2];
+      }
+      // parse all other fields
+      else
+      {
+        // match "name" and optional value in between newline sequences
+        preg_match('/name=\"([^\"]*)\"[\n|\r]+([^\n\r].*)?\r$/s', $block, $matches);
+        $a_data[$matches[1]] = $matches[2];
+      }
+    }
+  }
   /*
   @function uploadFile
   @param  $file  nom de l'input qui upload le fichier
@@ -142,10 +209,12 @@ class Form {
   static public function uploadFile($file_input){
     var_dump("OK DEBUT");
     $whitelist = array('image/jpg', 'image/jpeg','image/png','image/gif','image/bmp');
+    //on parse les data envoyées
+    var_dump($_FILES);
 
-    if(!isset($_FILES["$file_input"])){
+    if(!isset($_FILES) || !isset($_FILES["$file_input"])){
       $e = new Error("Pas de fichier.");
-      $res = array("status"=>"error","resultat"=>$e);
+      return $e;
     }
     var_dump("OK FICHIER");
     //Extension
@@ -153,13 +222,13 @@ class Form {
         || !in_array($_FILES[$file_input]['type'], $whitelist))
       {
         $e = new Error("Mauvaise extension de fichier.");
-        $res = array("status"=>"error","resultat"=>$e);
+        return $e;
       }
     //Taille > 10 MO
     if ($_FILES[$file_input]['size'] > 1000000)
     {
       $e = new Error("Taille du fichier > 10MO.");
-      $res = array("status"=>"error","resultat"=>$e);
+      return $e;
     }
     //Nom du fichier
     $ext = strtolower(pathinfo($_FILES[$file_input]['name'],PATHINFO_EXTENSION));
@@ -170,11 +239,11 @@ class Form {
     if (!move_uploaded_file($_FILES["$file_input"]['tmp_name'], $filename))
     {
       $e = new Error("Impossible d'uploader le fichier.");
-      $res = array("status"=>"error","resultat"=>$e);
+      return $e;
     }
-    self::createTinyImg($filename);
-
-    return array("status"=>"success","resultat"=>$filename);
+    //self::createTinyImg($filename);
+    $e = new Success("$filename");
+    return $e;
   }
 
   /*

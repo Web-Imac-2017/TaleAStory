@@ -90,8 +90,8 @@ class Choice {
             "Stat" => "Stat.IDStat"
           )
        );
-       $statsQuery = Database::instance()->query($tables,array("StatAlteration.IDChoice"=>"$this->id","StatAlteration.Value" => "", "Stat.Name"=>""));
-       $requiried_stats = Database::instance()->arrayMap($statsQuery, 'Name', 'Value');
+       $statsQuery = Database::instance()->query($tables,array("StatAlteration.IDChoice"=>"$this->id","StatAlteration.Value" => "", "Stat.IDStat"=>""));
+       $requiried_stats = Database::instance()->arrayMap($statsQuery, 'IDStat', 'Value');
 
        //on récupère les items gagnés
        $tables = array(
@@ -101,7 +101,6 @@ class Choice {
           )
        );
        $itemsQuery = Database::instance()->query($tables,array("Earn.IDChoice"=>"$this->id","Earn.quantity" => "","Item.Name"=>"","Item.IDItem"=>""));
-       var_dump($itemsQuery);
        $earned_items =Database::instance()->arrayMap($itemsQuery, 'IDItem', 'quantity');
 
        //on récupère les items perdus
@@ -114,8 +113,7 @@ class Choice {
        $itemsQuery = Database::instance()->query($tables,array("ItemRequirement.IDChoice"=>"$this->id","ItemRequirement.quantity" => "","Item.Name"=>"", "Item.IDItem"=>""));
        $requiried_items = Database::instance()->arrayMap($itemsQuery, 'IDItem', 'quantity');
 
-       /*var_dump($requiried_stats);
-       var_dump($itemsQuery);
+      /* var_dump($requiried_stats);
        var_dump($requiried_items);
        var_dump($earned_items);*/
 
@@ -152,7 +150,7 @@ class Choice {
   */
   public function checkPlayerRequirements($player){
     $pStatsQuery =  $player->stats();
-    $player_stats = Database::instance()->arrayMap($pStatsQuery, 'Name', 'Value');
+    $player_stats = Database::instance()->arrayMap($pStatsQuery, 'IDStat', 'Value');
 
     $tables = array(
        array(
@@ -160,11 +158,8 @@ class Choice {
          "Stat" => "Stat.IDStat"
        )
     );
-    $statsQuery = Database::instance()->query($tables,array("StatRequirement.IDChoice"=>"$this->id","StatRequirement.Value" => "", "Stat.Name"=>""));
-    $requiried_stats = Database::instance()->arrayMap($statsQuery, 'Name', 'Value');
-
-    //var_dump($player_stats);
-    //var_dump($requiried_stats);
+    $statsQuery = Database::instance()->query($tables,array("StatRequirement.IDChoice"=>"$this->id","StatRequirement.Value" => "", "StatRequirement.IDStat"=>""));
+    $requiried_stats = Database::instance()->arrayMap($statsQuery, 'IDStat', 'Value');
 
     foreach ($requiried_stats as $key => $value) {
       if(!isset($player_stats["$key"]) || $value>$player_stats["$key"])
@@ -172,7 +167,7 @@ class Choice {
     }
 
     $pItemsQuery =  $player->items();
-    $player_items = Database::instance()->arrayMap($pItemsQuery, 'Name', 'quantity');
+    $player_items = Database::instance()->arrayMap($pItemsQuery, 'IDItem', 'quantity');
 
     $tables = array(
        array(
@@ -181,11 +176,13 @@ class Choice {
        )
     );
 
-    $itemsQuery = Database::instance()->query($tables,array("ItemRequirement.IDChoice"=>"$this->id","ItemRequirement.quantity" => "","Item.Name"=>""));
-    $requiried_items = Database::instance()->arrayMap($itemsQuery, 'Name', 'quantity');
+    $itemsQuery = Database::instance()->query($tables,array("ItemRequirement.IDChoice"=>"$this->id","ItemRequirement.quantity" => "","ItemRequirement.IDItem"=>""));
+    $requiried_items = Database::instance()->arrayMap($itemsQuery, 'IDItem', 'quantity');
 
-    //var_dump($player_items);
-    //var_dump($requiried_items);
+    /*var_dump($player_stats);
+    var_dump($requiried_stats);
+    var_dump($player_items);
+    var_dump($requiried_items);*/
 
     foreach ($requiried_items as $key => $value) {
       if(!isset($player_items["$key"]) || $value>$player_items["$key"])

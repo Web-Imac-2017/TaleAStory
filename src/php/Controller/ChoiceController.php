@@ -12,9 +12,9 @@ use \View\Error;
 class ChoiceController {
   public static function addChoice() {
     $answer = Form::getField("Answer");
-    $idStep = Form::getField("IDStep");
+    $idStep = intval(Form::getField("IDStep"));
     $transitionText = Form::getField("TransitionText");
-    $idNextStep = Form::getField("IDNextStep");
+    $idNextStep = intval(Form::getField("IDNextStep"));
     if ($answer == NULL || $idStep == NULL || $transitionText == NULL || $idNextStep == NULL){
       $e = new Error("Tu ne peux pas ajouter ce choix !");
       return Response::jsonResponse($e);

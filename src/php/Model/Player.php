@@ -13,6 +13,7 @@ class Player {
   public $pwd;
   public $mail;
   public $imgpath;
+  public $admin;
   public $defaultImgpath = "../../defaultImg.jpg";
 
   private function __construct($id, $pseudo, $login, $pwd, $mail, $imgpath = NULL){
@@ -152,13 +153,13 @@ class Player {
 
   static public function checkPwd($pwd, $login){
     $qry = Database::instance()->query("player",array("Login"=>$login, "Pwd" => ""));
-    $hashed = $qry[0]["Pwd"];
+    $hashed = current($qry)["Pwd"];
     return Database::instance()->decode($pwd, $hashed);
   }
 
   static public function checkLogin($login){
     $qry = Database::instance()->query("player",array("Login"=>$login, "IDPlayer"=>""));
-    $login = $qry[0]['Login'];
+    $login = current($qry)['Login'];
     return $login;
   }
   /*
@@ -230,7 +231,6 @@ class Player {
 
   public function addItems($items) {
     foreach($items as $id => $number) {
-      var_dump($item);
       $quantity = Database::instance()->query("Inventory",Array("IDPlayer"=>$this->id, "IDItem"=>$id, "quantity"=>""));
       $quantity = $quantity[0]['quantity'];
       if($quantity) {
@@ -244,6 +244,7 @@ class Player {
   }
 
   public function removeItems($items) {
+    $items = array(2=>1);
     foreach($items as $id => $number) {
       $quantity = Database::instance()->query("Inventory",Array("IDPlayer"=>$this->id, "IDItem"=>$id, "quantity"=>""));
       $quantity = $quantity[0]['quantity'];

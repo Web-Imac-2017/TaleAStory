@@ -60,12 +60,17 @@ class StepController {
 
 
   public static function addStep() {
-    //$imgpath = Form::uploadFile("stepImg");
-    $imgpath = "bidon";
+    /*$imgpath = Form::uploadFile("ImgPath");
+    if($imgpath->status == "error")
+      return $imgpath; //on retourne l'erreur
+    else
+      $imgpath = $imgpath->message;
+    var_dump($imgpath);*/
+    $imgpath="bidon";
     $body = Form::getField("Body");
     $question = Form::getField("Question");
     $accepted = 1;
-    $idType = Form::getField("IDType");
+    $idType = intval(Form::getField("IDType"));
     if ($imgpath == NULL || $body == NULL || $question == NULL || $accepted == NULL || $idType == NULL){
       $e = new Error("Tu ne peux pas ajouter cette péripéthie !");
       return Response::jsonResponse($e);
@@ -105,7 +110,7 @@ class StepController {
     }
     $step = new Step("bidon", $entries["Body"], $entries["Question"],1, 0);
     $step->id = $entries["IDStep"];
-    var_dump($entries);
+    //var_dump($entries);
     $step->update($entries);
     $e = new Success("Péripéthie modifiée !");
     return Response::jsonResponse($e);

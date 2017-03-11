@@ -86,9 +86,11 @@ Class Step {
    public function processAnswer($player, $answer) {
      /*pour chaque choix du step, vérifier checkanswer et prendre celle qui est vrai */
      $choiceArray = Database::instance()->query("Choice", array( 'IDStep' => $this->id, 'TransitionText'=>'', 'IDNextStep'=>'', 'IDChoice'=>'', 'Answer'=>''));
-     var_dump($choicesArray);
+     var_dump($choiceArray);
+     if(!$choiceArray)
+      return false;
      $true_choice = null;
-     foreach ($choicesArray as $c) {
+     foreach ($choiceArray as $c) {
        $choice = new Choice($c['Answer'],$c['IDStep'],$c['TransitionText'],$c['IDNextStep']);
        $choice->id = $c['IDChoice'];
        if( $choice->checkAnswer($answer)){
@@ -96,6 +98,7 @@ Class Step {
          break;
        }
      }
+     var_dump($true_choice);
      if($true_choice && $true_choice->checkPlayerRequirements($player)) {
        $true_choice->alterPlayer($player);
        $nextStepArray = Database::instance()->query("Step", array('IDStep' => "$true_choice->IDNextStep", 'ImgPath' => '', 'Question'=>'', 'Body'=>'', 'IDType'=>''));
