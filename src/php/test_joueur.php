@@ -1,9 +1,5 @@
 <?php
-require "Item.php";
-require "Achievement.php";
-require "Step.php";
-require "Admin.php";
-
+use \Server\Database;
 
 $arc = new Step(".jpg", "blabla", "question?", "1", "1");
 $arc->id = 4;

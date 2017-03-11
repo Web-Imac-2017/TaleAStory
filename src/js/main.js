@@ -16,47 +16,57 @@ domready(() => {
 		ReactDOM.render(AppRouter, document.getElementById('root'));
 });
 
-class HomePageConnectionScreen extends React.Component{
+class Test extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = { text : "" };
+	}
+
+	componentDidMount(){
+		let that = this;
+		fetch(config.path('connexion'), {
+		                method: 'post',
+		                headers: {
+											'Content-Type' : 'application/json'
+		                },
+										credentials: "same-origin",
+										body: JSON.stringify({
+											yolo : "bonjour",
+											lol : 5
+										})
+		              }
+				  ).then(
+						function(response){
+							return response.json();
+				  	},
+						function(error) {
+					  	that.setState({ text : error.message});
+						}
+					).then(
+						function(json){
+							let dom = ReactDOM.findDOMNode(that);
+							dom.innerHTML = JSON.stringify(json);
+							that.setState({ text : JSON.stringify(json)});
+							console.log(json);
+					});
+	}
+
+	shouldComponentUpdate(nextProps, nextState){
+			console.log(this, this.state);
+			if(this.state.text){
+				console.log(this, this.state);
+				return true;
+			}
+			return true;
+	}
+
 	render(){
-		this.onAction = "";
-		return  <div className="screen homePageConnectionScreen orangeScreen">
-					<HeaderUnregistered/>
-					<div className="content">
-						<div className="block">
-							<h1>Connexion</h1>
-							<form onSubmit={this.onAction}>
-								<input type="text" className="formField" placeholder="Login" ref="login" />
-								<input type="text" className="formField" placeholder="Password" ref="password" />
-								<input className="submit" type="submit" value="Submit"/>
-							</form>
-							<p>Pas encore de compte ? <a href="">Inscrivez-vous !</a></p>
-						</div>
-					</div>
-				</div>;
+		return <div style={{backgroundColor:"white"}}>
+				</div>
 	}
 }
 
-class HomePageRegisterScreen extends React.Component{
-	render(){
-		this.onAction = "";
-		return  <div className="screen homePageRegisterScreen orangeScreen">
-					<HeaderUnregistered/>
-					<div className="content">
-						<div className="block">
-							<h1>Connexion</h1>
-							<form onSubmit={this.onAction}>
-								<input type="text" className="formField" placeholder="Nom d'utilisateur" ref="username" />
-								<input type="text" className="formField" placeholder="Email" ref="email" />
-								<input type="text" className="formField" placeholder="Password" ref="password" />
-								<input type="text" className="formField" placeholder="Confirmation Password" ref="confirmPassword" />
-								<input type="submit" value="Inscription"/>
-							</form>
-						</div>
-					</div>
-				</div>;
-	}
-}
-
-function imagesPath() {
-	return 'assets/images/';
-}
+domready(() => {
+		const test = <Test></Test>
+		ReactDOM.render(test, document.getElementById('root'));
+});

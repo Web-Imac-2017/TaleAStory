@@ -1,6 +1,6 @@
 <?php
-require "Database.php";
-require "Session.php";
+use \Server\Database;
+namespace Model;
 const UNAVAILABLE_LOGIN = -2;
 const NON_VALID_ENTRY = -1;
 

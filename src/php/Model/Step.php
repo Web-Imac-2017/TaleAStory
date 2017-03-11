@@ -1,7 +1,6 @@
 <?php
-require_once 'Choice.php';
-require_once 'Response.php';
-
+use \Server\Database;
+namespace Model;
 Class Step {
   public $id;
   public $imgpath;

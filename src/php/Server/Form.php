@@ -1,4 +1,5 @@
 <?php
+namespace Server;
 class Form {
   /*
   @function getFormPost

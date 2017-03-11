@@ -1,4 +1,6 @@
 <?php
+use \Server\Database;
+namespace Model;
 class Choice {
   public $id;
   public $answer;
