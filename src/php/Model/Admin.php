@@ -1,6 +1,10 @@
 <?php
-use \Server\Database;
 namespace Model;
+use \Server\Database;
+use \Model\Player;
+use \Server\Session;
+
+
 class Admin {
   public $id;
   public $player;
@@ -15,7 +19,7 @@ class Admin {
     //echo "<pre>".var_export($player, true)."</pre>";
     Database::instance()->insert("admin", array("IDAdmin"=>"", "IDPLayer"=>$player->id));
     $id = Database::instance()->query("admin", array("IDPLayer"=>$player->id, "IDAdmin"=>""));
-    $id = $id[0]['IDAdmin'];
+    $id = current($id)['IDAdmin'];
     if(!$id || !$player) {return NULL;}
     $admin = new Admin($id, $player);
     return $admin;
@@ -24,10 +28,13 @@ class Admin {
   static public function connect($login, $pwd) {
     $player = Player::connect($login, $pwd);
     $id = Database::instance()->query("admin", array("IDAdmin"=>"", "IDPLayer"=>$player->id));
-    $id = $id[0]['IDAdmin'];
+    $id = current($id)['IDAdmin'];
     if(!$id && !$player) {return NULL;}
     else if(!$id) {$admin = NULL;}
-    else {$admin = new Admin($id, $player);}
+    else {
+      $admin = new Admin($id, $player);
+      Session::connectUser($admin->id, false, $player->login);
+    }
     return array("admin"=>$admin, "player"=>$player);
   }
 }

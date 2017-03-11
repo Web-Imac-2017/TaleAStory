@@ -22,7 +22,7 @@ class Database {
     $this->password = $config_data['database']['password'];
     $this->dbName = $config_data['database']['name'];
     $this->options = array(
-      PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
+      \PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
     );
   }
 
@@ -40,9 +40,9 @@ class Database {
   private function getPDO() {
     if($this->pdo === null) {
       try{
-        $pdo = new PDO('mysql:host='.$this->server.';dbname='.$this->dbName,$this->userName,$this->password,$this->options);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+        $pdo = new \PDO('mysql:host='.$this->server.';dbname='.$this->dbName,$this->userName,$this->password,$this->options);
+        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $pdo->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
         $this->pdo = $pdo;
       }
       catch(Exception $e){
@@ -100,7 +100,7 @@ class Database {
   }
 
   /**
-   * sendQuery : prépare la query puis l'execute en utilisant un objet PDO
+   * sendQuery : prépare la query puis l'execute en utilisant un objet \PDO
    * @param  [string] $statement     [texte de la query: variables de type "?"]
    * @param  [array] $array_entries [[0...n] => "variables à executer dans la query"]
    * @return [array]          [contient toutes les données retournées par la requête]
@@ -165,6 +165,8 @@ class Database {
   }
 
   private function sendUpdate($statement, $array_entries) {
+    var_dump($statement);
+    var_dump($array_entries);
     try {
       $update = $this->getPDO()->prepare($statement);
       $update->execute($array_entries) or die(print_r($update->errorInfo()));
@@ -199,6 +201,21 @@ class Database {
     }
   }
 
+  public function count($table, $count, $entries = NULL){
+    $count = 'SELECT COUNT('.$count.')';
+    $from = $this->processFROM($table);
+    $statement = $count.$from;
+    $array_entries = [];
+    if($entries) {
+      $where = $this->processWHERE($entries);
+      $statement .= $where;
+      $array_entries = $this->processArrayEntries($entries);
+    }
+    //echo $statement;
+    $data = $this->sendQuery($statement, $array_entries);
+    return $data[0][0];
+  }
+
   /**
    * [arrayMap description]
    * @param  [type] $entry [description]
@@ -206,29 +223,61 @@ class Database {
    * @param  [type] $value [description]
    * @return [type]        [description]
    */
-  public function arrayMap($entry, $key, $value) {
+  public function arrayMap($entry, $key=0, $value) {
+    if(!$entry){
+      return NULL;
+    }
     $map = array();
     foreach($entry as $data){
-      $map[$data[$key]] = $data[$value];
+      if($key){$map[$data[$key]] = $data[$value];}
+      else {array_push($map, $data[$value]);}
     }
     return $map;
   }
 
-  public function count($table, $count, $entries = NULL){
-    $count = 'SELECT COUNT('.$count.')';
-    $from = $this->processFROM($table);
-    $statement = $count.$from;
-    if($entries) {
-      $where = $this->processWHERE($entries);
-      $statement .= $where;
+
+
+  public function arrayClean($entries ,$key_alpha, $relevant=0){
+    $array_clean = array();
+    if($entries == NULL){
+      return NULL;
     }
-    $array_entries = $this->processArrayEntries($entries);
-    //echo $statement;
-    $data = $this->sendQuery($statement, $array_entries);
-    return $data[0][0];
+    if (!$key_alpha) {
+      foreach($entries as $key=>$value) {
+        if(is_int($key)){
+          if($relevant) {
+            if(in_array($key, $relevant)){array_push($array_clean, $value);}
+          } else {array_push($array_clean, $value);}
+        }
+      }
+    } else {
+      foreach($entries as $key=>$value) {
+        if(!is_int($key)){
+          if($relevant) {
+            if(in_array($key, $relevant)){$array_clean[$key] = $value;}
+          } else {$array_clean[$key] = $value;}
+        }
+      }
+    }
+    return $array_clean;
   }
-
-
+  /**
+   * [dataClean Nettoie la réponse d'une query]
+   * @param  [array]  $query_response [réponse envoyée par la query]
+   * @param  [booléen]  $key_alpha        [true : ne garde que les index alphabétiques, false : ne garde que les index numériques]
+   * @param  [array] $relevant       [facultatif, liste des champs à conserver]
+   * @return [array]                  [une liste de tableaux soit indexés (!$key_alpha) soit associatif ($key_alpha)]
+   */
+  public function dataClean($query_response, $key_alpha, $relevant=0){
+    if(!$query_response){
+      return NULL;
+    }
+    $data_clean = array();
+    foreach($query_response as $array) {
+      array_push($data_clean, $this->arrayClean($array, $key_alpha, $relevant));
+    }
+    return $data_clean;
+  }
 
 
   //////////*****TRAITEMENTS DES PARAMETRES POUR LA CONSTRUCTION DES REQUETES******//////////
@@ -292,7 +341,7 @@ class Database {
    */
   private function processWHERE($entries) {
     $process_where = " WHERE ";
-    $array_entries = $this->processArrayEntries($entries);
+    $array_entries = $this->processArrayWhere($entries);
     foreach ($array_entries as $entry) {
       $field = array_search($entry, $entries);
       $process_where .= $field." = ? ";
@@ -309,7 +358,24 @@ class Database {
 /**
  * processArrayEntries: extrait les valeurs non nulles du tableau passé en param et en fait un nouveau tableau
  * @param  [array] $entries ["champ" => "entrée"]
- * @return [array]          [[0...n] => "entrée non nulle"]
+ * @return [array]          [[champ] => "entrée différente de "" "]
+ */
+  private function processArrayWhere($entries) {
+    $tabEntries = array();
+    foreach ($entries as $champ => $entry) {
+      if ($entry !== "") {
+        $tabEntries[$champ] = $entry;
+      }
+    }
+    //var_dump($tabEntries);
+    return $tabEntries;
+  }
+
+
+/**
+ * processArrayEntries: extrait les valeurs non nulles du tableau passé en param et en fait un nouveau tableau
+ * @param  [array] $entries ["champ" => "entrée"]
+ * @return [array]          [[0...n] => "entrée différente de """]
  */
   private function processArrayEntries($entries) {
     $tabEntries = array();
@@ -318,7 +384,6 @@ class Database {
         array_push($tabEntries, $entry);
       }
     }
-    //var_dump($tabEntries);
     return $tabEntries;
   }
 
@@ -350,11 +415,14 @@ class Database {
 
 
   private function processUPDATE($entries) {
-    $process_set;
+    $entries = $this->processArrayWhere($entries);
+    $process_set= "";
     foreach ($entries as $field => $entry) {
-      $process_set .= $field." = ?";
-      if($entry != end($entries)) {
-        $process_set .=", ";
+      if($entry !== ""){
+        $process_set .= $field." = ?";
+        if($entry != end($entries)) {
+          $process_set .=", ";
+        }
       }
     }
     return $process_set;

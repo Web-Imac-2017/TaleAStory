@@ -1,5 +1,6 @@
 <?php
 namespace Controller;
+
 use \Server\Database;
 use \Server\Response;
 use \Server\Form;
@@ -8,26 +9,39 @@ use \Server\Session;
 use \View\Error;
 use \View\Success;
 
-class SignInController{
+class SignUpController{
 
-  static public function signIn(){
-
+  static public function signUp(){
+    $mail = Form::getField('mail');
     $login = Form::getField('login');
     $pwd = Form::getField('pwd');
-    $player = Player::connect($login, $pwd);
-    //echo "<pre>".var_export($user, true)."</pre>";
+    $pseudo = Form::getField('pseudo');
+    if(!$mail || !$login || !$pseudo || !$pwd){
+      $e = new Error("Impossible d'ajouter le player - champs manquants");
+      return Response::jsonResponse($e);
+    }
+    $player = Player::signUp($pseudo, $login, $pwd, $mail);
     if(!$player){
       $error = new Error("tu sais pas rentrer ton login trou duc ni ton password d'ailleur... je suppose");
       return Response::jsonResponse($error);
     } else if(!is_object($player)){
       if($player == -1){
-        $error = new Error("Ton login c'est dla merde");
+        $error = new Error("Login déjà existant");
         return Response::jsonResponse($error);
-      } else if($player == -2){
-        $error = new Error("Bah alors t'as oublié ton mot de passe?");
+      } else if($player == -3){
+        $error = new Error("Format des entrées non conformes");
         return Response::jsonResponse($error);
       }
     } else {
+      //INIT STATS
+      $statsQuery = Database::instance()->query("Stat",array("IDStat"=>""));
+      $statsQuery = Database::instance()->arrayMap($statsQuery,0,'IDStat');
+      $stats = array();
+      foreach ($statsQuery as $s) {
+        $stats[$s]=0;
+      }
+      $player->alterStats($stats);
+
       $playerData = array();
       $playerData['id']= $player->id;
       $playerData['pseudo']= $player->pseudo;
@@ -36,15 +50,6 @@ class SignInController{
       $success = new Success($playerData);
       return Response::jsonResponse($success);
     }
-  /*
-  return Response::jsonResponse(array(
-  'status' => "error",
-  'login ' => $login,
-  'pwd' => $pwd,
-  'message' => "si tu t'affiche pas je nique ta mère !"
-
-));
-*/
   }
 
 }

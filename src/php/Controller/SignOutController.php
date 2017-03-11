@@ -1,16 +1,22 @@
 <?php
-
-require_once('Response.php');
-require_once('Player.php');
+namespace Controller;
+use \Model\Player;
+use \Server\Response;
 class SignOutControllers{
 
 
-  static public signout() {
+  static public function signOut() {
     $player = Player::connectSession();
-    if(!$player) {return Response::redirect("taleastory/");}
+    if(!$player) {
+      Response::redirect("taleastory/");
+      $error = new Error("T'étais pas connecté banouille");
+      return Response::jsonResponse($error);
+    }
     else {
-        $player->disconnect();
-        return Response::redirect("taleastory/");
+      $player->disconnect();
+      Response::redirect("taleastory/");
+      $success = new Success("Joueur deconnecté");
+      return Response::jsonResponse($success);
     }
   }
 

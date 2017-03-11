@@ -1,6 +1,8 @@
 <?php
-use \Server\Database;
 namespace Model;
+
+use \Server\Database;
+
 Class Achievement {
   public $id;
   public $name;
@@ -22,10 +24,11 @@ Class Achievement {
 
   public function save() {
     $entries = array(
-      'name' => $this->name,
-      'imgpath' => $this->imgpath,
-      'brief' => $this->brief
+      'Name' => $this->name,
+      'ImgPath' => $this->imgpath,
+      'Brief' => $this->brief
     );
+    var_dump($entries);
     $id=Database::instance()->insert(self::$table, $entries);
     if($id != null){
       $this->id = $id;
