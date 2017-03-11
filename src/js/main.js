@@ -4,17 +4,7 @@ import domready  from 'domready';
 import {GlobalBack} from './utils/interfaceback';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import TweenMax from './greenshock/TweenMax.js';
-import TweenLite from './greenshock/TweenMax.js';
-import Media from 'react-media';
-import AppRouter from './app/router';
-import webGL from './webgl/webgl.js';
-
-var bg_anim;
-domready(() => {
-		webGL.runWebGL();
-		ReactDOM.render(AppRouter, document.getElementById('root'));
-});
+import config from './config';
 
 class Test extends React.Component{
 	constructor(props){
@@ -61,8 +51,7 @@ class Test extends React.Component{
 	}
 
 	render(){
-		return <div style={{backgroundColor:"white"}}>
-				</div>
+		return <p style={{backgroundColor:"white"}}></p>
 	}
 }
 
