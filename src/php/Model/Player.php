@@ -23,6 +23,7 @@ class Player {
     $this->mail = $mail;
     $this->imgpath = (is_null($imgpath)) ? $this->defaultImgpath : $imgpath;
     $this->id = $id;
+    $this->admin = NULL;
   }
 
   static public function getPlayer($id) {
@@ -56,6 +57,7 @@ class Player {
     else {
       $player = new Player(0, $pseudo, $login, $pwd, $mail, $imgpath);
       $player->id = $player->save();
+      $player->admin = $player->isAdmin();
       if($player->id == NULL) {
         return NULL;
       }
@@ -79,6 +81,7 @@ class Player {
         $playerData[0]["Mail"],
         $playerData[0]["ImgPath"]
       );
+      $player->admin = $player->isAdmin();
       Session::connectUser($player->id, true, $player->login);
       return $player;
     } else {
@@ -99,10 +102,17 @@ class Player {
         $playerData[0]["Mail"],
         $playerData[0]["ImgPath"]
       );
+      $player->admin = $player->isAdmin();
       return $player;
     } else {
       return NULL;
     }
+  }
+
+  public function isAdmin(){
+    $id = Database::instance()->query("admin", array("IDAdmin"=>"", "IDPLayer"=>$this->id));
+    $id = current($id)['IDAdmin'];
+    return ($id)?$id:NULL;
   }
 
   public function disconnect(){
@@ -125,11 +135,11 @@ class Player {
       Database::instance()->insert($table, $entries);
     }
     catch (RuntimeException $e) {
-        echo $e->getMessage();
+        //echo $e->getMessage();
         return NULL;
     }
     $id = Database::instance()->query($table, array("IDPlayer" =>"", "Login" =>$this->login));
-    return $id[0][IDPlayer];
+    return current($id)['IDPlayer'];
   }
 
   public function update() {
@@ -182,7 +192,7 @@ class Player {
       )
     );
     $stats = Database::instance()->query($tables,array("PlayerStat.IDPlayer"=>$this->id,"PlayerStat.Value"=>"", "Stat.*" => ""));
-    $stats = Database::instance()->arrayMap($stats, "IDStat", "Value");
+    //$stats = Database::instance()->arrayMap($stats, "IDStat", "Value");
     return $stats;
   }
 
@@ -271,6 +281,18 @@ class Player {
     return $achievements;
   }
 
+  public function unreadAchievements() {
+    $tables = array(
+      array(
+        "PlayerAchievement" => "PlayerAchievement.IDAchievement",
+        "Achievement" => "Achievement.IDAchievement"
+      )
+    );
+    $achievements = Database::instance()->query($tables,array("PlayerAchievement.IDPlayer"=>$this->id,"PlayerAchievement.isRead"=>"0", "Achievement.*" => ""));
+    Database::instance()->update("PlayerAchievement", array("isRead"=>1), array("isRead"=>0, "IDPlayer"=>$this->id));
+    return $achievements;
+  }
+
   public function addAchievement($achievement) {
 
     $player_achievement = Database::instance()->query("PlayerAchievement",Array("IDPlayer"=>$this->id, "IDAchievement"=>$achievement->id, "isRead"=>""));
@@ -296,7 +318,8 @@ class Player {
       )
     );
     $currentStep = Database::instance()->query($tables, array("Player.IDPlayer"=>$this->id, "Step.*"=> ""));
-    return new Step($currentStep[0]['ImgPath'], $currentStep[0]['Body'], $currentStep[0]['Question'], $currentStep[0]['IDType']);
+    return $currentStep;
+    //return new Step($currentStep[0]['ImgPath'], $currentStep[0]['Body'], $currentStep[0]['Question'], $currentStep[0]['IDType']);
   }
 
   public function pastSteps() {

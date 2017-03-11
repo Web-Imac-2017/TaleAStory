@@ -7,8 +7,8 @@ class Success {
 */
   public static $etat = "ok";
 
-  public function __construct($message,$code = 0) {
-      $this->message = json_encode($message);
+  public function __construct($result,$code = 0) {
+      $this->result = json_encode($result);
       $this->code = $code;
       $this->status = self::$etat;
   }

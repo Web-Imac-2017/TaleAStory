@@ -1,8 +1,13 @@
 <?php
 namespace Controller;
-use \Model\Player;
 use \Server\Database;
-const FAILED_SIGNUP = -5;
+use \Server\Response;
+use \Server\Form;
+use \Model\Player;
+use \Server\Session;
+use \View\Error;
+use \View\Success;
+
 
 class MakeGuestController{
 
@@ -16,16 +21,16 @@ class MakeGuestController{
     }
     $guest = Player::signup("Guest", strval($login), "Guest", "fake@mail.com", $imgpath = NULL);
     if(!$guest) {
-      return FAILED_SIGNUP;
+      $error = new Error("Oh bah ça n'a pas marché!");
+      return Response::jsonResponse($error);
     } else {
       $guestData = array();
       $guestData['id']= $guest->id;
       $guestData['pseudo']= $guest->pseudo;
       $guestData['imgpath']= $guest->imgpath;
       $guestData['mail']= $guest->mail;
-      $json = array('success', $guestData);
-      echo "blabla";
-      return Response::jsonResponse($json);
+      $success = new Success($guestData);
+      return Response::jsonResponse($success);
     }
   }
 

@@ -9,5 +9,9 @@
   "step/count/":"Controller\\StepController::stepCount",
   "currentstep/response":"Controller\\StepController::stepResponse",
   "currentuser/achievements":"Controller\\CurrentUserController::achievements",
-  "currentuser/items":"Controller\\CurrentUserController::items"
+  "currentuser/unreadachievements":"Controller\\CurrentUserController::unreadAchievements",
+  "currentuser/items":"Controller\\CurrentUserController::items",
+  "currentuser/currentstep":"Controller\\CurrentUserController::currentStep",
+  "currentuser/story":"Controller\\CurrentUserController::story",
+  "makeguest":"Controller\\MakeGuestController::MakeGuest"
 }
