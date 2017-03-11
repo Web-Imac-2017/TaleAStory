@@ -5,6 +5,7 @@ import {GlobalBack} from './utils/interfaceback';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import config from './config';
+import {Requester} from './utils/interfaceback';
 
 class Test extends React.Component{
 	constructor(props){
@@ -13,32 +14,12 @@ class Test extends React.Component{
 	}
 
 	componentDidMount(){
-		let that = this;
-		fetch(config.path('connexion'), {
-		                method: 'post',
-		                headers: {
-											'Content-Type' : 'application/json'
-		                },
-										credentials: "same-origin",
-										body: JSON.stringify({
-											yolo : "bonjour",
-											lol : 5
-										})
-		              }
-				  ).then(
-						function(response){
-							return response.json();
-				  	},
-						function(error) {
-					  	that.setState({ text : error.message});
-						}
-					).then(
-						function(json){
-							let dom = ReactDOM.findDOMNode(that);
-							dom.innerHTML = JSON.stringify(json);
-							that.setState({ text : JSON.stringify(json)});
-							console.log(json);
-					});
+		console.log('-------------');
+		Requester.testCurrentUser().then(
+            function(json){
+              console.log("in main");
+              console.log(json);
+         });
 	}
 
 	shouldComponentUpdate(nextProps, nextState){
