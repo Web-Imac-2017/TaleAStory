@@ -1,5 +1,9 @@
 <?php
 namespace Server;
+use \Controller\CurrentUserController;
+use \Server\Session;
+use \Model\Player;
+use \View\Success;
 class Router {
 
     static $routes = [];
@@ -51,10 +55,15 @@ class Router {
 *
 */
   public static function index(){
-    Response::generateIndex((object)array('userID' => '1',
-                                          'userPseudo' => 'Marcel Patulacci',
-                                          'userImgPath' => 'patulacci_tiny.jpg',
-                                          'time' => '16h45'));
+    $id = Session::getCurrentUser();
+    $player = Player::connectSession();
+    if ($player == NULL){
+      $e = (object)array();
+    }
+    else{
+      $e = $player;
+    }
+    Response::generateIndex($e);
   }
 
   /**
