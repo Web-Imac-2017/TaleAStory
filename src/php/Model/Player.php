@@ -44,9 +44,9 @@ class Player {
     else return NULL;
   }
 
-  static public function signup($pseudo, $login, $pwd, $mail, $imgpath = NULL) {
+  static public function signUp($pseudo, $login, $pwd, $mail, $imgpath = NULL) {
     //echo "SIGN UP!";
-    if(Player::checkLogin($login)) {return UNAVAILABLE_LOGIN;}
+    if(Player::checkLogin($login)) {return ERR_LOGIN;}
     else if
     (
       !Player::formatMail($mail) ||
@@ -231,7 +231,7 @@ class Player {
   public function addItem($item) {
 
     $quantity = Database::instance()->query("Inventory",Array("IDPlayer"=>$this->id, "IDItem"=>key($item), "quantity"=>""));
-    $quantity = $quantity[0]['quantity'];
+    $quantity = current($quantity)['quantity'];
     if($quantity) {
       if($quantity<10){$quantity = (($quantity+current($item))<10)?$quantity+current($item):10;}
       Database::instance()->update("Inventory",Array("quantity"=>$quantity),Array("IDPlayer"=>$this->id, "IDItem"=>key($item)));
@@ -244,7 +244,7 @@ class Player {
   public function addItems($items) {
     foreach($items as $id => $number) {
       $quantity = Database::instance()->query("Inventory",Array("IDPlayer"=>$this->id, "IDItem"=>$id, "quantity"=>""));
-      $quantity = $quantity[0]['quantity'];
+      $quantity = current($quantity)['quantity'];
       if($quantity) {
         if($quantity<10){$quantity = (($quantity+$number)<10)?$quantity+$number:10;}
         Database::instance()->update("Inventory",Array("quantity"=>$quantity),Array("IDPlayer"=>$this->id, "IDItem"=>$id));
@@ -256,15 +256,16 @@ class Player {
   }
 
   public function removeItems($items) {
-    $items = array(2=>1);
     foreach($items as $id => $number) {
       $quantity = Database::instance()->query("Inventory",Array("IDPlayer"=>$this->id, "IDItem"=>$id, "quantity"=>""));
-      $quantity = $quantity[0]['quantity'];
+      $quantity = current($quantity)['quantity'];
       //echo "<pre>".var_export($quantity, true)."</pre>";
-      if($quantity > $number) {
+      if(!$quantity) {
+        return NULL;
+      } else if($quantity > $number) {
         $quantity = $quantity - $number;
         Database::instance()->update("Inventory",Array("quantity"=>$quantity),Array("IDPlayer"=>$this->id, "IDItem"=>$id));
-      } else if ($quantity == 1) {
+      } else {
         Database::instance()->delete("Inventory",Array("IDPlayer"=>$this->id, "IDItem"=>$id));
       }
     }

@@ -13,7 +13,7 @@ class SignInController{
   static public function signIn(){
 
     $login = Form::getField('login');
-    $pwd = Form::getField('password');
+    $pwd = Form::getField('pwd');
     $player = Player::connect($login, $pwd);
     //echo "<pre>".var_export($user, true)."</pre>";
     if(!$player){
