@@ -48,8 +48,8 @@ html, body, #root, #app{
 		max-height: 100%;
 		height: 100%;
 		.route-component {
-			height: 103%;
-			padding-bottom: 10px;
+			height: 101%;
+      padding: 1% 0;
 		}
   }
 }
@@ -125,7 +125,7 @@ header {
 		position: absolute;
 		transition : all 0.3s;
 	}
-	
+
 	#profilePopup {
 		/*display: none;*/
 		position: absolute;
