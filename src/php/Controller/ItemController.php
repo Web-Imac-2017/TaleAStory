@@ -5,6 +5,7 @@ namespace Controller;
 use \Server\Database;
 use \Server\Form;
 use \Model\Item;
+use \Model\Player;
 use \Server\Response;
 use \View\Success;
 use \View\Error;
@@ -12,6 +13,12 @@ use \View\Error;
 class ItemController {
 
   public static function addItem() {
+    $admin = Player::connectSession();
+    if(!$admin || $admin->admin == 0 || $admin->isAdmin() == 0){
+      $e = new Error("Tu n'as pas le droit d'effectuer cette action !");
+      return Response::jsonResponse($e);
+    }
+
     $name = Form::getField("Name");
     //$imgpath = Form::uploadFile("ItemImg");
     $imgpath="bidon";
@@ -31,6 +38,12 @@ class ItemController {
     }
 
   public static function updateItem() {
+    $admin = Player::connectSession();
+    if(!$admin || $admin->admin == 0 || $admin->isAdmin() == 0){
+      $e = new Error("Tu n'as pas le droit d'effectuer cette action !");
+      return Response::jsonResponse($e);
+    }
+
     //$tmp = $imgpath;
     //$imgpath = Form::uploadFile("itemImg");
     $data = Form::getFullForm();
@@ -58,6 +71,12 @@ class ItemController {
   }
 
   public static function deleteItem() {
+    $admin = Player::connectSession();
+    if(!$admin || $admin->admin == 0 || $admin->isAdmin() == 0){
+      $e = new Error("Tu n'as pas le droit d'effectuer cette action !");
+      return Response::jsonResponse($e);
+    }
+
     $id = Form::getField("IDItem");
     if(!$id){
       $e = new Error("Impossible de supprimer l'item !");

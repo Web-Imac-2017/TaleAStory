@@ -5,6 +5,9 @@ use \Model\Player;
 use \Server\Database;
 use \Server\Response;
 use \Server\Session;
+use \View\Error;
+use \View\Success;
+
 const ERR_NOT_CONNECTED = -4;
 
 class CurrentUserController{
@@ -12,43 +15,62 @@ class CurrentUserController{
 
 
   static public function stats(){
-    $player = Player::connectSession();
-    if(!$player) return ERR_NOT_CONNECTED;
+    //$player = Player::connectSession();
+    $player = Player::connect("login","pwd");
+    if(!$player) {
+      $error = new Error("Vous n'êtes pas connectés");
+      return Response::jsonResponse($error);
+    }
     else {
       $stats = $player->stats();
       $stats = Database::instance()->arrayMap($stats, 'Name', 'Value');
-      return Response::jsonResponse($stats);
+      $success = new Success($stats);
+      return Response::jsonResponse($success);
     }
   }
 
   static public function items(){
     //$player = Player::connectSession();
     $player = Player::connect("login","pwd");
-    if(!$player) {return ERR_NOT_CONNECTED;}
+    if(!$player) {
+      $error = new Error("Vous n'êtes pas connectés");
+      return Response::jsonResponse($error);
+    }
     else {
       $items = $player->items();
       $items = Database::instance()->dataClean($items, true, array('Brief', 'ImgPath', 'Name', 'quantity'));
-      return Response::jsonResponse($items);
+      $success = new Success($items);
+      return Response::jsonResponse($success);
     }
   }
 
   static public function currentStep(){
-    $player = Player::connectSession();
-    if(!$player) {return ERR_NOT_CONNECTED;}
+    //$player = Player::connectSession();
+    $player = Player::connect("login","pwd");
+    if(!$player) {
+      $error = new Error("Vous n'êtes pas connectés");
+      return Response::jsonResponse($error);
+    }
     else {
       $current_step = $player->currentStep();
       $current_step = Database::instance()->dataClean($current_step, true);
-      return Response::jsonResponse($current_step);
+      $success = new Success($current_step);
+      return Response::jsonResponse($success);
     }
   }
 
   static public function story(){
-    $player = Player::connectSession();
-    if(!$player) {return ERR_NOT_CONNECTED;}
+    //$player = Player::connectSession();
+    $player = Player::connect("login","pwd");
+    if(!$player) {
+      $error = new Error("Vous n'êtes pas connectés");
+      return Response::jsonResponse($error);
+    }
     else {
-      $story = $player->pastStep();
+      $story = $player->pastSteps();
       $story = Database::instance()->dataClean($story, true);
-      return Response::jsonResponse($story);
+      $success = new Success($story);
+      return Response::jsonResponse($success);
     }
   }
 
@@ -64,19 +86,33 @@ class CurrentUserController{
           $e = new Succes($player);
       else
         $e = new Succes("Pas d'utilisateur courant");
-      return Response::jsonResponse($e);*
+      return Response::jsonResponse($e);
     }
   }
   static public function achievements(){
-    $userId = Session::getCurrentUser();
-    $achievements = Database::instance()->query("PlayerAchievement",array("IDPlayer"=>$userId, "*" => ""));
-    return Response::jsonResponse($achievements);
+    //$player = Session::getCurrentUser();
+    $player = Player::connect("login","pwd");
+    if(!$player) {
+      $error = new Error("Vous n'êtes pas connectés");
+      return Response::jsonResponse($error);
+    }
+    $achievements = $player->achievements();
+    $achievements = Database::instance()->dataClean($achievements, true);
+    $success = new Success($achievements);
+    return Response::jsonResponse($success);
   }
 
-  static public function unreadachievements(){
-    $userId = Session::getCurrentUser();
-    $achievements = Database::instance()->query("PlayerAchievement",array("IDPlayer"=>$userId, "isRead"=>0, "*" => ""));
-    return Response::jsonResponse($achievements);
+  static public function unreadAchievements(){
+    //$player = Session::getCurrentUser();
+    $player = Player::connect("login","pwd");
+    if(!$player) {
+      $error = new Error("Vous n'êtes pas connectés");
+      return Response::jsonResponse($error);
+    }
+    $achievements = $player->unreadAchievements();
+    $achievements = Database::instance()->dataClean($achievements, true);
+    $success = new Success($achievements);
+    return Response::jsonResponse($success);
   }
 }
 ?>

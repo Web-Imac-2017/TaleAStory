@@ -5,12 +5,19 @@ namespace Controller;
 use \Server\Database;
 use \Server\Form;
 use \Model\Choice;
+use \Model\Player;
 use \Server\Response;
 use \View\Success;
 use \View\Error;
 
 class ChoiceController {
   public static function addChoice() {
+    $admin = Player::connectSession();
+    if(!$admin || $admin->admin == 0 || $admin->isAdmin() == 0){
+      $e = new Error("Tu n'as pas le droit d'effectuer cette action !");
+      return Response::jsonResponse($e);
+    }
+
     $answer = Form::getField("Answer");
     $idStep = intval(Form::getField("IDStep"));
     $transitionText = Form::getField("TransitionText");
@@ -29,6 +36,11 @@ class ChoiceController {
   }
 
   public static function updateChoice() {
+    $admin = Player::connectSession();
+    if(!$admin || $admin->admin == 0 || $admin->isAdmin() == 0){
+      $e = new Error("Tu n'as pas le droit d'effectuer cette action !");
+      return Response::jsonResponse($e);
+    }
     $data = Form::getFullForm(); //si l'id n'est pas présent, on retourne null
     if(!isset($data["IDChoice"]) || $data["IDChoice"]== null ){
       $e = new Error("Tu ne peux pas modifier ce choix !");
@@ -55,6 +67,11 @@ class ChoiceController {
   }
 
   public static function deleteChoice() {
+    $admin = Player::connectSession();
+    if(!$admin || $admin->admin == 0 || $admin->isAdmin() == 0){
+      $e = new Error("Tu n'as pas le droit d'effectuer cette action !");
+      return Response::jsonResponse($e);
+    }
     $id = Form::getField("IDChoice");
     if(!$id){
       $e = new Error("Impossible de supprimer le choix !");

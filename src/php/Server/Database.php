@@ -224,6 +224,9 @@ class Database {
    * @return [type]        [description]
    */
   public function arrayMap($entry, $key, $value) {
+    if(!$entry){
+      return NULL;
+    }
     $map = array();
     foreach($entry as $data){
       $map[$data[$key]] = $data[$value];
@@ -233,10 +236,13 @@ class Database {
 
 
 
-  public function arrayClean($array ,$key_alpha, $relevant=0){
+  public function arrayClean($entries ,$key_alpha, $relevant=0){
     $array_clean = array();
+    if($entries == NULL){
+      return NULL;
+    }
     if (!$key_alpha) {
-      foreach($array as $key=>$value) {
+      foreach($entries as $key=>$value) {
         if(is_int($key)){
           if($relevant) {
             if(in_array($key, $relevant)){array_push($array_clean, $value);}
@@ -244,7 +250,7 @@ class Database {
         }
       }
     } else {
-      foreach($array as $key=>$value) {
+      foreach($entries as $key=>$value) {
         if(!is_int($key)){
           if($relevant) {
             if(in_array($key, $relevant)){$array_clean[$key] = $value;}
@@ -262,6 +268,9 @@ class Database {
    * @return [array]                  [une liste de tableaux soit indexés (!$key_alpha) soit associatif ($key_alpha)]
    */
   public function dataClean($query_response, $key_alpha, $relevant=0){
+    if(!$query_response){
+      return NULL;
+    }
     $data_clean = array();
     foreach($query_response as $array) {
       array_push($data_clean, $this->arrayClean($array, $key_alpha, $relevant));
@@ -331,7 +340,7 @@ class Database {
    */
   private function processWHERE($entries) {
     $process_where = " WHERE ";
-    $array_entries = $this->processArrayEntries($entries);
+    $array_entries = $this->processArrayWhere($entries);
     foreach ($array_entries as $entry) {
       $field = array_search($entry, $entries);
       $process_where .= $field." = ? ";
@@ -348,7 +357,24 @@ class Database {
 /**
  * processArrayEntries: extrait les valeurs non nulles du tableau passé en param et en fait un nouveau tableau
  * @param  [array] $entries ["champ" => "entrée"]
- * @return [array]          [[0...n] => "entrée non nulle"]
+ * @return [array]          [[champ] => "entrée différente de "" "]
+ */
+  private function processArrayWhere($entries) {
+    $tabEntries = array();
+    foreach ($entries as $champ => $entry) {
+      if ($entry !== "") {
+        $tabEntries[$champ] = $entry;
+      }
+    }
+    //var_dump($tabEntries);
+    return $tabEntries;
+  }
+
+
+/**
+ * processArrayEntries: extrait les valeurs non nulles du tableau passé en param et en fait un nouveau tableau
+ * @param  [array] $entries ["champ" => "entrée"]
+ * @return [array]          [[0...n] => "entrée différente de """]
  */
   private function processArrayEntries($entries) {
     $tabEntries = array();
@@ -388,11 +414,12 @@ class Database {
 
 
   private function processUPDATE($entries) {
-    $process_set;
+    $entries = $this->processArrayWhere($entries);
+    $process_set= "";
     foreach ($entries as $field => $entry) {
       if($entry !== ""){
         $process_set .= $field." = ?";
-        if(current($entries) != end($entries)) {
+        if($entry != end($entries)) {
           $process_set .=", ";
         }
       }

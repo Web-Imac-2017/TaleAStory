@@ -28,6 +28,7 @@ Class Achievement {
       'ImgPath' => $this->imgpath,
       'Brief' => $this->brief
     );
+    var_dump($entries);
     $id=Database::instance()->insert(self::$table, $entries);
     if($id != null){
       $this->id = $id;
