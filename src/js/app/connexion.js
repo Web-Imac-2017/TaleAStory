@@ -36,7 +36,7 @@ export default RouteComponent({
 							<h1 className="element pageTitle">Connexion</h1>
 							<form className="element" onSubmit={this.handleSubmit}>
 								<span><input name="login" type="text" placeholder="Login" value={this.state.login} onChange={this.handleChange} ref="login" /></span>  
-								<span><input name="password" type="text" placeholder="Password" value={this.state.password} onChange={this.handleChange} ref="password" /></span>
+								<span><input name="password" type="password" placeholder="Password" value={this.state.password} onChange={this.handleChange} ref="password" /></span>
 								<span className="button" ><input className="submit" type="submit" value="Connexion"/></span>
 							</form>
 							<p>Pas encore de compte ?<Link className="link linkAnim" to={config.path('sign/up')}>Inscrivez-vous !</Link></p>
