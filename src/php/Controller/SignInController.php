@@ -19,6 +19,14 @@ class SignInController{
     if(!$player){
       $error = new Error("tu sais pas rentrer ton login trou duc ni ton password d'ailleur... je suppose");
       return Response::jsonResponse($error);
+    } else if(!is_object($player)){
+      if($player == -1){
+        $error = new Error("Ton login c'est dla merde");
+        return Response::jsonResponse($error);
+      } else if($player == -2){
+        $error = new Error("Bah alors t'as oublié ton mot de passe?");
+        return Response::jsonResponse($error);
+      }
     } else {
       $playerData = array();
       $playerData['id']= $player->id;
