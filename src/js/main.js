@@ -15,10 +15,15 @@ class Test extends React.Component{
 
 	componentDidMount(){
 		console.log('-------------');
-		/*Requester.signIn('marcel', 'inconnus').then(
+		Requester.signIn('marcel', 'inconnus').then(
             function(json){
                 console.log(json);
-         });*/
+         });
+		// message d'error OK si mauvais mail, sinon (comme ci-dessous) hard crash
+		Requester.signUp('Babar', 'BabarLogin', 'babar@gmail.com', 'BabarPass').then(
+            function(json){
+                console.log(json);
+         });
 		Requester.currentUser().then(
             function(json){
                 console.log(json);
@@ -27,7 +32,49 @@ class Test extends React.Component{
             function(json){
                 console.log(json);
          });
+		Requester.makeGuest().then(
+            function(json){
+                console.log(json);
+         });
+		Requester.currentUserItems().then(
+            function(json){
+                console.log(json);
+         });
+		Requester.currentUserStep().then(
+            function(json){
+                console.log(json);
+         });
+		Requester.currentUserStory().then(
+            function(json){
+                console.log(json);
+         });
 		Requester.currentUserAchievements().then(
+            function(json){
+                console.log(json);
+         });
+		Requester.currentUserUnreadAchievements().then(
+            function(json){
+                console.log(json);
+         });
+		Requester.stepCount().then(
+            function(json){
+                console.log(json);
+         });
+		// A partir de là, à vérifier. 
+		// ==> notamment, voir le type de données attendues, etc
+		Requester.stepList(0,0).then( 
+            function(json){
+                console.log(json);
+         });
+		Requester.stepList(0).then(
+            function(json){
+                console.log(json);
+         });
+		Requester.currentStepResponse(0).then(
+            function(json){
+                console.log(json);
+         });
+		Requester.stepAdd(0,0,0).then(
             function(json){
                 console.log(json);
          });

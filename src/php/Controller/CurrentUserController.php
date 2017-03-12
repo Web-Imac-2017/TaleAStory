@@ -83,9 +83,9 @@ class CurrentUserController{
     else{
       $player = Player::connectSession();
       if($player)
-          $e = new Succes($player);
+          $e = new Success($player);
       else
-        $e = new Succes("Pas d'utilisateur courant");
+        $e = new Success("Pas d'utilisateur courant");
       return Response::jsonResponse($e);
     }
   }
