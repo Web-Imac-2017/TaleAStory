@@ -1,7 +1,6 @@
 import fetch from 'isomorphic-fetch';
 import Promise from 'es6-promise';
 import config from '../config';
-
 import ReactDOM from 'react-dom';
 
 class GlobalBack{
@@ -31,26 +30,7 @@ export {GlobalBack};
 class Requester {
 
   static currentUser(){
-    fetch(config.path('currentuser'), {
-              method: 'get',
-              headers: {
-                'Accept': 'application/json'
-              }
-            }
-        ).then(function(response){
-          console.log("response");
-          console.log(response);
-          return response.json();
-        }).then(function(json){
-          let _currentuser = json;
-          console.log("_currentuser");
-          console.log(_currentuser);
-          return _currentuser;
-        });
-  }
-
-  static testCurrentUser(){
-    return fetch(config.path('currentuser'), {
+    return fetch(config.path('currentuser/getcurrentuser'), {
               method: 'post',
               headers: {
                 'Content-Type' : 'application/json'
@@ -59,15 +39,95 @@ class Requester {
             }
           ).then(
             function(response){
-              console.log(response);
               return response.json();
             }
           ).then(
             function(json){
-              console.log(json);
               return json;
           });
   }  
+
+  static signIn(log, pass){
+    return fetch(config.path('signin'), {
+              method: 'post',
+              headers: {
+                'Content-Type' : 'application/json'
+               },
+              credentials: "same-origin",
+              body: JSON.stringify({
+                login: log,
+                pwd: pass
+              })
+            }
+          ).then(
+            function(response){
+              return response.json();
+            }
+          ).then(
+            function(json){
+              return json;
+          });
+  } 
+
+  // !!!!!!!!! appel à makeGuest, qui ne fonctionne pas
+  static signOut(){
+    makeGuest();
+  }  
+
+  // !!!!!!!!! fonction php makeguest semble buguée
+  static makeGuest(){
+    return fetch(config.path('makeguest'), {
+              method: 'post',
+              headers: {
+                'Content-Type' : 'application/json'
+               },
+              credentials: "same-origin"
+            }
+          ).then(
+            function(response){
+              return response.json();
+            }
+          ).then(
+            function(json){
+              return json;
+          });
+  } 
+
+  static currentUserStats(){
+    return fetch(config.path('currentuser/stats/'), {
+              method: 'post',
+              headers: {
+                'Content-Type' : 'application/json'
+               },
+              credentials: "same-origin"
+            }
+          ).then(
+            function(response){
+              return response.json();
+            }
+          ).then(
+            function(json){
+              return json;
+          });
+  } 
+
+  static currentUserAchievements(){
+    return fetch(config.path('currentuser/achievements/'), {
+              method: 'post',
+              headers: {
+                'Content-Type' : 'application/json'
+               },
+              credentials: "same-origin"
+            }
+          ).then(
+            function(response){
+              return response.json();
+            }
+          ).then(
+            function(json){
+              return json;
+          });
+  } 
 
   static test(that){ /* == ancien 'componentDidMount' )*/
     fetch(config.path('connexion'), {

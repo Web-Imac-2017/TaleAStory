@@ -15,8 +15,8 @@ class CurrentUserController{
 
 
   static public function stats(){
-    //$player = Player::connectSession();
-    $player = Player::connect("login","pwd");
+    $player = Player::connectSession();
+    //$player = Player::connect("login","pwd");
     if(!$player) {
       $error = new Error("Vous n'êtes pas connectés");
       return Response::jsonResponse($error);
@@ -30,8 +30,8 @@ class CurrentUserController{
   }
 
   static public function items(){
-    //$player = Player::connectSession();
-    $player = Player::connect("login","pwd");
+    $player = Player::connectSession();
+    //$player = Player::connect("login","pwd");
     if(!$player) {
       $error = new Error("Vous n'êtes pas connectés");
       return Response::jsonResponse($error);
@@ -45,8 +45,8 @@ class CurrentUserController{
   }
 
   static public function currentStep(){
-    //$player = Player::connectSession();
-    $player = Player::connect("login","pwd");
+    $player = Player::connectSession();
+    //$player = Player::connect("login","pwd");
     if(!$player) {
       $error = new Error("Vous n'êtes pas connectés");
       return Response::jsonResponse($error);
@@ -60,8 +60,8 @@ class CurrentUserController{
   }
 
   static public function story(){
-    //$player = Player::connectSession();
-    $player = Player::connect("login","pwd");
+    $player = Player::connectSession();
+    //$player = Player::connect("login","pwd");
     if(!$player) {
       $error = new Error("Vous n'êtes pas connectés");
       return Response::jsonResponse($error);
@@ -90,8 +90,8 @@ class CurrentUserController{
     }
   }
   static public function achievements(){
-    //$player = Session::getCurrentUser();
-    $player = Player::connect("login","pwd");
+    $player = Session::getCurrentUser();
+    //$player = Player::connect("login","pwd");
     if(!$player) {
       $error = new Error("Vous n'êtes pas connectés");
       return Response::jsonResponse($error);
@@ -103,8 +103,8 @@ class CurrentUserController{
   }
 
   static public function unreadAchievements(){
-    //$player = Session::getCurrentUser();
-    $player = Player::connect("login","pwd");
+    $player = Session::getCurrentUser();
+    //$player = Player::connect("login","pwd");
     if(!$player) {
       $error = new Error("Vous n'êtes pas connectés");
       return Response::jsonResponse($error);

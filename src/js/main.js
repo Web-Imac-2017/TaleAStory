@@ -15,10 +15,21 @@ class Test extends React.Component{
 
 	componentDidMount(){
 		console.log('-------------');
-		Requester.testCurrentUser().then(
+		/*Requester.signIn('marcel', 'inconnus').then(
             function(json){
-              console.log("in main");
-              console.log(json);
+                console.log(json);
+         });*/
+		Requester.currentUser().then(
+            function(json){
+                console.log(json);
+         });
+		Requester.currentUserStats().then(
+            function(json){
+                console.log(json);
+         });
+		Requester.currentUserAchievements().then(
+            function(json){
+                console.log(json);
          });
 	}
 

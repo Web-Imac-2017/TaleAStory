@@ -20,9 +20,10 @@ export default RouteComponent({
 	},
 
 	handleSubmit(event) {
-		/* alert(this.state.login + '-' + this.state.password ); */
 		event.preventDefault();
-		/*this.context.router.push(config.path('home'));*/
+
+		
+
 		if (this.context.requestedPage == null || this.context.requestedPage == undefined ) {
 			this.context.requestedPage = config.path('home');
 		}
