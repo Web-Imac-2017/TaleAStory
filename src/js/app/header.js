@@ -69,11 +69,11 @@ class ProfileMenu extends React.Component{
 					<div className="profileMenu rows" >
 						<div className="cols">
 							<img src={config.imagePath('profil.svg')}/>
-							<a href="">Mon Profil</a>
+							<Link to={config.path('profils/account')}>Mon profil</Link>
 						</div>
 						<div className="cols">
 							<img src={config.imagePath('trophy.svg')}/>
-							<a href="">Mes Trophées</a>
+							<Link to={config.path('profils/trophy')}>Mes Trophées</Link>
 						</div>
 						<div className="cols">
 							<img src={config.imagePath('deco.svg')}/>

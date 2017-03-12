@@ -20,6 +20,11 @@
 			margin : 0 auto 30px auto;
 			border-radius : 50%;
 			width : 40% ;
+			cursor : pointer;
+
+			@media screen and (max-width: $break-medium) {
+				width : 20%;
+			}
 		}
 
 		.userName{
@@ -42,6 +47,40 @@
 					color : #fff;
 				}
 
+				a, a:visited, p {
+					text-decoration: none;
+					padding-bottom: 6px;
+					vertical-align: middle;
+					transition: all 0.25s;
+					border-bottom: 0px solid rgba(255,255,255,0.75);
+					position: relative;
+					color: black;
+				}
+
+				a:hover{
+					color: white !important;
+				}
+
+				a:before{
+					width: 0%;
+					height: 1px;
+					content: '';
+					background: rgba(255,255,255,0.75);
+					position: absolute;
+					transition : all 0.4s;
+					bottom: 0;
+					left: 20%;
+				}
+
+				a:hover::before{
+					width: 60%;
+					height: 1px;
+					content: '';
+					background: rgba(255,255,255,1);
+					position: absolute;
+					transition : all 0.3s;
+				}
+
 			}
 		}
 
@@ -53,6 +92,14 @@
 			min-width : 100px;
 			width : 80%;
 		}
+	}
+
+	@media screen and (max-width: $break-medium) {
+		display : block;
+		margin : 6% 0 !important;
+		height : auto;
+		width : 100%;
+		padding : 20px;
 	}
 }
 
@@ -69,20 +116,28 @@
 			font-size : 11px;
 			letter-spacing : 4px;
 			padding : 20px 0;
+
+			span{
+				padding-left : 10px;
+			}
+
+			img{
+				padding-left : 10px; 
+				cursor : pointer;
+			}
 		} 
 
-		.addPhoto{
-			display : flex;
-			flex-direction : row;
-
-			.element{
-				margin : 20px auto 40px auto;
-			}
-
-			.button{
-				min-width : 150px;
-			}
+		@media screen and (max-width: $break-medium) {
+			width : 80%;
+			margin : 0 auto;
+			text-align : center;
 		}
+	}
+
+	@media screen and (max-width: $break-medium) {
+		display : block;
+		height : auto;
+		width : 100%;
 	}
 
 }
@@ -99,6 +154,7 @@
 
 		.insideTrophy{
 			width : 100%;
+			padding : 40px 0;
 
 			img{
 				margin-top : 0;
@@ -110,6 +166,13 @@
 				font-weight : normal;
 				letter-spacing : 4px;
 			}
+		}
+
+		@media screen and (max-width: $break-medium) {
+			display : block;
+			height : auto;
+			width : 100%;
+			margin: 0;
 		}
 
 	}

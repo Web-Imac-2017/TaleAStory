@@ -44,7 +44,6 @@ html, body, #root, #app{
     width : 100%;
 		overflow-x: hidden;
 		overflow-y: auto;
-		margin-left: 5%;
 		max-height: 100%;
 		height: 100%;
 		.route-component {
@@ -59,7 +58,7 @@ header {
 	width: 100%;
 	padding-left: 5%;
 	padding-right: 5%;
-	padding-top: 0%;
+	padding-top: 30px;
 	height: 10%;
 	font-size: 10px;
 	font-family: 'Bjorn';
@@ -69,7 +68,6 @@ header {
 	h1 {
 		float: left;
 		font-size: 12px;
-		margin-bottom: 10px;
 	}
 
   .links {
@@ -185,39 +183,42 @@ header {
    		height: 100%;
 
    		li {
-        position: relative;
-        margin: auto 10px;
-        transition : all 0.4s;
-        padding: 8px;
-        font-family: OpenSans;
-        font-weight: bold;
-        color: rgba(255,255,255,0.5);
-        list-style: none;
-        a{
-          text-decoration: none;
-        }
+        	position: relative;
+        	margin: auto 10px;
+        	transition : all 0.4s;
+        	padding: 8px;
+        	font-family: OpenSans;
+        	font-weight: bold;
+        	color: rgba(255,255,255,0.5);
+        	list-style: none;
+
+        	a{
+          		text-decoration: none;
+        	}
    		}
 
 
 		li:before{
-      color: rgba(255,255,255,0);
-      display: block;
-      margin: auto;
-      transform: rotate(270deg);
-      width: 200px;
-      height: 30px;
-      text-align: center;
-      content: attr(data-content);
-      text-transform: uppercase;
-      position: absolute;
-      transition : all 0.4s;
-      left: -115px;
-      letter-spacing: 3px;
-      font-size: 12px;
+			color: rgba(255,255,255,0);
+			margin: auto;
+			transform: rotate(270deg);
+			width: 200px;
+			height: 30px;
+			text-align: center;
+			content: attr(data-content);
+			text-transform: uppercase;
+			position: absolute;
+			transition : all 0.4s;
+			left: -90px;
+   			letter-spacing: 3px;
+   			top : -15px;
+   			font-size: 10px;
+   			display : block;
+   			padding-bottom : 30px;
 		}
 
 		li:hover::before{
-			left: -135px;
+			left: -105px;
 			color: rgba(255,255,255,0.9);
 		}
 

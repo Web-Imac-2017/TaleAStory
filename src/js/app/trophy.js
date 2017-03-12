@@ -17,7 +17,7 @@ export default RouteComponent({
                       <img className="element" src={config.imagePath('wave_large.png')}/>
                       <ul className="assideMenu">
                         <li><Link to={config.path('profils/account')}>Mon compte</Link></li>
-                        <li><Link to={config.path('')}>Mes trophées</Link></li>
+                        <li><Link to={config.path('profils/trophy')}>Mes trophées</Link></li>
                         <li><Link to={config.path('')}>Déconnexion</Link></li>
                       </ul> 
                       <a href="" className="element button">Jouer</a>

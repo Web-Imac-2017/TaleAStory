@@ -1,5 +1,5 @@
 @import './import/reset';
-@import 'bootstrap';
+/* @import 'bootstrap'; */
 @import './import/common';
 @import './import/profil';
 @import './import/fonts';
@@ -168,7 +168,7 @@
 	min-width: $width-index;
 	height: 70%;
     width: 10%;
-	margin: 0px 3%;
+	margin: 0px 3% 0 0;
 
 	@media screen and (max-width: $break-small) {
     	display: none;
