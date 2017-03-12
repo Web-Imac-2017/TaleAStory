@@ -15,22 +15,18 @@ class MakeGuestController{
   }
 
   static public function MakeGuest(){
-    $login = random_int(1000, 100000);
+    //$login = random_int(1000, 100000);
+    $login = rand(1000, 100000);
     while(Database::instance()->query("Player", array('Login'=>strval($login)))) {
       $login++;
     }
     $guest = Player::signup("Guest", strval($login), "Guest", "fake@mail.com", $imgpath = NULL);
     if(!$guest) {
       $error = new Error("Oh bah ça n'a pas marché!");
-      return Response::jsonResponse($error);
+      Response::jsonResponse($error);
     } else {
-      $guestData = array();
-      $guestData['id']= $guest->id;
-      $guestData['pseudo']= $guest->pseudo;
-      $guestData['imgpath']= $guest->imgpath;
-      $guestData['mail']= $guest->mail;
-      $success = new Success($guestData);
-      return Response::jsonResponse($success);
+      $success = new Success($guest);
+      Response::jsonResponse($success);
     }
   }
 
