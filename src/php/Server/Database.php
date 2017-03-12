@@ -223,13 +223,14 @@ class Database {
    * @param  [type] $value [description]
    * @return [type]        [description]
    */
-  public function arrayMap($entry, $key, $value) {
+  public function arrayMap($entry, $key=0, $value) {
     if(!$entry){
       return NULL;
     }
     $map = array();
     foreach($entry as $data){
-      $map[$data[$key]] = $data[$value];
+      if($key){$map[$data[$key]] = $data[$value];}
+      else {array_push($map, $data[$value]);}
     }
     return $map;
   }
