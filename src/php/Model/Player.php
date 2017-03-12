@@ -17,10 +17,11 @@ class Player {
   public $admin;
   public $defaultImgpath = "../../defaultImg.jpg";
 
-  private function __construct($id, $pseudo, $login, $pwd, $mail, $imgpath = NULL){
+  private function __construct($id, $pseudo, $login, $pwd=NULL, $mail, $imgpath = NULL){
     $this->pseudo = $pseudo;
     $this->login = $login;
-    $this->pwd = Database::instance()->encode($pwd);
+    if($pwd)
+      $this->pwd = Database::instance()->encode($pwd);
     $this->mail = $mail;
     $this->imgpath = (is_null($imgpath)) ? $this->defaultImgpath : $imgpath;
     $this->id = $id;
@@ -100,7 +101,6 @@ class Player {
         $playerData[0]["IDPlayer"],
         $playerData[0]["Pseudo"],
         $playerData[0]["Login"],
-        $playerData[0]["Pwd"],
         $playerData[0]["Mail"],
         $playerData[0]["ImgPath"]
       );
@@ -125,7 +125,6 @@ class Player {
   public function save() {
     $table = "Player";
     $entries = array(
-      "IDPlayer" => "",
       "ImgPath" => $this->imgpath,
       "Login" => $this->login,
       "Pwd" => $this->pwd,
@@ -157,6 +156,27 @@ class Player {
     );
     $where = array("IDPlayer" => $this->id);
     Database::instance()->update($table, $entries, $where);
+  }
+
+  public function delete(){
+    $entries = array(
+      "IDPlayer" => $this->id
+    );
+   try {
+      $table = "PlayerAchievement";
+       Database::instance()->delete($table, array("IDChoice"=>$this->id));
+      $table = "Inventory";
+       Database::instance()->delete($table, array("IDChoice"=>$this->id));
+      $table = "PlayerStat";
+       Database::instance()->delete($table, array("IDChoice"=>$this->id));
+      $table = "PastStep";
+       Database::instance()->delete($table, array("IDChoice"=>$this->id));
+
+      Database::instance()->delete("Player", $entries);
+    }catch (RuntimeException $e) {
+        return false;
+    }
+    return true;
   }
 
   public function setPassword($newPwd) {
@@ -362,6 +382,7 @@ class Player {
     $regex = "#^\w{1,60}$#";
     return preg_match($regex,$s);
   }
+
 
 }
 

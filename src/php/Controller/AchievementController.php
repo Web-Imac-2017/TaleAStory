@@ -16,7 +16,7 @@ class AchievementController {
     $admin = Player::connectSession();
     if(!$admin || $admin->admin == 0 || $admin->isAdmin() == 0){
       $e = new Error("Tu n'as pas le droit d'effectuer cette action !");
-      return Response::jsonResponse($e);
+      Response::jsonResponse($e);
     }
     $name = Form::getField("Name");
     //$imgpath = Form::uploadFile("AchievementImg");
@@ -24,7 +24,7 @@ class AchievementController {
     $brief = Form::getField("Brief");
     if ($name == NULL || $imgpath == NULL || $brief == NULL){
       $e = new Error("Tu ne peux pas ajouter cet achievement !");
-      return Response::jsonResponse($e);
+      Response::jsonResponse($e);
     }
     $a = new Achievement($name, $imgpath, $brief);
     $a = $a->save();
@@ -33,21 +33,21 @@ class AchievementController {
     else{
       $e = new Error("Tu ne peux pas ajouter cet achievement !");
       }
-    return Response::jsonResponse($e);
+    Response::jsonResponse($e);
   }
 
   public static function updateAchievement() {
     $admin = Player::connectSession();
     if(!$admin || $admin->admin == 0 || $admin->isAdmin() == 0){
       $e = new Error("Tu n'as pas le droit d'effectuer cette action !");
-      return Response::jsonResponse($e);
+      Response::jsonResponse($e);
     }
     //$tmp = $imgpath;
     //$imgpath = Form::uploadFile("");
     $data = Form::getFullForm();
     if(!isset($data["IDAchievement"]) || $data["IDAchievement"]== null ){
       $e = new Error("Achievement invalide");
-      return Response::jsonResponse($e);
+      Response::jsonResponse($e);
     }
 
     $entries = array();
@@ -65,19 +65,19 @@ class AchievementController {
     $a->id = $data["IDAchievement"];
     $a->update($entries);
     $e = new Success("Achievement modifié !");
-    return Response::jsonResponse($e);
+    Response::jsonResponse($e);
   }
 
   public static function deleteAchievement() {
     $admin = Player::connectSession();
     if(!$admin || $admin->admin == 0 || $admin->isAdmin() == 0){
       $e = new Error("Tu n'as pas le droit d'effectuer cette action !");
-      return Response::jsonResponse($e);
+      Response::jsonResponse($e);
     }
     $id = Form::getField("IDAchievement");
     if(!$id){
       $e = new Error("Impossible de supprimer l'achievement !");
-      return Response::jsonResponse($e);
+      Response::jsonResponse($e);
     }
     else{
       $a = new Achievement("", "", "");
@@ -87,7 +87,7 @@ class AchievementController {
         $e = new Success("Achievement supprimé !");
       else
         $e = new Error("Impossible de supprimer l'achievement !");
-      return Response::jsonResponse($e);
+      Response::jsonResponse($e);
     }
   }
 
