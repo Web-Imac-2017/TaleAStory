@@ -46,7 +46,7 @@ class Player {
 
   static public function signup($pseudo, $login, $pwd, $mail, $imgpath = NULL) {
     //echo "SIGN UP!";
-    if(Player::checkLogin($login)) {return UNAVAILABLE_LOGIN;}
+    if(Player::checkLogin($login)) {return ERR_LOGIN;}
     else if
     (
       !Player::formatMail($mail) ||
