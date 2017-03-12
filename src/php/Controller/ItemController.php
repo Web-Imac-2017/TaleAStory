@@ -9,15 +9,12 @@ use \Model\Player;
 use \Server\Response;
 use \View\Success;
 use \View\Error;
+use \Controller\CurrentUserController;
 
 class ItemController {
 
   public static function addItem() {
-    $admin = Player::connectSession();
-    if(!$admin || $admin->admin == 0 || $admin->isAdmin() == 0){
-      $e = new Error("Tu n'as pas le droit d'effectuer cette action !");
-      return Response::jsonResponse($e);
-    }
+    CurrentUserController::isAdmin();
 
     $name = Form::getField("Name");
     //$imgpath = Form::uploadFile("ItemImg");
@@ -25,7 +22,7 @@ class ItemController {
     $brief = Form::getField("Brief");
     if ($name == NULL || $imgpath == NULL || $brief == NULL){
       $e = new Error("Tu ne peux pas ajouter cet item !");
-      return Response::jsonResponse($e);
+      Response::jsonResponse($e);
     }
     $item = new Item($name, $imgpath, $brief);
     $item = $item->save();
@@ -34,22 +31,18 @@ class ItemController {
     else{
       $e = new Error("Tu ne peux pas ajouter cet item !");
       }
-    return Response::jsonResponse($e);
+    Response::jsonResponse($e);
     }
 
   public static function updateItem() {
-    $admin = Player::connectSession();
-    if(!$admin || $admin->admin == 0 || $admin->isAdmin() == 0){
-      $e = new Error("Tu n'as pas le droit d'effectuer cette action !");
-      return Response::jsonResponse($e);
-    }
+    CurrentUserController::isAdmin();
 
     //$tmp = $imgpath;
     //$imgpath = Form::uploadFile("itemImg");
     $data = Form::getFullForm();
     if(!isset($data["IDItem"]) || $data["IDItem"]== null ){
       $e = new Error("Item invalide");
-      return Response::jsonResponse($e);
+      Response::jsonResponse($e);
     }
 
     $entries = array();
@@ -67,20 +60,16 @@ class ItemController {
     $item->id = $data["IDItem"];
     $item->update($entries);
     $e = new Success("Item modifié !");
-    return Response::jsonResponse($e);
+    Response::jsonResponse($e);
   }
 
   public static function deleteItem() {
-    $admin = Player::connectSession();
-    if(!$admin || $admin->admin == 0 || $admin->isAdmin() == 0){
-      $e = new Error("Tu n'as pas le droit d'effectuer cette action !");
-      return Response::jsonResponse($e);
-    }
+    CurrentUserController::isAdmin();
 
     $id = Form::getField("IDItem");
     if(!$id){
       $e = new Error("Impossible de supprimer l'item !");
-      return Response::jsonResponse($e);
+      Response::jsonResponse($e);
     }
     else{
       $item = new Item("", "", "");
@@ -90,7 +79,7 @@ class ItemController {
         $e = new Success("Item supprimé !");
       else
         $e = new Error("Impossible de supprimer l'item !");
-      return Response::jsonResponse($e);
+      Response::jsonResponse($e);
     }
   }
 

@@ -18,26 +18,21 @@ class SignInController{
     //echo "<pre>".var_export($user, true)."</pre>";
     if(!$player){
       $error = new Error("tu sais pas rentrer ton login trou duc ni ton password d'ailleur... je suppose");
-      return Response::jsonResponse($error);
+      Response::jsonResponse($error);
     } else if(!is_object($player)){
       if($player == -1){
         $error = new Error("Ton login c'est dla merde");
-        return Response::jsonResponse($error);
+        Response::jsonResponse($error);
       } else if($player == -2){
         $error = new Error("Bah alors t'as oublié ton mot de passe?");
-        return Response::jsonResponse($error);
+        Response::jsonResponse($error);
       }
     } else {
-      $playerData = array();
-      $playerData['id']= $player->id;
-      $playerData['pseudo']= $player->pseudo;
-      $playerData['imgpath']= $player->imgpath;
-      $playerData['mail']= $player->mail;
-      $success = new Success($playerData);
-      return Response::jsonResponse($success);
+      $success = new Success($player);
+      Response::jsonResponse($success);
     }
   /*
-  return Response::jsonResponse(array(
+  Response::jsonResponse(array(
   'status' => "error",
   'login ' => $login,
   'pwd' => $pwd,

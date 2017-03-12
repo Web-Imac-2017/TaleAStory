@@ -28,7 +28,7 @@ Class Achievement {
       'ImgPath' => $this->imgpath,
       'Brief' => $this->brief
     );
-    var_dump($entries);
+    //var_dump($entries);
     $id=Database::instance()->insert(self::$table, $entries);
     if($id != null){
       $this->id = $id;
@@ -52,7 +52,7 @@ Class Achievement {
         Database::instance()->delete($table, $entries);
         Database::instance()->delete(self::$table, $entries);
       } catch (RuntimeException $e) {
-          echo $e->getMessage();
+          //echo $e->getMessage();
           return false;
       }
       return true;

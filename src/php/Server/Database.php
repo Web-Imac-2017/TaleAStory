@@ -165,8 +165,8 @@ class Database {
   }
 
   private function sendUpdate($statement, $array_entries) {
-    var_dump($statement);
-    var_dump($array_entries);
+    //var_dump($statement);
+    //var_dump($array_entries);
     try {
       $update = $this->getPDO()->prepare($statement);
       $update->execute($array_entries) or die(print_r($update->errorInfo()));
@@ -183,7 +183,7 @@ class Database {
     $where = $this->processWHERE($identification);
     $statement = $delete.$from.$where;
     $array_entries = $this->processArrayEntries($identification);
-    echo $statement;
+    //echo $statement;
     if (strstr($statement, "WHERE") == FALSE) {
       //echo "BUG DELETE";
       return 0;

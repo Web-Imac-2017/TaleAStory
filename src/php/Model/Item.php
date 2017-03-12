@@ -57,7 +57,7 @@ Class Item {
         Database::instance()->delete($table, $entries);
         Database::instance()->delete(self::$table, $entries);
       }catch (RuntimeException $e) {
-          echo $e->getMessage();
+          //echo $e->getMessage();
           return false;
       }
       return true;
