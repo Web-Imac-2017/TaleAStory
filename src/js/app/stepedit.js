@@ -78,7 +78,7 @@ export default RouteComponent({
     }
     else{
       image = <div className="image empty" onClick={this.handleImage}>
-                <img src={config.imgPath('default_image.png')} alt="image de la péripétie"></img>
+                <img src={config.imagePath('default_image_tiny.png')} alt="image de la péripétie"></img>
               </div>
     }
 		return  <div className="form-screen editing">
