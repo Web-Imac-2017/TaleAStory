@@ -29,7 +29,7 @@ export default RouteComponent({
 	},
 
     render(){
-		return  <div className="form-screen homePageConnectionScreen">
+		return  <div className="homePageConnectionScreen">
 					<div className="content">
 						<div className="block">
 							<h1 className="element pageTitle">Connexion</h1>

@@ -1,5 +1,4 @@
 import React from 'react';
-import {Link} from 'react-router'
 import config from '../config';
 import {currentUser} from '../model/user';
 import {User} from '../model/user';
@@ -11,8 +10,26 @@ class App extends React.Component{
     let that = this;
     this.state = {
       user: null,
+      requestedPage: null,
       setUser : function(user){
         that.setState({'user': user});
+      },
+      unsetUser : function(){
+        that.setState({'user':null});
+      },
+      goRequestedPage : function(){
+        let requestedPage;
+        if (that.state.requestedPage) {
+          requestedPage = that.state.requestedPage;
+          that.setState({'requestedPage': null});
+    		}
+        else{
+          requestedPage = config.path('home');
+        }
+    		that.context.router.push(requestedPage)
+      },
+      requestPage : function(page){
+        that.setState({'requestedPage': page})
       }
     };
   }
@@ -41,9 +58,21 @@ class App extends React.Component{
   }
 };
 
+App.contextTypes = {
+  router: React.PropTypes.object
+}
+
 App.childContextTypes = {
+  router: React.PropTypes.object,
   user: React.PropTypes.objectOf(User),
-  setUser: React.PropTypes.func
+  setUser: React.PropTypes.func,
+  requestPage : React.PropTypes.func,
+  goRequestedPage : React.PropTypes.func,
+  requestedPage : React.PropTypes.string,
+  unsetUser : React.PropTypes.func
 };
 
+let AppContextTypes = App.childContextTypes;
+
+export {AppContextTypes};
 export default App;

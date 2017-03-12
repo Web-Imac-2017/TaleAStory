@@ -5,12 +5,12 @@ import {GlobalBack} from '../utils/interfaceback';
 
 
 class User{
-  constructor(id, pseudo, imgpath){
+  constructor(id, pseudo, imgpath, isAdmin = false){
     this.id = id;
     this.pseudo = pseudo;
     this.imgpath = imgpath;
+    this.isAdmin = isAdmin;
   }
-
 }
 
 class LoggedUser extends User{
@@ -30,7 +30,9 @@ function currentUser(){
   if(_currentuser == null){
     let id = GlobalBack.get('userID');
     if(id){
-      _currentuser = new User(id, GlobalBack.get('userPseudo'), GlobalBack.get('userImgPath'));
+      _currentuser = new User(id, GlobalBack.get('userPseudo'),
+                                  GlobalBack.get('userImgPath'),
+                                 GlobalBack.get('isAdmin'));
       return new Promise((resolve, reject) =>
                         {
                             resolve(_currentuser);
@@ -43,7 +45,6 @@ function currentUser(){
                         }
                       }
           ).then(function(response){
-            console.log(response);
             return _currentuser;
             //return response.json();
           }).then(function(json){

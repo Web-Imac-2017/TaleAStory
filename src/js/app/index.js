@@ -5,7 +5,7 @@ import RouteComponent from '../utils/routecomponent';
 import {Link} from 'react-router';
 import Scroll from '../utils/scroll';
 import {RightNavigation} from './wrapper';
-import App from './app';
+import {AppContextTypes} from './app';
 import {User, Guest} from '../model/user';
 import {Button, Modal} from 'react-bootstrap';
 import _Dialog from 'react-bootstrap-dialog';
@@ -36,7 +36,7 @@ class Dialog extends _Dialog {
 }
 
 export default RouteComponent({
-  contextTypes : App.childContextTypes,
+  contextTypes : AppContextTypes,
 
   guestStart(){
     this.context.setUser(new Guest());
@@ -44,6 +44,7 @@ export default RouteComponent({
   },
 
   signin(){
+    this.context.requestPage(config.path('game'));
     this.context.router.push(config.path('sign/in'));
   },
 

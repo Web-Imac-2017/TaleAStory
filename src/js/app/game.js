@@ -1,7 +1,5 @@
 import React from 'react';
-import TweenMax from '../greenshock/TweenMax.js';
 import TweenLite from '../greenshock/TweenMax.js';
-//import {Animation} from '../greenshock/TweenMax.js';
 import ReactDOM from 'react-dom'
 import config from '../config';
 import RouteComponent from '../utils/routecomponent';
@@ -20,8 +18,8 @@ class GameComponent extends React.Component{
     this.animation = TweenLite.fromTo(dom, 1.3,{opacity:0, scale:0},{opacity:1,scale:1})
                               .eventCallback("onComplete", callback);
   }
-  
-  
+
+
   componentWillAppear(callback){
     this.componentWillEnter(callback);
   }
@@ -51,7 +49,7 @@ class Decision extends GameComponent{
       setTimeout((that) => {that.nextText()}, 1700, this);
   }
   nextText(){
-	  
+
     let dom = ReactDOM.findDOMNode(this);
     if(this.childs == null)
       this.childs = dom.getElementsByClassName('story-text');
@@ -63,12 +61,12 @@ class Decision extends GameComponent{
       }
     }
     else{
-	
+
 
       this.animation = TweenLite.fromTo(this.childs[this.state.current], 2,
                                         {opacity:0},{opacity:1})
                                 .eventCallback("onComplete",this.nextText);
-								
+
       this.setState((prevState, props) => ({
         current: prevState.current + 1
       }));
@@ -148,9 +146,11 @@ class StoryComponent extends GameComponent{
     this.handleSkip = this.handleSkip.bind(this);
     this.handleNext = this.handleNext.bind(this);
   }
-  componentWillMount(){
-      setTimeout(this.nextText, 1700);
+
+  componentDidMount(){
+      setTimeout(this.nextText, 1000);
   }
+
   nextText(){
     let dom = ReactDOM.findDOMNode(this);
     if(this.childs == null)
@@ -214,10 +214,10 @@ export default RouteComponent({
 	  // webGL.bg_anim.setLandscape(true);
 	  if(webGL.bg_anim != null){
 		webGL.bg_anim.unMuteAll();
-		
+
 	  }
 	  TweenLite.fromTo(document.getElementById('analyser'), 1.3,{opacity:0},{opacity:1});
-	
+
     return {
       currentStep : null
     };
@@ -238,7 +238,7 @@ export default RouteComponent({
 				TweenLite.to(links[i], 0.5,{color:"rgb("+Math.floor(255*color[0]+30)+","+Math.floor(255*color[1]+30)+","+Math.floor(255*color[2]+30)+")"});
 			}
 		}
-		
+
 		// webGL.bg_anim.getColor();
 
 	}
@@ -256,9 +256,9 @@ export default RouteComponent({
                       </StoryComponent>);
     this.setState({currentStep : component, currentStepID : 1});
   },
-  
 
-  
+
+
   componentWillUnmount(){
 	  if(webGL.bg_anim != null){
 		  webGL.bg_anim.setLandscape(false);

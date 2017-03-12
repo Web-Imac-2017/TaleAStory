@@ -9,8 +9,9 @@
 	display : flex;
 	align-items : center;
 	border : 1px solid #fff;
-	height : 80%;
-	width : 30%;
+	height: 80%;
+	width: 30%;
+	margin-left: 7%;
 
 	.insideCol{
 		width : 100%;
@@ -46,18 +47,19 @@
 		}
 
 		.element.button{
-				margin : 40px auto 0 auto;
+				margin : 15px auto 0 auto;
 			}
 
 		.button {
 			min-width : 100px;
 			width : 80%;
+			text-align: center;
 		}
 	}
 }
 
 .contentRight{
-	width : 70%;
+	width : 93%;
 	height : 80%;
 	display : flex;
 	align-items : center;
@@ -69,7 +71,7 @@
 			font-size : 11px;
 			letter-spacing : 4px;
 			padding : 20px 0;
-		} 
+		}
 
 		.addPhoto{
 			display : flex;
@@ -87,17 +89,19 @@
 
 }
 
-.contentTrophy .contentRight{
+.contentProfil .contentRight{
 	flex-wrap : wrap;
 
-	.trophy{
+	.item{
 		display : flex;
 		align-items : center ;
 		border : 1px solid #fff;
-		width : 31%;
+		min-width : 30%;
 		height : 48%;
+		margin: 1%;
+		flex: 1;
 
-		.insideTrophy{
+		.insideItem{
 			width : 100%;
 
 			img{
@@ -112,6 +116,11 @@
 			}
 		}
 
+	}
+
+	.item.selected{
+		background: rgba(0,0,0,0.15);
+		transition : all 0.45s;
 	}
 
 	.one, .two, .three{
