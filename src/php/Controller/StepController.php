@@ -36,27 +36,65 @@ class StepController {
     response::jsonResponse($stepParam);
   }
 
-  public static function getStep() { //récuperer les options grâce au module global : Form.php ->
-    Form::getFormPost( );
+  public static function getSteps() {
+    $option = Form::getField("nameFilter");
+    $stepArray =  Database::instance()->query("Step", Array("Title"=> $option,
+                                                                    "IDStep"=> "",
+                                                                    "ImgPath"=>"",
+                                                                    "Body"=>"",
+                                                                    "Question"=>"",
+                                                                    "IDType"=>""));
+    if ($stepArray != null) {
+        response::jsonResponse($stepArray);
+    }
 
-  }
+    else {
+      $array = [
+                  "statut" => "error",
+                  "message" => "Aucun step correspondant n'a été trouvé.",
+              ];
+      //var_dump($array);
+      response::jsonResponse($error);
+    }
+}
 
-  public static function stepResponse(){
+  public static function stepResponse(){ //ENCORE EN TEST
     $answer = \Server\Form::getField("answer");
-    //echo $answer;
+    echo $answer;
     $id = 2; //\Server\Session::getCurrentUser();
     $player = \Model\Player::getPlayer($id);
-    //var_dump($player);
+    var_dump($player);
 
 
     if ($player == NULL) {
-      echo "Joueur introuvable, IDPlayer incorrect.";
+      $array = [
+                  "statut" => "error",
+                  "message" => "Le joueur n'a pas pu être trouvé",
+              ];
+      Response::jsonResponse($array);
     }
     else {
-        $CurrentStep = $player->currentStep();
-        $array = $CurrentStep->processAnswer($player,$answer);
-        //var_dump($array);
-        Response::jsonResponse($array);
+        $Step = $player->currentStep();
+        var_dump($Step);
+        $CurrentStep = new Step($Step[0]['ImgPath'], $Step[0]['Body'], $Step[0]['Question'], $Step[0]['IDType']);
+        $result = $CurrentStep->processAnswer($player,$answer);
+        if ($result == true) {
+          $array = [
+                      "statut" => "ok",
+                      "message" => "Le joueur a bien été modifié",
+                  ];
+
+          Response::jsonResponse($array);
+        }
+
+        else {
+          $array = [
+                      "statut" => "error",
+                      "message" => "Le joueur n'a pas pu être modifié",
+                  ];
+
+          Response::jsonResponse($array);
+        }
     }
   }
 
