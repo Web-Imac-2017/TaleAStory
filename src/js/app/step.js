@@ -1,9 +1,7 @@
 import React from 'react';
 import config from '../config';
 import RouteComponent from '../utils/routecomponent';
-import {Link} from 'react-router';
 import Scroll from '../utils/scroll';
-import {RightNavigation} from './wrapper';
 
 export default RouteComponent({
   render(){

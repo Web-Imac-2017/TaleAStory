@@ -4,10 +4,41 @@
 	display: flex;
 	text-align: justify;
 	align-items: center;
-	flex-direction: row;
+	flex-direction: column;
 	width: 80%;
 	margin-left: 5%;
 	margin-right: 10%;
+
+	.stats{
+		position: absolute;
+		bottom: 5%;
+		left: 50px;
+		height: 20%;
+		span{
+			width: 100%;
+			height: 30%;
+			display: inline-block;
+			.progress{
+				width: 150px;
+				vertical-align: middle;
+				margin : 0;
+				display: inline-block;
+				background-color: unset;
+				border: solid 1px white;
+				border-radius: 0;
+				height: 70%;
+			}
+			h4{
+				font-family: 'OpenSans';
+				font-variant: small-caps;
+				margin: 0 2%;
+				vertical-align: middle;
+				width: 11%;
+				display: inline-block;
+			}
+		}
+	}
+
   > span{
     position: relative;
     left: 0;
@@ -48,5 +79,5 @@
 .button.small{
   padding: 12px 5px;
 	margin-top: 20px;
-  min-width: 0;
+  min-width: 100px;
 }

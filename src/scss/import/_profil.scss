@@ -9,8 +9,9 @@
 	display : flex;
 	align-items : center;
 	border : 1px solid #fff;
-	height : 80%;
-	width : 30%;
+	height: 80%;
+	width: 30%;
+	margin-left: 7%;
 
 	.insideCol{
 		width : 100%;
@@ -85,12 +86,13 @@
 		}
 
 		.element.button{
-				margin : 40px auto 0 auto;
+				margin : 15px auto 0 auto;
 			}
 
 		.button {
 			min-width : 100px;
 			width : 80%;
+			text-align: center;
 		}
 	}
 
@@ -104,8 +106,8 @@
 }
 
 .contentRight{
-	width : 70%;
-	height : 80%;
+	width : 93%;
+	height : 83%;
 	display : flex;
 	align-items : center;
 
@@ -116,6 +118,10 @@
 			font-size : 11px;
 			letter-spacing : 4px;
 			padding : 20px 0;
+<<<<<<< HEAD
+=======
+		}
+>>>>>>> backoffice
 
 			span{
 				padding-left : 10px;
@@ -142,9 +148,11 @@
 
 }
 
-.contentTrophy .contentRight{
+.contentProfil .contentRight{
 	flex-wrap : wrap;
+}
 
+<<<<<<< HEAD
 	.trophy{
 		display : flex;
 		align-items : center ;
@@ -155,19 +163,25 @@
 		.insideTrophy{
 			width : 100%;
 			padding : 40px 0;
+=======
+.item{
+	display : flex;
+	align-items : center ;
+	border : 1px solid #fff;
+	min-width : 30%;
+	height : 48%;
+	margin: 1%;
+	flex: 1;
+>>>>>>> backoffice
 
-			img{
-				margin-top : 0;
-			}
+	.insideItem{
+		width : 100%;
 
-			h3{
-				font-size : 11px;
-				text-align : center;
-				font-weight : normal;
-				letter-spacing : 4px;
-			}
+		img{
+			margin-top : 0;
 		}
 
+<<<<<<< HEAD
 		@media screen and (max-width: $break-medium) {
 			display : block;
 			height : auto;
@@ -175,13 +189,26 @@
 			margin: 0;
 		}
 
+=======
+		h3{
+			font-size : 11px;
+			text-align : center;
+			font-weight : normal;
+			letter-spacing : 4px;
+		}
+>>>>>>> backoffice
 	}
 
-	.one, .two, .three{
-		margin-bottom : 1%;
-	}
+}
 
+<<<<<<< HEAD
 	.four, .five, .six{
 		margin-top : 1%;
 	}
 }
+=======
+.item.selected{
+	background: rgba(0,0,0,0.15);
+	transition : all 0.45s;
+}
+>>>>>>> backoffice

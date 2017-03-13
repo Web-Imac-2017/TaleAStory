@@ -9,7 +9,7 @@ html {
 }
 
 .route-component{
-  width:100%;
+  width:95%;
   height : 100%;
   position: absolute;
   top: 0;
@@ -43,12 +43,13 @@ html, body, #root, #app{
     position: relative;
     width : 100%;
 		overflow-x: hidden;
-		overflow-y: auto;
+		overflow-y: scroll;
+		margin-left: 3.5%;
 		max-height: 100%;
 		height: 100%;
 		.route-component {
-			height: 103%;
-			padding-bottom: 10px;
+			height: 101%;
+      padding: 1% 0;
 		}
   }
 }
@@ -123,7 +124,7 @@ header {
 		position: absolute;
 		transition : all 0.3s;
 	}
-	
+
 	#profilePopup {
 		/*display: none;*/
 		position: absolute;
@@ -228,4 +229,102 @@ header {
 
    }
 
+}
+
+
+/* *** Screens - General *** */
+
+.screen {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	height:100vh;
+	color: white;
+
+	a, p {
+		letter-spacing: 4px;
+	}
+
+	.button{
+		padding: 18px 8px;
+		border: 1px solid rgba(255,255,255,0.85);
+		background: rgba(255,255,255,0);
+		display: block;
+		position: relative;
+		color: #fff;
+    @include defaultFont();
+		text-transform: uppercase;
+		font-size: 10px;
+		letter-spacing: 5px;
+		text-decoration: none;
+		margin: 0px 20px 0px 0px;
+		border-bottom: 8px solid transparent;
+		transition : all 0.3s;
+		z-index: 10;
+		border: 1px solid #fff;
+		margin: auto;
+		transition : all 0.3s;
+
+		min-width: 220px;
+		max-width: 350px;
+
+		@media screen and (max-width: $break-small) {
+			padding: 12px 5.5px;
+			font-size: 10px;
+		}
+
+	}
+
+	.button:after{
+		width: 104%;
+		height: 86%;
+		content: '';
+		border: 1px solid #fff;
+		position: absolute;
+		transition : all 0.4s;
+		z-index: -1!important;
+		bottom: 6%;
+		left: -2.25%;
+	}
+
+	.button:before{
+		width: 100%;
+		height: 0%;
+		content: '';
+		background: rgba(255,255,255,0);
+		position: absolute;
+		transition : all 0.4s;
+		z-index: -1!important;
+		bottom: 0;
+		left: 0;
+	}
+
+	.button:hover::before{
+		width: 100%;
+		height: 100%;
+		content: '';
+		background: rgba(255,255,255,0.15);
+		position: absolute;
+		transition : all 0.3s;
+	}
+
+	.button:hover::after{
+		background: rgba(255,255,255,0.15);
+	}
+
+}
+
+.picto {
+	@media screen and (max-width: $break-small) {
+    	width: 50px;
+    }
+	@media screen and (max-width: $break-tiny) {
+    	display: none !important;
+    }
+}
+.wave {
+	@media screen and (max-width: $break-tiny) {
+    	display: none !important;
+    }
 }

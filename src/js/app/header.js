@@ -1,6 +1,7 @@
 import React from 'react'
 import {Link} from 'react-router'
 import config from '../config';
+import {AppContextTypes} from './app'
 
 class Header extends React.Component{
 
@@ -8,7 +9,8 @@ class Header extends React.Component{
 		if (this.props.pseudo) {
 			return (
 				<HeaderRegistered pseudo={this.props.pseudo}
-                          img={this.props.imgpath}/>
+                          img={this.props.imgpath}
+													adminOpt={this.props.adminOpt}/>
 			);
 		} else {
 			return (
@@ -50,7 +52,7 @@ class HeaderRegistered extends React.Component{
 					<Link className="profileLink" to={config.path('profils/account')} onMouseOver={this.onHover}>{this.props.pseudo}</Link>
 					<img className="rounded profilPic" src={config.imagePath(this.props.img)}/>
 				</div>
-				<ProfileMenu/>
+				<ProfileMenu adminOpt={this.props.adminOpt}/>
 			</header>
 		);
 	}
@@ -58,12 +60,28 @@ class HeaderRegistered extends React.Component{
 
 class ProfileMenu extends React.Component{
 
+	constructor(props){
+		super(props);
+		this.disconnect = this.disconnect.bind(this)
+	}
+
+	disconnect(){
+		this.context.unsetUser();
+	}
+
 	hide() {
         document.getElementById("profilePopup").style.opacity = 0;
         document.getElementById("profilePopup").style.right = "-250px";
     }
 
 	render() {
+		let adminCols = null;
+		if(this.props.adminOpt){
+			adminCols = <div className="cols">
+										<img src={config.imagePath('deco.svg')}/>
+										<Link to={config.path('admin')}>Edition</Link>
+									</div>
+		}
 		return (
 				<div id="profilePopup" onMouseLeave={this.hide}>
 					<div className="profileMenu rows" >
@@ -75,14 +93,17 @@ class ProfileMenu extends React.Component{
 							<img src={config.imagePath('trophy.svg')}/>
 							<Link to={config.path('profils/trophy')}>Mes Trophées</Link>
 						</div>
+						{adminCols}
 						<div className="cols">
 							<img src={config.imagePath('deco.svg')}/>
-							<a href="">Déconnexion</a>
+							<a onClick={this.disconnect}>Déconnexion</a>
 						</div>
 					</div>
 				</div>
 		);
 	}
 }
+
+ProfileMenu.contextTypes = AppContextTypes;
 
 export default Header;
