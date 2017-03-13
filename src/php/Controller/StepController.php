@@ -19,27 +19,48 @@ class StepController {
   }
 
   public static function getStepsList($start, $count) {
+      if ($start-1 < 0) {
+          $error = new Error("Variable de départ incorrecte");
+          Response::jsonResponse($error);
+
+      }
+
+      else if ($count <= 0){
+          $empty = array();
+          $sucess = New Success($empty);
+          Response::jsonResponse($success);
+
+      }
+
+      else {
       $stepParam = Database::instance()->query("Step", Array("IDStep"=> "",
                                                             "ImgPath"=>"",
                                                             "Body"=>"",
                                                             "Question"=>"",
                                                             "IDType"=>""),
-                                                          "LIMIT ".$count." OFFSET ".$start);
-
-    response::jsonResponse($stepParam);
+                                                          "LIMIT ".$count." OFFSET ".$start-1);
+      $sucess = New Success($stepParam);
+      Response::jsonResponse($success);
   }
 
   public static function getTenStepsList($start) {
-    $stepParam = Database::instance()->query("Step", Array("IDStep"=> "",
-                                                          "ImgPath"=>"",
-                                                          "Body"=>"",
-                                                          "Question"=>"",
-                                                          "IDType"=>""),
-                                                        "LIMIT 10 OFFSET ".$start);
+        if ($start-1 < 0) {
+        $error = new Error("Variable de départ incorrecte");
+        Response::jsonResponse($error);
 
-    response::jsonResponse($stepParam);
+    }
+    else {
+        $stepParam = Database::instance()->query("Step", Array("IDStep"=> "",
+                                                              "ImgPath"=>"",
+                                                              "Body"=>"",
+                                                              "Question"=>"",
+                                                              "IDType"=>""),
+                                                            "LIMIT 10 OFFSET ".$start-1);
+
+        $sucess = New Success($stepParam);
+        Response::jsonResponse($success);
   }
-
+}
   public static function getSteps() {
     $option = Form::getField("nameFilter");
     $stepArray =  Database::instance()->query("Step", Array("Title"=> $option,
@@ -49,15 +70,13 @@ class StepController {
                                                                     "Question"=>"",
                                                                     "IDType"=>""));
     if ($stepArray != null) {
-        response::jsonResponse($stepArray);
+      $sucess = New Success($stepArray);
+      Response::jsonResponse($success);
     }
 
     else {
-      $array = [
-                  "statut" => "error",
-                  "message" => "Aucun step correspondant n'a été trouvé.",
-              ];
-      response::jsonResponse($error);
+      $error = new Error("Aucun step correspondant n'a été trouvé");
+      Response::jsonResponse($error);
     }
 }
 
@@ -67,30 +86,21 @@ class StepController {
     $player = Player::getPlayer($id);
 
     if ($player == NULL) {
-      $array = [
-                  "statut" => "error",
-                  "message" => "Le joueur n'a pas pu être trouvé",
-              ];
-      Response::jsonResponse($array);
+      $error = new Error("Le joueur n'a pas pu être trouvé");
+      Response::jsonResponse($error);
     }
     else {
         $Step = $player->currentStep();
         $CurrentStep = new Step($Step[0]['ImgPath'], $Step[0]['Body'], $Step[0]['Question'], $Step[0]['IDType']);
         $result = $CurrentStep->processAnswer($player,$answer);
         if ($result == true) {
-          $array = [
-                      "statut" => "ok",
-                      "message" => "Le joueur a bien été modifié",
-                  ];
-          Response::jsonResponse($array);
+          $success = new Success("Le joueur a bien été modifié");
+          Response::jsonResponse($success);
         }
 
         else {
-          $array = [
-                      "statut" => "error",
-                      "message" => "Le joueur n'a pas pu être modifié",
-                  ];
-          Response::jsonResponse($array);
+          $error = new Error("Le joueur n'a pas pu être modifié");
+          Response::jsonResponse($error);
         }
     }
   }
