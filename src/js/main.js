@@ -21,13 +21,14 @@ class Test extends React.Component{
 	}
 	componentDidMount(){
 		let that = this;
-		fetch(config.path('currentuser/unreadachievements'), {
+		fetch(config.path('step/list/'), {
 		                method: 'post',
 		                headers: {
 											'Content-Type' : 'application/json'
 		                },
 										credentials: "same-origin",
 										body: JSON.stringify({
+											"nameFilter" : "JeNeSuisPasUnTitre",
 										})
 		              }
 				  ).then(
