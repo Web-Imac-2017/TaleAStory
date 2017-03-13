@@ -29,5 +29,7 @@
   "currentuser/getcurrentuser":"Controller\\CurrentUserController::currentUser",
   "makeguest":"Controller\\MakeGuestController::MakeGuest",
   "/signup":"Controller\\SignUpController::signUp",
-  "/signout":"Controller\\SignOutController::signOut"
+  "/signout":"Controller\\SignOutController::signOut",
+  "/deleteplayer":"Controller\\CurrentUserController::deletePlayer",
+  "/updateplayer":"Controller\\CurrentUserController::updatePlayer"
 }

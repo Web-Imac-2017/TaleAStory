@@ -30,7 +30,6 @@ class Player {
 
   static public function getPlayer($id) {
     $playerData = Database::instance()->query("Player", array("IDPlayer"=>$id, "*"=>""));
-
     if ($playerData != NULL) {
         $player = new Player(
           $playerData[0]["IDPlayer"],
@@ -145,19 +144,8 @@ class Player {
     return current($id)['IDPlayer'];
   }
 
-  public function update() {
-    //echo "UPDATE";
-    $table = "Player";
-    $entries = array(
-      "IDPlayer" => $this->id,
-      "ImgPath" => $this->imgpath,
-      "Login" => $this->login,
-      "Pwd" => $this->pwd,
-      "Pseudo" => $this->pseudo,
-      "Mail" => $this->mail
-    );
-    $where = array("IDPlayer" => $this->id);
-    Database::instance()->update($table, $entries, $where);
+  public function update($entries) {
+    Database::instance()->update("Player", $entries, array("IDPlayer"=>$this->id));
   }
 
   public function delete(){
@@ -166,14 +154,15 @@ class Player {
     );
    try {
       $table = "PlayerAchievement";
-       Database::instance()->delete($table, array("IDChoice"=>$this->id));
+       Database::instance()->delete($table, array("IDPlayer"=>$this->id));
       $table = "Inventory";
-       Database::instance()->delete($table, array("IDChoice"=>$this->id));
+       Database::instance()->delete($table, array("IDPlayer"=>$this->id));
       $table = "PlayerStat";
-       Database::instance()->delete($table, array("IDChoice"=>$this->id));
+       Database::instance()->delete($table, array("IDPlayer"=>$this->id));
       $table = "PastStep";
-       Database::instance()->delete($table, array("IDChoice"=>$this->id));
-
+       Database::instance()->delete($table, array("IDPlayer"=>$this->id));
+      $table = "Admin";
+      Database::instance()->delete($table, array("IDPlayer"=>$this->id));
       Database::instance()->delete("Player", $entries);
     }catch (RuntimeException $e) {
         return false;

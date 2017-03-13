@@ -12,7 +12,10 @@ class Form {
   update la variable $_POST avec les données envoyées au serveur
   */
   static public function updatePOST(){
-    if(empty($_POST))
+    if(!empty($FILES) && empty($_POST)){
+      $_POST = parse_raw_http_request($_POST);
+    }
+    else if(empty($_POST))
       $_POST = json_decode(file_get_contents('php://input'), true);
   }
   /*

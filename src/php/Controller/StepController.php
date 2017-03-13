@@ -20,7 +20,8 @@ class StepController {
                                                             "ImgPath"=>"",
                                                             "Body"=>"",
                                                             "Question"=>"",
-                                                            "IDType"=>""),
+                                                            "IDType"=>"",
+                                                            "Title"=>""),
                                                           "LIMIT ".$count." OFFSET ".$start);
 
     response::jsonResponse($stepParam);
@@ -31,7 +32,8 @@ class StepController {
                                                           "ImgPath"=>"",
                                                           "Body"=>"",
                                                           "Question"=>"",
-                                                          "IDType"=>""),
+                                                          "IDType"=>"",
+                                                          "Title"=>""),
                                                         "LIMIT 10 OFFSET ".$start);
 
     response::jsonResponse($stepParam);
@@ -44,7 +46,8 @@ class StepController {
                                                                     "ImgPath"=>"",
                                                                     "Body"=>"",
                                                                     "Question"=>"",
-                                                                    "IDType"=>""));
+                                                                    "IDType"=>"",
+                                                                    "Title"=>""));
     if ($stepArray != null) {
         response::jsonResponse($stepArray);
     }
@@ -72,7 +75,7 @@ class StepController {
     }
     else {
         $Step = $player->currentStep();
-        $CurrentStep = new Step($Step[0]['ImgPath'], $Step[0]['Body'], $Step[0]['Question'], $Step[0]['IDType']);
+        $CurrentStep = new Step($Step[0]['ImgPath'], $Step[0]['Body'], $Step[0]['Question'], $Step[0]['IDType'], $Step[0]['Title']);
         $result = $CurrentStep->processAnswer($player,$answer);
         if ($result == true) {
           $array = [
@@ -94,24 +97,24 @@ class StepController {
 
 
   public static function addStep() {
-      CurrentUserController::isAdmin();
-    /*$imgpath = Form::uploadFile("ImgPath");
+    CurrentUserController::isAdmin();
+    $imgpath = Form::uploadFile("ImgPath");
     if($imgpath->status == "error")
-      return $imgpath; //on retourne l'erreur
+      Response::jsonResponse($imgpath); //on retourne l'erreur
     else
-      $imgpath = $imgpath->message;
-    var_dump($imgpath);*/
-    $imgpath="bidon";
-    $body = Form::getField("Body");
-    $question = Form::getField("Question");
-    $accepted = 1;
-    $idType = intval(Form::getField("IDType"));
-    if ($imgpath == NULL || $body == NULL || $question == NULL || $accepted == NULL || $idType == NULL){
-      $e = new Error("Tu ne peux pas ajouter cette péripéthie !");
-      Response::jsonResponse($e);
+      $entries['imgpath'] = "bidon";
+    $entries['body'] = Form::getField("Body");
+    $entries['question'] = Form::getField("Question");
+    $entries['title'] = Form::getField("Title");
+    $entries['accepted'] = 1;
+    $entries['idType'] = intval(Form::getField("IDType"));
+    foreach ($entries as $key => $value) {
+      if($value==NULL){
+        $e = new Error(array("$key"=>"Champs invalide ! Tu ne peux pas ajouter cette péripéthie !"));
+        Response::jsonResponse($e);
+      }
     }
-
-    $step = new Step($imgpath, $body, $question, $accepted, $idType);
+    $step = new Step($imgpath, $body, $question, $accepted, $idType,$title);
     $step = $step->save();
     if($step)
       $e = new Success("La péripéthie a été ajoutée.");
@@ -127,14 +130,13 @@ class StepController {
     //unlink ($tem);
 
     $data = Form::getFullForm(); //si l'id n'est pas présent, on retourne null
-    //var_dump($data);
     if(!isset($data["IDStep"]) || $data["IDStep"]== null ){
-      $e = new Error("Péripéthie invalide");
+      $e = new Error(array("IDStep"=>"Id invalide ! Péripéthie invalide"));
       Response::jsonResponse($e);
     }
 
     $entries = array();
-    $fields = array("IDStep","ImgPath","Body","Question","IDType");
+    $fields = array("IDStep","ImgPath","Body","Question","IDType","Title");
     foreach ($fields as $field) {
       if(!isset($data[$field]) || $data[$field]=="") {
         if(substr($field,0,2) != "ID") //les champs ID inchangés (donc initialisés à null dans data) ne doivent pas être précisés dans entries
@@ -144,9 +146,8 @@ class StepController {
         $entries[$field]=$data[$field];
       }
     }
-    $step = new Step("bidon", $entries["Body"], $entries["Question"],1, 0);
+    $step = new Step("bidon", $entries["Body"], $entries["Question"],1, 0,$entries["Title"]);
     $step->id = $entries["IDStep"];
-    //var_dump($entries);
     $step->update($entries);
     $e = new Success("Péripéthie modifiée !");
     Response::jsonResponse($e);
@@ -156,17 +157,17 @@ class StepController {
       CurrentUserController::isAdmin();
     $id = Form::getField("IDStep");
     if(!$id){
-      $e = new Error("Impossible de supprimer la péripéthie !");
+      $e = new Error(array("IDStep"=>"Impossible de supprimer la péripéthie !"));
       Response::jsonResponse($e);
     }
     else{
-      $step = new Step("", "", "", 0,0);
+      $step = new Step("", "", "", 0,0,"");
       $step->id = $id;
       $step = $step->delete();
       if($step)
         $e = new Success("Péripéthie supprimée !");
       else
-        $e = new Error("Impossible de supprimer la péripéthie !");
+        $e = new Error(array("all"=>"Impossible de supprimer la péripéthie !"));
       Response::jsonResponse($e);
     }
   }
