@@ -29,7 +29,7 @@ class SignInController{
       }
     } else {
       $playerData = array();
-      $playerData['id']= $player->id;
+      //$playerData['id']= $player->id;
       $playerData['pseudo']= $player->pseudo;
       $playerData['imgpath']= $player->imgpath;
       $playerData['mail']= $player->mail;
