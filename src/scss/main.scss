@@ -1,11 +1,14 @@
 @import './import/reset';
 @import 'bootstrap';
+@import 'rc-slider/assets/index';
 @import './import/common';
 @import './import/profil';
 @import './import/fonts';
 @import './import/app';
 @import './import/dialog';
 @import './import/game';
+@import './import/admin';
+@import './import/editing';
 
 /* *** Blue background *** */
 
@@ -44,103 +47,6 @@
 	header a:visited, header a {
 		color: #6852D1;
 	}
-}
-
-/* *** Screens - General *** */
-
-.screen {
-	width: 100%;
-	height: 100%;
-	display: flex;
-	flex-direction: column;
-	height:100vh;
-	color: white;
-
-	a, p {
-		letter-spacing: 4px;
-	}
-
-	.button{
-		padding: 18px 8px;
-		border: 1px solid rgba(255,255,255,0.85);
-		background: rgba(255,255,255,0);
-		display: block;
-		position: relative;
-		color: #fff;
-    @include defaultFont();
-		text-transform: uppercase;
-		font-size: 10px;
-		letter-spacing: 5px;
-		text-decoration: none;
-		margin: 0px 20px 0px 0px;
-		border-bottom: 8px solid transparent;
-		transition : all 0.3s;
-		z-index: 10;
-		border: 1px solid #fff;
-		margin: auto;
-		transition : all 0.3s;
-
-		min-width: 220px;
-		max-width: 350px;
-
-		@media screen and (max-width: $break-small) {
-			padding: 12px 5.5px;
-			font-size: 10px;
-		}
-
-	}
-
-	.button:after{
-		width: 104%;
-		height: 86%;
-		content: '';
-		border: 1px solid #fff;
-		position: absolute;
-		transition : all 0.4s;
-		z-index: -1!important;
-		bottom: 6%;
-		left: -2.25%;
-	}
-
-	.button:before{
-		width: 100%;
-		height: 0%;
-		content: '';
-		background: rgba(255,255,255,0);
-		position: absolute;
-		transition : all 0.4s;
-		z-index: -1!important;
-		bottom: 0;
-		left: 0;
-	}
-
-	.button:hover::before{
-		width: 100%;
-		height: 100%;
-		content: '';
-		background: rgba(255,255,255,0.15);
-		position: absolute;
-		transition : all 0.3s;
-	}
-
-	.button:hover::after{
-		background: rgba(255,255,255,0.15);
-	}
-
-}
-
-.picto {
-	@media screen and (max-width: $break-small) {
-    	width: 50px;
-    }
-	@media screen and (max-width: $break-tiny) {
-    	display: none !important;
-    }
-}
-.wave {
-	@media screen and (max-width: $break-tiny) {
-    	display: none !important;
-    }
 }
 
 .columnsContainer {
@@ -446,7 +352,7 @@ button {
 
 
 form {
-	input {
+	input, textarea {
 		color: white;
 		font-family: Bjorn;
 		border-style: solid;
@@ -457,7 +363,7 @@ form {
 }
 
 /* *** HomePageConnectionScreen *** */
-.homePageConnectionScreen, .homePageRegisterScreen {
+.form-screen {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -466,18 +372,17 @@ form {
 		margin: initial;
 		.block {
 			margin: 0px auto;
-			max-width: 350px;
+			max-width: 600px;
 			display: block;
 			@media screen and (max-width: $break-small) {
 				width: 100%;
 			}
 			.pageTitle {
-				font-size: 35px;
-				letter-spacing: 15px;
+				letter-spacing: 5px;
 				@media screen and (max-width: $break-medium) {
 					font-size: 26px;
 					letter-spacing: 12px;
-			    }
+			  }
 			}
 			form {
 				span {
@@ -597,5 +502,29 @@ form {
 			margin: 0px 1%;
 		}
 
+	}
+}
+
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+	width: 100%;
+	height : 100%;
+	margin : 0;
+}
+
+canvas#analyser {
+	position: fixed;
+	width:3%;
+	height:10%;
+	top:initial;
+	left: initial;
+	right : 5%;
+	bottom : 5%;
+	z-index : 2;
+	opacity:0;
+	&:hover{
+		cursor: hand;
 	}
 }

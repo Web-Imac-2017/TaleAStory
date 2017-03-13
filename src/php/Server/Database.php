@@ -88,31 +88,15 @@ class Database {
     $from = $this->processFROM($tables);
     $where = $this->processWHERE($entries);
     $statement=$select.$from;
-    if($where && !is_array($addEndStatement)) {
+    if($where) {
       $statement .= $where;
-      $array_entries = $this->processArrayEntries($entries);
     }
-    if($addEndStatement && !is_array($addEndStatement)) {
+    if($addEndStatement) {
       $statement .= " ".$addEndStatement;
-    } else if ($addEndStatement && is_array($addEndStatement) && current($addEndStatement) == "IN") {
-      $in = $this->processIN($addEndStatement);
-      $array_entries = $addEndStatement[2];
-      $statement .= $in;
     }
-    echo $statement;
+    $array_entries = $this->processArrayEntries($entries);
+    //echo $statement;
     return $this->sendQuery($statement, $array_entries);
-  }
-
-  private function processIN($entry) {
-    $process_in = " WHERE ".$entry[1]." IN ( ";
-    foreach($entry[2] as $value){
-      $process_in .= "?";
-      if($value != end($entry[2])){
-        $process_in .= ", ";
-      }
-    }
-    $process_in .= " )";
-    return $process_in;
   }
 
   /**
