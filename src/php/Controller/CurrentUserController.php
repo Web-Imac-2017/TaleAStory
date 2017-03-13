@@ -45,7 +45,7 @@ class CurrentUserController{
   }
 
   static public function currentStep(){
-    //$player = Player::connectSession();
+    $player = Player::connectSession();
     $player = Player::connect("login","pwd");
     if(!$player) {
       $error = new Error("Vous n'êtes pas connectés");

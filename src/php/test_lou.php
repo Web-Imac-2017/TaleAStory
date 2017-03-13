@@ -1,15 +1,10 @@
 <?php
 use \Server\Database;
-
-$arc = new Step(".jpg", "blabla", "question?", "1", "1");
-$arc->id = 4;
-
-$arg = new Achievement("arg","image","brief");
-$arg->id = 2;
-
+require_once("Server/Database.php");
 
 //$player = Player::signup("Louuuu", "Louuuuu", "Lou", "lou@gmailcom");
-$test = Database::instance()->count("Player", "*", array("Mail"=>"lou@"));
+$in = array("IN", "Login", array("lou", "Dori", "lol"));
+$test = Database::instance()->query("Player", array("Login"=>"login", "Mail"=>""), $in);
 //$player = Player::connect("login","pwd");
 //$test = Database::instance()->query("Player", array("Login"=>"Dori", "IDPlayer"=>""));
 //$test = Database::instance()->arrayMap($test, "Login", "IDPlayer");

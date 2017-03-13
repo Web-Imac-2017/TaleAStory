@@ -13,13 +13,13 @@ class SignUpController{
 
   static public function signUp(){
     $mail = Form::getField('mail');
-    $login = Form::getField('login');
     $pwd = Form::getField('pwd');
     $pseudo = Form::getField('pseudo');
-    if(!$mail || !$login || !$pseudo || !$pwd){
+    if(!$mail || !$pseudo || !$pwd){
       $e = new Error("Impossible d'ajouter le player - champs manquants");
       Response::jsonResponse($e);
     }
+    $login = $mail;
     $player = Player::signUp($pseudo, $login, $pwd, $mail);
     if(!$player){
       $error = new Error("tu sais pas rentrer ton login trou duc ni ton password d'ailleur... je suppose");
