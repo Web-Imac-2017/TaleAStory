@@ -54,18 +54,14 @@ class StepController {
                   "statut" => "error",
                   "message" => "Aucun step correspondant n'a été trouvé.",
               ];
-      //var_dump($array);
       response::jsonResponse($error);
     }
 }
 
-  public static function stepResponse(){ //ENCORE EN TEST
-    $answer = \Server\Form::getField("answer");
-    echo $answer;
-    $id = 2; //\Server\Session::getCurrentUser();
-    $player = \Model\Player::getPlayer($id);
-    var_dump($player);
-
+  public static function stepResponse(){
+    $answer = Form::getField("answer");
+    $id = Session::getCurrentUser();
+    $player = Player::getPlayer($id);
 
     if ($player == NULL) {
       $array = [
@@ -76,7 +72,6 @@ class StepController {
     }
     else {
         $Step = $player->currentStep();
-        var_dump($Step);
         $CurrentStep = new Step($Step[0]['ImgPath'], $Step[0]['Body'], $Step[0]['Question'], $Step[0]['IDType']);
         $result = $CurrentStep->processAnswer($player,$answer);
         if ($result == true) {
@@ -84,7 +79,6 @@ class StepController {
                       "statut" => "ok",
                       "message" => "Le joueur a bien été modifié",
                   ];
-
           Response::jsonResponse($array);
         }
 
@@ -93,7 +87,6 @@ class StepController {
                       "statut" => "error",
                       "message" => "Le joueur n'a pas pu être modifié",
                   ];
-
           Response::jsonResponse($array);
         }
     }
