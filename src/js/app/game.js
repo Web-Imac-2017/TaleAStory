@@ -235,14 +235,15 @@ export default RouteComponent({
 		TweenLite.fromTo(document.getElementById('analyser'), 1.3,{opacity:0},{opacity:1});
 		var links = document.getElementsByTagName("a");
 		var color;
+    color = webGL.bg_anim.getColor();
 		for(var i=0;i<links.length;i++)
 		{
 			if(links[i].href)
 			{
-				color = webGL.bg_anim.getColor();
 				TweenLite.to(links[i], 0.5,{color:"rgb("+Math.floor(255*color[0]+30)+","+Math.floor(255*color[1]+30)+","+Math.floor(255*color[2]+30)+")"});
 			}
 		}
+
 
 		// webGL.bg_anim.getColor();
 

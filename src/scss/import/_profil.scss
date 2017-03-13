@@ -28,6 +28,12 @@
 			}
 		}
 
+		img.element{
+			display : block ;
+			margin : 0 auto;
+			padding : 20px;
+		}
+
 		.userName{
 			font-weight : normal;
 			text-align : center;
@@ -42,6 +48,7 @@
 
 			li{
 				padding : 10px;
+				color : #fff;
 
 				a{
 					text-decoration : none;
@@ -55,7 +62,6 @@
 					transition: all 0.25s;
 					border-bottom: 0px solid rgba(255,255,255,0.75);
 					position: relative;
-					color: black;
 				}
 
 				a:hover{
@@ -118,19 +124,15 @@
 			font-size : 11px;
 			letter-spacing : 4px;
 			padding : 20px 0;
-<<<<<<< HEAD
-=======
 		}
->>>>>>> backoffice
 
-			span{
-				padding-left : 10px;
-			}
+		span{
+			padding-left : 10px;
+		}
 
-			img{
-				padding-left : 10px; 
-				cursor : pointer;
-			}
+		img{
+			padding-left : 10px; 
+			cursor : pointer;
 		} 
 
 		@media screen and (max-width: $break-medium) {
@@ -152,18 +154,6 @@
 	flex-wrap : wrap;
 }
 
-<<<<<<< HEAD
-	.trophy{
-		display : flex;
-		align-items : center ;
-		border : 1px solid #fff;
-		width : 31%;
-		height : 48%;
-
-		.insideTrophy{
-			width : 100%;
-			padding : 40px 0;
-=======
 .item{
 	display : flex;
 	align-items : center ;
@@ -172,7 +162,6 @@
 	height : 48%;
 	margin: 1%;
 	flex: 1;
->>>>>>> backoffice
 
 	.insideItem{
 		width : 100%;
@@ -181,7 +170,6 @@
 			margin-top : 0;
 		}
 
-<<<<<<< HEAD
 		@media screen and (max-width: $break-medium) {
 			display : block;
 			height : auto;
@@ -189,26 +177,17 @@
 			margin: 0;
 		}
 
-=======
 		h3{
 			font-size : 11px;
 			text-align : center;
 			font-weight : normal;
 			letter-spacing : 4px;
 		}
->>>>>>> backoffice
 	}
 
 }
 
-<<<<<<< HEAD
-	.four, .five, .six{
-		margin-top : 1%;
-	}
-}
-=======
 .item.selected{
 	background: rgba(0,0,0,0.15);
 	transition : all 0.45s;
 }
->>>>>>> backoffice

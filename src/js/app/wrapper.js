@@ -167,7 +167,7 @@ let WrapperSpec = {
                       null;
     this.findNext();
     this.findPrevious();
-    return  <div id="wrapper" className={this.props.route.className + " orangeScreen"}>
+    return  <div id="wrapper" className={this.props.route.className}>
               {this.header}
               <div className="caca">
                 <div className="scroller">
@@ -228,12 +228,12 @@ let AccountWrapperSpec = Object.assign({}, WrapperSpec, {
       </li>
     );
 
-    return  <div id="wrapper" className={this.props.route.className + " orangeScreen"}>
+    return  <div id="wrapper" className={this.props.route.className}>
               {this.header}
               <div className="caca">
                 <div className="colGauche">
                   <div className="insideCol">
-                    <img className="bigProfil" src={config.imagePath('patulacci_large.jpg')}/>
+                    <img id="bigProfil" className="bigProfil" src={config.imagePath('patulacci_large.jpg')}/>
                     <h2 className="userName">Marcel Patullacci</h2>
                     <img className="element" src={config.imagePath('wave_large.png')}/>
                     <ul className="assideMenu">
