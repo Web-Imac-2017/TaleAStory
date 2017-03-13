@@ -12,6 +12,7 @@
   "/updatestep":"Controller\\StepController::updateStep",
   "/step/list/:start/:count":"Controller\\StepController::getStepsList",
   "step/count/":"Controller\\StepController::stepCount",
+  "step/list/":"Controller\\StepController::getSteps",
   "currentstep/response":"Controller\\StepController::stepResponse",
   "currentuser/achievements":"Controller\\CurrentUserController::achievements",
   "currentuser/items":"Controller\\CurrentUserController::items",

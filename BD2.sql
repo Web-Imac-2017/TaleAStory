@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Mer 01 Mars 2017 à 14:54
+-- Généré le :  Lun 13 Mars 2017 à 11:34
 -- Version du serveur :  5.6.17
 -- Version de PHP :  5.5.12
 
@@ -324,6 +324,7 @@ CREATE TABLE IF NOT EXISTS `step` (
   `Body` text NOT NULL,
   `Question` text NOT NULL,
   `IDType` int(11) NOT NULL,
+  `Title` text,
   PRIMARY KEY (`IDStep`),
   KEY `FK_Step_IDType` (`IDType`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
@@ -332,10 +333,10 @@ CREATE TABLE IF NOT EXISTS `step` (
 -- Contenu de la table `step`
 --
 
-INSERT INTO `step` (`IDStep`, `ImgPath`, `Body`, `Question`, `IDType`) VALUES
-(1, 'blahblah', 'ceci est une étape step', 'Where is Brayan ?', 1),
-(2, NULL, 'Mes yeux sont fermés. Je reste là, couché. J’aimerais qu’il soit plus tard, avoir plus de temps pour me reposer. Mais je sens les rayons du soleil contre ma peau. Le vent se lève', '...', 4),
-(3, NULL, 'Il est temps de partir, le vent se lève. Mon voyage me mène vers l’est, contre le vent. Parfait pour chasser, les proies ne me sentiront pas venir.', '...', 4);
+INSERT INTO `step` (`IDStep`, `ImgPath`, `Body`, `Question`, `IDType`, `Title`) VALUES
+(1, 'blahblah', 'ceci est une étape step', 'Where is Brayan ?', 1, 'JeSuisUnTitre'),
+(2, NULL, 'Mes yeux sont fermés. Je reste là, couché. J’aimerais qu’il soit plus tard, avoir plus de temps pour me reposer. Mais je sens les rayons du soleil contre ma peau. Le vent se lève', '...', 4, NULL),
+(3, NULL, 'Il est temps de partir, le vent se lève. Mon voyage me mène vers l’est, contre le vent. Parfait pour chasser, les proies ne me sentiront pas venir.', '...', 4, NULL);
 
 -- --------------------------------------------------------
 

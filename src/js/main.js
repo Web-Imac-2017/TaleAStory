@@ -68,11 +68,11 @@ class Test extends React.Component{
             function(json){
                 console.log(json);
          });
-		Requester.currentStepResponse(0).then(
+		Requester.currentStepResponse("A").then(
             function(json){
                 console.log(json);
          });
-		Requester.stepAdd(0,0,0).then(
+		Requester.stepAdd("mySuperBody","mySurperAnswer",0).then(
             function(json){
                 console.log(json);
          });

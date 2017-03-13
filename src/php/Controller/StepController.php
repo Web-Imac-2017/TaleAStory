@@ -8,57 +8,107 @@ use \Server\Response;
 use \View\Success;
 use \View\Error;
 use \Controller\CurrentUserController;
+use \Server\Session;
 
 class StepController {
 
   public static function stepCount() {
-    return Step::countSteps();
+    $count = Step::countSteps();
+    $success = new Success($count);
+    Response::jsonResponse($success);
+
   }
 
   public static function getStepsList($start, $count) {
 	$start--;
-     $stepParam = Database::instance()->query("Step", Array("IDStep"=> "",
-                                                            "ImgPath"=>"",
-                                                            "Body"=>"",
-                                                            "Question"=>"",
-                                                            "IDType"=>""),
-                                                          "LIMIT ".$count." OFFSET ".$start);
+	if ($start < 0) {
+	  $error = new Error("Variable de départ incorrecte");
+	  Response::jsonResponse($error);
+		
+	}
+	else if ($count <= 0){
+	  $empty = array();
+	  $success = New Success($empty);
+	  Response::jsonResponse($success);
 
-    response::jsonResponse($stepParam);
+	}
+	else {
+		$stepParam = Database::instance()->query("Step", Array("IDStep"=> "",
+															"ImgPath"=>"",
+															"Body"=>"",
+															"Question"=>"",
+															"IDType"=>""),
+														  "LIMIT ".$count." OFFSET ".$start);
+		$success = New Success($stepParam);
+		Response::jsonResponse($success);
+	}
   }
 
   public static function getTenStepsList($start) {
-    $stepParam = Database::instance()->query("Step", Array("IDStep"=> "",
-                                                          "ImgPath"=>"",
-                                                          "Body"=>"",
-                                                          "Question"=>"",
-                                                          "IDType"=>""),
-                                                        "LIMIT 10 OFFSET ".$start);
+        if ($start-1 < 0) {
+        $error = new Error("Variable de départ incorrecte");
+        Response::jsonResponse($error);
 
-    response::jsonResponse($stepParam);
-  }
-
-  public static function getStep() { //récuperer les options grâce au module global : Form.php ->
-    Form::getFormPost( );
-
-  }
-
-  public static function stepResponse(){
-    $answer = \Server\Form::getField("answer");
-    //echo $answer;
-    $id = 2; //\Server\Session::getCurrentUser();
-    $player = \Model\Player::getPlayer($id);
-    //var_dump($player);
-
-
-    if ($player == NULL) {
-      echo "Joueur introuvable, IDPlayer incorrect.";
     }
     else {
-        $CurrentStep = $player->currentStep();
-        $array = $CurrentStep->processAnswer($player,$answer);
-        //var_dump($array);
-        Response::jsonResponse($array);
+        $stepParam = Database::instance()->query("Step", Array("IDStep"=> "",
+                                                              "ImgPath"=>"",
+                                                              "Body"=>"",
+                                                              "Question"=>"",
+                                                              "IDType"=>""),
+                                                            "LIMIT 10 OFFSET ".$start-1);
+
+        $success = New Success($stepParam);
+        Response::jsonResponse($success);
+  }
+}
+  public static function getSteps() {
+    $option = Form::getField("nameFilter");
+    $stepArray =  Database::instance()->query("Step", Array("Title"=> $option,
+                                                                    "IDStep"=> "",
+                                                                    "ImgPath"=>"",
+                                                                    "Body"=>"",
+                                                                    "Question"=>"",
+                                                                    "IDType"=>""));
+    if ($stepArray != null) {
+      $success = New Success($stepArray);
+      Response::jsonResponse($success);
+    }
+
+    else {
+      $error = new Error("Aucun step correspondant n'a été trouvé");
+      Response::jsonResponse($error);
+    }
+}
+
+  public static function stepResponse(){
+    $answer = Form::getField("answer");
+    $player = Player::connectSession();
+	
+	//var_dump($player);
+
+    if ($player == NULL) {
+      $error = new Error("Le joueur n'a pas pu être trouvé");
+      Response::jsonResponse($error);
+    }
+    else {
+        $Step = $player->currentStep();
+		//var_dump($Step);
+
+        $CurrentStep = new Step($Step[0]['ImgPath'], $Step[0]['Body'], $Step[0]['Question'], $Step[0]['IDType']);
+		$CurrentStep->id = $Step[0]['IDStep'];
+		//var_dump($CurrentStep);
+        $result = $CurrentStep->processAnswer($player,$answer);
+		//var_dump($result);
+        if ($result == true) {
+          $success = new Success("Le joueur a bien été modifié");
+          Response::jsonResponse($success);
+        }
+
+        else {
+          $error = new Error("Le joueur n'a pas pu être modifié");
+          Response::jsonResponse($error);
+        }
     }
   }
 

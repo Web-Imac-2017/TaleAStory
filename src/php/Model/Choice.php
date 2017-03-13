@@ -161,11 +161,13 @@ class Choice {
     $statsQuery = Database::instance()->query($tables,array("StatRequirement.IDChoice"=>"$this->id","StatRequirement.Value" => "", "StatRequirement.IDStat"=>""));
     $requiried_stats = Database::instance()->arrayMap($statsQuery, 'IDStat', 'Value');
 
-    foreach ($requiried_stats as $key => $value) {
-      if(!isset($player_stats["$key"]) || $value>$player_stats["$key"])
-        return false;
-    }
-
+	if (!empty($requiried_stats)) {
+		foreach ($requiried_stats as $key => $value) {
+		  if(!isset($player_stats["$key"]) || $value>$player_stats["$key"])
+			return false;
+		}
+	}
+	
     $pItemsQuery =  $player->items();
     $player_items = Database::instance()->arrayMap($pItemsQuery, 'IDItem', 'quantity');
 
@@ -184,10 +186,12 @@ class Choice {
     var_dump($player_items);
     var_dump($requiried_items);*/
 
-    foreach ($requiried_items as $key => $value) {
-      if(!isset($player_items["$key"]) || $value>$player_items["$key"])
-        return false;
-    }
+	if (!empty($requiried_items)) {
+		foreach ($requiried_items as $key => $value) {
+		  if(!isset($player_items["$key"]) || $value>$player_items["$key"])
+			return false;
+		}
+	}
     return true;
   }
 }

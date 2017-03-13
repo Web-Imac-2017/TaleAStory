@@ -115,7 +115,6 @@ class Requester {
             });
     } 
 
-    // semble ok. Message doit valoir []  en cas de BDD vide
     static currentUserStats(){
       return fetch(config.path('currentuser/stats/'), {
                 method: 'post',
@@ -134,7 +133,6 @@ class Requester {
             });
     } 
 
-    // semble ok. Message doit valoir []  en cas de BDD vide
     static currentUserItems(){
       return fetch(config.path('currentuser/items/'), {
                 method: 'post',
@@ -153,7 +151,6 @@ class Requester {
             });
     } 
 
-    // semble ok. Message doit valoir []  en cas de BDD vide
     static currentUserStep(){
       return fetch(config.path('currentuser/currentstep/'), {
                 method: 'post',
@@ -172,7 +169,6 @@ class Requester {
             });
     } 
 
-    // semble ok. Message doit valoir []  en cas de BDD vide
     static currentUserStory(){
       return fetch(config.path('currentuser/story/'), {
                 method: 'post',
@@ -191,7 +187,6 @@ class Requester {
             });
     } 
 
-    // semble ok. Message doit valoir []  en cas de BDD vide
     static currentUserAchievements(){
       return fetch(config.path('currentuser/achievements/'), {
                 method: 'post',
@@ -210,7 +205,6 @@ class Requester {
             });
     } 
 
-    // semble ok. Message doit valoir []  en cas de BDD vide
     static currentUserUnreadAchievements(){
       return fetch(config.path('currentuser/unreadachievements/'), {
                 method: 'post',
@@ -229,7 +223,6 @@ class Requester {
             });
     } 
 
-    // Réponse vide ==> ceci est une pb
     static stepCount(){
       return fetch(config.path('step/count/'), {
                 method: 'post',
@@ -249,10 +242,6 @@ class Requester {
     } 
 
 
-    // Fonctionne mais ne gère pas les imprévus
-    // + renvoie uniquement la réponse, il faut que ça renvoie un
-    // status et un code à chaque fois.
-    
     /* Renvoie une liste de 'count' steps, à partir de la step 'start'.
     * sinon count n'est pas précisé, il est fixé à 10
     */
@@ -280,9 +269,9 @@ class Requester {
             });
     }
 
-    // hard error
+    // OK mais si dans pastStep le couple existe déjà, hard crash
     /* 
-    *
+    * _answer est le text de la réponse
     */
     static currentStepResponse(_answer){
       return fetch(config.path('currentstep/response'), {
@@ -306,7 +295,7 @@ class Requester {
     }
 
     // A tester
-    static stepAdd(body, question, answer){
+    static stepAdd(body, question, idType){
       return fetch(config.path('addstep'), {
                 method: 'post',
                 headers: {
@@ -316,7 +305,7 @@ class Requester {
                 body: JSON.stringify({
                   Body: body,
                   Question: question,
-                  IDType: answer
+                  IDType: idType
                 })
               }
             ).then(
@@ -356,53 +345,6 @@ class Requester {
                 console.log(json);
             });
       }  
-
-    static test2(){
-      fetch(config.path('connexion'), {
-                method: 'post',
-                headers: {
-                  'Content-Type' : 'application/json'
-                 },
-                credentials: "same-origin",
-                body: JSON.stringify({
-                  yolo : "bonjour",
-                  lol : 5
-                })
-              }
-            ).then(
-              function(response){
-                console.log(response);
-                response = JSON.stringify({
-                  yolo : "bonjour",
-                  lol : 5
-                });
-                return response;
-              }
-            ).then(
-              function(json){
-                console.log(json);
-            });
-      }
-
-    static test3(){
-      return fetch(config.path('connexion'), {
-                method: 'post',
-                headers: {
-                  'Content-Type' : 'application/json'
-                 },
-                credentials: "same-origin"
-              }
-            ).then(
-              function(response){
-                console.log(response);
-                return response.json();
-              }
-            ).then(
-              function(json){
-                console.log(json);
-                return json;
-            });
-    }  
 
 
 }
