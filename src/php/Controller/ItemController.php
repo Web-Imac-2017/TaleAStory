@@ -9,15 +9,12 @@ use \Model\Player;
 use \Server\Response;
 use \View\Success;
 use \View\Error;
+use \Controller\CurrentUserController;
 
 class ItemController {
 
   public static function addItem() {
-    $admin = Player::connectSession();
-    if(!$admin || $admin->admin == 0 || $admin->isAdmin() == 0){
-      $e = new Error("Tu n'as pas le droit d'effectuer cette action !");
-      Response::jsonResponse($e);
-    }
+    CurrentUserController::isAdmin();
 
     $name = Form::getField("Name");
     //$imgpath = Form::uploadFile("ItemImg");
@@ -38,11 +35,7 @@ class ItemController {
     }
 
   public static function updateItem() {
-    $admin = Player::connectSession();
-    if(!$admin || $admin->admin == 0 || $admin->isAdmin() == 0){
-      $e = new Error("Tu n'as pas le droit d'effectuer cette action !");
-      Response::jsonResponse($e);
-    }
+    CurrentUserController::isAdmin();
 
     //$tmp = $imgpath;
     //$imgpath = Form::uploadFile("itemImg");
@@ -71,11 +64,7 @@ class ItemController {
   }
 
   public static function deleteItem() {
-    $admin = Player::connectSession();
-    if(!$admin || $admin->admin == 0 || $admin->isAdmin() == 0){
-      $e = new Error("Tu n'as pas le droit d'effectuer cette action !");
-      Response::jsonResponse($e);
-    }
+    CurrentUserController::isAdmin();
 
     $id = Form::getField("IDItem");
     if(!$id){

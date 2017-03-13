@@ -28,5 +28,6 @@
   "currentuser/story":"Controller\\CurrentUserController::story",
   "currentuser/getcurrentuser":"Controller\\CurrentUserController::currentUser",
   "makeguest":"Controller\\MakeGuestController::MakeGuest",
-  "/signup":"Controller\\SignUpController::signUp"
+  "/signup":"Controller\\SignUpController::signUp",
+  "/signout":"Controller\\SignOutController::signOut"
 }

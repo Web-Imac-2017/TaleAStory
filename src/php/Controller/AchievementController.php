@@ -9,15 +9,13 @@ use \Model\Player;
 use \Server\Response;
 use \View\Success;
 use \View\Error;
+use \Controller\CurrentUserController;
 
 class AchievementController {
 
   public static function addAchievement() {
-    $admin = Player::connectSession();
-    if(!$admin || $admin->admin == 0 || $admin->isAdmin() == 0){
-      $e = new Error("Tu n'as pas le droit d'effectuer cette action !");
-      Response::jsonResponse($e);
-    }
+    CurrentUserController::isAdmin();
+
     $name = Form::getField("Name");
     //$imgpath = Form::uploadFile("AchievementImg");
     $imgpath="bidon";
@@ -37,11 +35,7 @@ class AchievementController {
   }
 
   public static function updateAchievement() {
-    $admin = Player::connectSession();
-    if(!$admin || $admin->admin == 0 || $admin->isAdmin() == 0){
-      $e = new Error("Tu n'as pas le droit d'effectuer cette action !");
-      Response::jsonResponse($e);
-    }
+    CurrentUserController::isAdmin();
     //$tmp = $imgpath;
     //$imgpath = Form::uploadFile("");
     $data = Form::getFullForm();
@@ -69,11 +63,7 @@ class AchievementController {
   }
 
   public static function deleteAchievement() {
-    $admin = Player::connectSession();
-    if(!$admin || $admin->admin == 0 || $admin->isAdmin() == 0){
-      $e = new Error("Tu n'as pas le droit d'effectuer cette action !");
-      Response::jsonResponse($e);
-    }
+    CurrentUserController::isAdmin();
     $id = Form::getField("IDAchievement");
     if(!$id){
       $e = new Error("Impossible de supprimer l'achievement !");
