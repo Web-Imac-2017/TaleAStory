@@ -12,7 +12,10 @@ use \Controller\CurrentUserController;
 class StepController {
 
   public static function stepCount() {
-    return Step::countSteps();
+    $count = Step::countSteps();
+    $success = new Success($count);
+    Response::jsonResponse($success);
+
   }
 
   public static function getStepsList($start, $count) {
