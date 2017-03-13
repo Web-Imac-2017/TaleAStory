@@ -23,26 +23,32 @@ class CurrentUserController{
 
   static public function items(){
     $player = CurrentUserController::isConnected();
-    $items = $player->items();
-    $items = Database::instance()->dataClean($items, true, array('Brief', 'ImgPath', 'Name', 'quantity'));
-    $success = new Success($items);
-    Response::jsonResponse($success);
+      $items = $player->items();
+      $items = Database::instance()->dataClean($items, true, array('Brief', 'ImgPath', 'Name', 'quantity'));
+      if($items == NULL){$items = array();}
+      $success = new Success($items);
+      Response::jsonResponse($success);
+
   }
 
   static public function currentStep(){
     $player = CurrentUserController::isConnected();
-    $current_step = $player->currentStep();
-    $current_step = Database::instance()->dataClean($current_step, true);
-    $success = new Success($current_step);
-    Response::jsonResponse($success);
+      $current_step = $player->currentStep();
+      $current_step = Database::instance()->dataClean($current_step, true);
+      if($current_step == NULL){$current_step = array();}
+      $success = new Success($current_step);
+      Response::jsonResponse($success);
+
   }
 
   static public function story(){
     $player = CurrentUserController::isConnected();
-    $story = $player->pastSteps();
-    $story = Database::instance()->dataClean($story, true);
-    $success = new Success($story);
-    Response::jsonResponse($success);
+      $story = $player->pastSteps();
+      $story = Database::instance()->dataClean($story, true);
+      if($story == NULL){$story = array();}
+      $success = new Success($story);
+      Response::jsonResponse($success);
+    
   }
 
   static public function currentUser() {
@@ -59,6 +65,7 @@ class CurrentUserController{
     $player = CurrentUserController::isConnected();
     $achievements = $player->achievements();
     $achievements = Database::instance()->dataClean($achievements, true);
+    if($achievements == NULL){$achievements = array();}
     $success = new Success($achievements);
     Response::jsonResponse($success);
   }
@@ -67,6 +74,7 @@ class CurrentUserController{
     $player = CurrentUserController::isConnected();
     $achievements = $player->unreadAchievements();
     $achievements = Database::instance()->dataClean($achievements, true);
+    if($achievements == NULL){$achievements = array();}
     $success = new Success($achievements);
     Response::jsonResponse($success);
   }

@@ -50,7 +50,7 @@ class Player {
     else if
     (
       !Player::formatMail($mail) ||
-      !Player::validateEntry($login) ||
+      !Player::formatMail($login) ||
       !Player::validateEntry($pseudo) ||
       !Player::validateEntry($pwd)
     )
