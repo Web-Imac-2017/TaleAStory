@@ -7,33 +7,7 @@ import Scroll from '../utils/scroll';
 import {RightNavigation} from './wrapper';
 import {AppContextTypes} from './app';
 import {User, Guest} from '../model/user';
-import {Button, Modal} from 'react-bootstrap';
-import _Dialog from 'react-bootstrap-dialog';
-
-class Dialog extends _Dialog {
-
-  constructor(props){
-    super(props);
-    //this.removeStyle = this.removeStyle.bind(this);
-  }
-
-  onEnter(){}
-
-  removeStyle(dom){
-      dom.style = "";
-  }
-
-  render () {
-    let modalBase = super.render();
-    return <Modal {...modalBase.props}
-                  ref='lol'
-                  bsClass="tas-dialog modal"
-                  dialogClassName={this.props.className}
-                  onEnter={this.removeStyle}>
-            {modalBase.props.children}
-           </Modal>
-  }
-}
+import Dialog from '../utils/dialog'
 
 export default RouteComponent({
   contextTypes : AppContextTypes,
@@ -68,7 +42,7 @@ export default RouteComponent({
           Dialog.Action(
             'Sign in',
             that.signin,
-            'button btn-cancel'
+            'button btn-confirm'
           ),
         ],
         bsSize: 'medium',

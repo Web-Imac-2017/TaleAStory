@@ -87,20 +87,18 @@ export default RouteComponent({
                   <button onClick={this.returnSteps}>&lt;</button>
                 </div>
     						<div className="block form">
-                  <h1 className="element pageTitle">Péripétie</h1>
+                  <h1 className="element pageTitle">Objet</h1>
                   <div>
                     {image}
                     <form className="element" onSubmit={this.handleSubmit} method="post" encType="multipart/form-data">
                       <input name="image" type="file" accept='image/*' value={this.state.imgpath}
                                    onChange={this.handleChange} ref="imgpath"
                                    multiple={false} style={{display:"none"}}/>
-                      <span><input name="title" type="text" placeholder="Titre de la péripétie"
+                                 <span><input name="title" type="text" placeholder="Nom de la réussite"
                         value={this.state.title} onChange={this.handleChange} ref="title" /></span>
-                     <textarea name="body" type="text" placeholder="Que fait le personnage ?" value={this.state.body}
+                      <textarea name="body" type="text" placeholder="Description" value={this.state.body}
                         onChange={this.handleChange} ref="body" />
-                      <span><input name="question" type="text" placeholder="Question au joueur"
-                       value={this.state.question} onChange={this.handleChange} ref="question" /></span>
-                     <span className="button" ><input className="submit" type="submit" value="Enregistrer"/></span>
+                      <span className="button" ><input className="submit" type="submit" value="Enregistrer"/></span>
                     </form>
                   </div>
     						</div>

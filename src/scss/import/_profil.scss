@@ -60,7 +60,7 @@
 
 .contentRight{
 	width : 93%;
-	height : 80%;
+	height : 83%;
 	display : flex;
 	align-items : center;
 
@@ -91,43 +91,35 @@
 
 .contentProfil .contentRight{
 	flex-wrap : wrap;
+}
 
-	.item{
-		display : flex;
-		align-items : center ;
-		border : 1px solid #fff;
-		min-width : 30%;
-		height : 48%;
-		margin: 1%;
-		flex: 1;
+.item{
+	display : flex;
+	align-items : center ;
+	border : 1px solid #fff;
+	min-width : 30%;
+	height : 48%;
+	margin: 1%;
+	flex: 1;
 
-		.insideItem{
-			width : 100%;
+	.insideItem{
+		width : 100%;
 
-			img{
-				margin-top : 0;
-			}
-
-			h3{
-				font-size : 11px;
-				text-align : center;
-				font-weight : normal;
-				letter-spacing : 4px;
-			}
+		img{
+			margin-top : 0;
 		}
 
+		h3{
+			font-size : 11px;
+			text-align : center;
+			font-weight : normal;
+			letter-spacing : 4px;
+		}
 	}
 
-	.item.selected{
-		background: rgba(0,0,0,0.15);
-		transition : all 0.45s;
-	}
+}
 
-	.one, .two, .three{
-		margin-bottom : 1%;
-	}
-
-	.four, .five, .six{
-		margin-top : 1%;
-	}
+.item.selected{
+	background: rgba(0,0,0,0.15);
+	transition : all 0.45s;
 }

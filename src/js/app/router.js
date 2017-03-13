@@ -12,12 +12,15 @@ import Connexion from './connexion'
 import Inscription from './inscription'
 import Account from './account'
 import Trophy from './trophy'
-import Choices from './choices'
-import Achievements from './achievements'
-import Items from './items'
+import Choices from './choiceslist'
+import Achievements from './achievementslist'
+import Items from './itemslist'
 import Steps from './stepslist'
 import Game from './game'
 import StepEdit from './stepedit'
+import ItemEdit from './itemedit'
+import AchievementEdit from './achievementedit'
+import ChoiceEdit from './choiceedit'
 
 let AppRouter, routes;
 
@@ -57,8 +60,17 @@ AppRouter =
           <Route path='admin' index={1} className="screen">
             <IndexRedirect to={config.path('profils/admin/steps')} />
           </Route>
-          <Route path='edit/step(/:stepid)' component={Wrapper} index={4} className="screen">
+          <Route path='edit/step(/:id)' component={Wrapper} index={4} className="screen">
             <IndexRoute component={StepEdit} index={1}/>
+          </Route>
+          <Route path='edit/choice(/:id)' component={Wrapper} index={5} className="screen">
+            <IndexRoute component={ChoiceEdit} index={1}/>
+          </Route>
+          <Route path='edit/achievement(/:id)' component={Wrapper} index={6} className="screen">
+            <IndexRoute component={AchievementEdit} index={1}/>
+          </Route>
+          <Route path='edit/item(/:id)' component={Wrapper} index={7} className="screen">
+            <IndexRoute component={ItemEdit} index={1}/>
           </Route>
           <Route path='game' component={Wrapper} index={1} className="screen">
             <IndexRoute component={Game} index={1}/>

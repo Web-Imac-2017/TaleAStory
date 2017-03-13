@@ -6,6 +6,7 @@ import RouteComponent from '../utils/routecomponent';
 import {Link} from 'react-router';
 import Scroll from '../utils/scroll';
 import TransitionGroup from 'react-addons-transition-group';
+import {ProgressBar} from 'react-bootstrap';
 import webGL from '../webgl/webgl.js';
 
 class GameComponent extends React.Component{
@@ -213,12 +214,16 @@ export default RouteComponent({
   getInitialState(){
 	  // webGL.bg_anim.setLandscape(true);
 	  if(webGL.bg_anim != null){
-		webGL.bg_anim.unMuteAll();
-
+		    webGL.bg_anim.unMuteAll();
 	  }
 	  TweenLite.fromTo(document.getElementById('analyser'), 1.3,{opacity:0},{opacity:1});
 
     return {
+      currentStats : [
+        {label: 'Fatigue', value: 100},
+        {label: 'Force', value: 10},
+        {label: 'Faim', value: 50}
+      ],
       currentStep : null
     };
   },
@@ -287,7 +292,11 @@ export default RouteComponent({
                           J’ouvre les yeux
                         </p>
                       </Decision>);
-    this.setState({currentStep : component, currentStepID : 2});
+    this.setState({currentStep : component, currentStepID : 2, currentStats : [
+      {label: 'Fatigue', value: 50},
+      {label: 'Force', value: 30},
+      {label: 'Faim', value: 50}
+    ]});
   },
   nextTransition(nextStep){
     //get the transition text
@@ -338,10 +347,19 @@ export default RouteComponent({
                       React.cloneElement(this.state.currentStep, {
                         key: this.state.currentStepID
                       }) : null;
+    let statsDisplay = this.state.currentStats.map((stat, index) =>
+      <span key={stat.label}>
+        <h4>{stat.label}</h4>
+        <ProgressBar now={stat.value}/>
+      </span>
+    )
     return  <div className="game-container">
               <TransitionGroup>
                 {this.children}
               </TransitionGroup>
+              <div className="stats">
+                {statsDisplay}
+              </div>
             </div>
   }
 });

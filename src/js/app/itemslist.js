@@ -12,13 +12,13 @@ let StepsList = RouteComponent(Object.assign({}, EditList, {
     return steps;
   },
   editItem(item){
-    this.context.router.push(config.path('edit/step/'+item.id));
+    this.context.router.push(config.path('edit/item/'+item.id));
   },
   removeItem(item){
     console.log(item);
   },
   addItem(){
-    this.context.router.push(config.path('edit/step'));
+    this.context.router.push(config.path('edit/item'));
   }
 
 }));

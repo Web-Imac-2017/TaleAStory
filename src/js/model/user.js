@@ -10,6 +10,11 @@ class User{
     this.pseudo = pseudo;
     this.imgpath = imgpath;
     this.isAdmin = isAdmin;
+    this.stats = [
+      {label: 'fatigue', value: 100},
+      {label: 'force', value: 10},
+      {label: 'faim', value: 50}
+    ]
   }
 }
 

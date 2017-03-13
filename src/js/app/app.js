@@ -8,6 +8,7 @@ class App extends React.Component{
   constructor(props) {
     super(props);
     let that = this;
+    this.resizeHandlers = [];
     this.state = {
       user: null,
       requestedPage: null,
@@ -30,8 +31,23 @@ class App extends React.Component{
       },
       requestPage : function(page){
         that.setState({'requestedPage': page})
+      },
+      addResizeHandler : function(handler){
+        that.resizeHandlers.push(handler);
+      },
+      removeResizeHandler : function(handler){
+        let index = that.resizeHandlers.indexOf(5);
+        if (index > -1) {
+            that.resizeHandlers.splice(index, 1);
+        }
       }
     };
+  }
+
+  resizeHandle(){
+    this.resizeHandlers.forEach(function(callback){
+      callback();
+    })
   }
 
   componentDidMount(){
@@ -69,7 +85,9 @@ App.childContextTypes = {
   requestPage : React.PropTypes.func,
   goRequestedPage : React.PropTypes.func,
   requestedPage : React.PropTypes.string,
-  unsetUser : React.PropTypes.func
+  unsetUser : React.PropTypes.func,
+  addResizeHandler : React.PropTypes.func,
+  removeResizeHandler : React.PropTypes.func
 };
 
 let AppContextTypes = App.childContextTypes;

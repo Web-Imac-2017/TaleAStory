@@ -41,6 +41,7 @@ function buildSass(sassSrc) {
                 style: 'compressed',
                 includePaths: [
                   configSass.srcPath,
+                  configSass.node_path,
                   configSass.node_path + 'bootstrap-sass/assets/stylesheets'
                 ]}))
     .on('error', mapError)

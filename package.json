@@ -1,5 +1,5 @@
 {
-  "name": "Tale A Story",
+  "name": "TaleAStory",
   "version": "0.3.5",
   "description": "Package de base",
   "main": "src/js/main.js",
@@ -42,6 +42,7 @@
     "history": "^3.2.1",
     "isomorphic-fetch": "^2.2.1",
     "preload-js": "^0.6.3",
+    "rc-slider": "^6.1.2",
     "react": "^15.4.2",
     "react-addons-transition-group": "^15.4.2",
     "react-bootstrap": "^0.30.7",
