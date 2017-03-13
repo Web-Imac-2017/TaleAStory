@@ -16,7 +16,7 @@ export default RouteComponent({
                   		<h2 className="userName">Marcel Patullacci</h2>
                   		<img className="element" src={config.imagePath('wave_large.png')}/>
                   		<ul className="assideMenu">
-                  			<li><Link to={config.path('')}>Mon compte</Link></li>
+                  			<li><Link to={config.path('profils/account')}>Mon compte</Link></li>
                   			<li><Link to={config.path('profils/trophy')}>Mes trophées</Link></li>
                   			<li><Link to={config.path('')}>Déconnexion</Link></li>
                   		</ul> 
@@ -25,15 +25,17 @@ export default RouteComponent({
                   </div>
                   <div className="contentRight">
                   	<div className="insideContent"> 
-                  		<p>Prenom : <span>Marcel</span></p>
-                  		<p>Nom : <span>Patullacci</span></p>
-                  		<p>Email : <span>marcel.patullaci@gmail.com</span></p>
-                  		<p>Changer de mot de passe</p>
-                  		<p>Changer de photo de profil : </p>
-                  		<div className="addPhoto">
-                  			<a href="" className="element button"></a>
-                  			<a href="" className="element button">Parcourir</a>
-                  		</div>
+                  		<p>Pseudo : 
+                        <span>Marcel Patullacci</span>
+                        <img className="editElement" src={config.imagePath('pen_large.png')}/>
+                      </p>
+                  		<p>Email : 
+                        <span>marcel.patullaci@gmail.com</span>
+                        <img className="editElement" src={config.imagePath('pen_large.png')}/>
+                      </p>
+                  		<p>Changer de mot de passe
+                        <img className="editElement" src={config.imagePath('pen_large.png')}/>
+                      </p>
                   		<a href="" className="element button">Sauvegarder le profil</a>
                   	</div>
                   </div>

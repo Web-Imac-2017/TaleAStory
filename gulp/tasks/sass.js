@@ -41,7 +41,7 @@ function buildSass(sassSrc) {
                 style: 'compressed',
                 includePaths: [
                   configSass.srcPath,
-                  configSass.node_path+ 'bootstrap-sass/assets/stylesheets'
+                  configSass.node_path + 'bootstrap-sass/assets/stylesheets'
                 ]}))
     .on('error', mapError)
     .pipe(rename(function (path) {

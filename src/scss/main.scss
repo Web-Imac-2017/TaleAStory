@@ -1,5 +1,5 @@
 @import './import/reset';
-@import 'bootstrap';
+/* @import 'bootstrap'; */
 @import './import/common';
 @import './import/profil';
 @import './import/fonts';
@@ -168,7 +168,7 @@
 	min-width: $width-index;
 	height: 70%;
     width: 10%;
-	margin: 0px 3%;
+	margin: 0px 3% 0 0;
 
 	@media screen and (max-width: $break-small) {
     	display: none;
@@ -597,5 +597,29 @@ form {
 			margin: 0px 1%;
 		}
 
+	}
+}
+
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+	width: 100%;
+	height : 100%;
+	margin : 0;
+}
+
+canvas#analyser {
+	position: fixed;
+	width:3%;
+	height:10%;
+	top:initial;
+	left: initial;
+	right : 5%;
+	bottom : 5%;
+	z-index : 2;
+	opacity:0;
+	&:hover{
+		cursor: hand;
 	}
 }
