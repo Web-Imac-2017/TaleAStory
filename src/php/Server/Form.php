@@ -68,7 +68,7 @@ class Form {
       else
         return null;
     } else {
-      echo "Hack-Attempt detected. Got ya!.";
+      //echo "Hack-Attempt detected. Got ya!.";
       self::writeLog('Formtoken');
       return null;
     }
@@ -95,35 +95,33 @@ class Form {
   }
 
   /*
-  @function generateFormToken
-  @param  $form id du form
+  @function generateToken
   @return void
-  Genère un token pour un formulaire donne et stocke la valeur dans $_SESSION
+  Genère un token et stocke la valeur dans $_SESSION
   */
-  static public function generateFormToken($form) {
+  static public function generateToken() {
     // generate a token from an unique value
     $token = md5(uniqid(microtime(), true));
     // Write the generated token to the session variable to check it against the hidden field when the form is sent
-    $_SESSION[$form.'_token'] = $token;
+    $_SESSION['token'] = $token;
     return $token;
   }
 
   /*
-  @function verifyFormToken
-  @param  $form id du form
+  @function verifyToken
   @return bool
   Verifie que le token present dans $_POST correspond bien à celui present dans $_SESSION (le formulaire est authentique)
   */
-  static public function verifyFormToken($form) {
+  static public function verifyToken() {
     // check if a session is started and a token is transmitted, if not return an error
-    if(!isset($_SESSION[$form.'_token']))
+    if(!isset($_SESSION['token']))
     return false;
     self::updatePOST();
     // check if the form is sent with token in it
     if(!isset($_POST['token']))
     return false;
     // compare the tokens against each other if they are still the same
-    if ($_SESSION[$form.'_token'] !== $_POST['token'])
+    if ($_SESSION['token'] !== $_POST['token'])
     return false;
 
     return true;
@@ -157,7 +155,7 @@ class Form {
   {
     // read incoming data
     $input = file_get_contents('php://input');
-    var_dump($input);
+    //var_dump($input);
     // grab multipart boundary from content type header
     preg_match('/boundary=(.*)$/', $_SERVER['CONTENT_TYPE'], $matches);
 
@@ -207,16 +205,14 @@ class Form {
   Si No file, renvoyer une chaine de caractère vide
   */
   static public function uploadFile($file_input){
-    var_dump("OK DEBUT");
     $whitelist = array('image/jpg', 'image/jpeg','image/png','image/gif','image/bmp');
     //on parse les data envoyées
-    var_dump($_FILES);
+    //var_dump($_FILES);
 
     if(!isset($_FILES) || !isset($_FILES["$file_input"])){
       $e = new Error("Pas de fichier.");
       return $e;
     }
-    var_dump("OK FICHIER");
     //Extension
     if(empty($_FILES[$file_input]['tmp_name'])
         || !in_array($_FILES[$file_input]['type'], $whitelist))

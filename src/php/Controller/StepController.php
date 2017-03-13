@@ -7,6 +7,7 @@ use \Model\Player;
 use \Server\Response;
 use \View\Success;
 use \View\Error;
+use \Controller\CurrentUserController;
 
 class StepController {
 
@@ -43,10 +44,10 @@ class StepController {
 
   public static function stepResponse(){
     $answer = \Server\Form::getField("answer");
-    echo $answer;
+    //echo $answer;
     $id = 2; //\Server\Session::getCurrentUser();
     $player = \Model\Player::getPlayer($id);
-    var_dump($player);
+    //var_dump($player);
 
 
     if ($player == NULL) {
@@ -55,17 +56,14 @@ class StepController {
     else {
         $CurrentStep = $player->currentStep();
         $array = $CurrentStep->processAnswer($player,$answer);
-        var_dump($array);return Response::jsonResponse($array);
+        //var_dump($array);
+        Response::jsonResponse($array);
     }
   }
 
 
   public static function addStep() {
-    $admin = Player::connectSession();
-    if(!$admin || $admin->admin == 0 || $admin->isAdmin() == 0){
-      $e = new Error("Tu n'as pas le droit d'effectuer cette action !");
-      return Response::jsonResponse($e);
-    }
+      CurrentUserController::isAdmin();
     /*$imgpath = Form::uploadFile("ImgPath");
     if($imgpath->status == "error")
       return $imgpath; //on retourne l'erreur
@@ -79,7 +77,7 @@ class StepController {
     $idType = intval(Form::getField("IDType"));
     if ($imgpath == NULL || $body == NULL || $question == NULL || $accepted == NULL || $idType == NULL){
       $e = new Error("Tu ne peux pas ajouter cette péripéthie !");
-      return Response::jsonResponse($e);
+      Response::jsonResponse($e);
     }
 
     $step = new Step($imgpath, $body, $question, $accepted, $idType);
@@ -88,15 +86,11 @@ class StepController {
       $e = new Success("La péripéthie a été ajoutée.");
     else
       $e = new Error("Tu ne peux pas ajouter cette péripéthie !");
-    return Response::jsonResponse($e);
+    Response::jsonResponse($e);
   }
 
   public static function updateStep() {
-    $admin = Player::connectSession();
-    if(!$admin || $admin->admin == 0 || $admin->isAdmin() == 0){
-      $e = new Error("Tu n'as pas le droit d'effectuer cette action !");
-      return Response::jsonResponse($e);
-    }
+      CurrentUserController::isAdmin();
     //$tmp = $imgpath;
     //$imgpath = Form::uploadFile("stepImg");
     //unlink ($tem);
@@ -105,7 +99,7 @@ class StepController {
     //var_dump($data);
     if(!isset($data["IDStep"]) || $data["IDStep"]== null ){
       $e = new Error("Péripéthie invalide");
-      return Response::jsonResponse($e);
+      Response::jsonResponse($e);
     }
 
     $entries = array();
@@ -124,19 +118,15 @@ class StepController {
     //var_dump($entries);
     $step->update($entries);
     $e = new Success("Péripéthie modifiée !");
-    return Response::jsonResponse($e);
+    Response::jsonResponse($e);
   }
 
   public static function deleteStep() {
-    $admin = Player::connectSession();
-    if(!$admin || $admin->admin == 0 || $admin->isAdmin() == 0){
-      $e = new Error("Tu n'as pas le droit d'effectuer cette action !");
-      return Response::jsonResponse($e);
-    }
+      CurrentUserController::isAdmin();
     $id = Form::getField("IDStep");
     if(!$id){
       $e = new Error("Impossible de supprimer la péripéthie !");
-      return Response::jsonResponse($e);
+      Response::jsonResponse($e);
     }
     else{
       $step = new Step("", "", "", 0,0);
@@ -146,7 +136,7 @@ class StepController {
         $e = new Success("Péripéthie supprimée !");
       else
         $e = new Error("Impossible de supprimer la péripéthie !");
-      return Response::jsonResponse($e);
+      Response::jsonResponse($e);
     }
   }
 }
