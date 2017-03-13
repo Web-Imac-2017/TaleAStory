@@ -20,7 +20,32 @@ class GameComponent extends React.Component{
                               .eventCallback("onComplete", callback);
   }
 
+	componentDidMount(){
+	  if(webGL.bg_anim != null){
+		webGL.bg_anim.unMuteAll();
+		document.getElementById('analyser').style = 'width:3%';
+		TweenLite.fromTo(document.getElementById('analyser'), 1.3,{opacity:0},{opacity:1});
+		var links = document.getElementsByTagName("a");
+		var color;
+		color = webGL.bg_anim.getColor();
+		for(var i=0;i<links.length;i++)
+		{
+			if(links[i].href)
+			{
+				TweenLite.to(links[i], 0.5,{color:"rgb("+Math.floor(255*color[0]+30)+","+Math.floor(255*color[1]+30)+","+Math.floor(255*color[2]+30)+")"});
+			}
+		}
+		
+		links = document.getElementsByClassName("progress-bar");
+		for(var i=0;i<links.length;i++)
+		{
+			TweenLite.to(links[i], 0.5,{backgroundColor:"rgb("+Math.floor(255*color[0]+30)+","+Math.floor(255*color[1]+30)+","+Math.floor(255*color[2]+30)+")"});
+		}
 
+		// webGL.bg_anim.getColor();
+
+	}
+  }
   componentWillAppear(callback){
     this.componentWillEnter(callback);
   }
@@ -230,25 +255,6 @@ export default RouteComponent({
   },
   componentWillMount(){
     //get the first step
-	if(webGL.bg_anim != null){
-		webGL.bg_anim.unMuteAll();
-		document.getElementById('analyser').style = 'width:3%';
-		TweenLite.fromTo(document.getElementById('analyser'), 1.3,{opacity:0},{opacity:1});
-		var links = document.getElementsByTagName("a");
-		var color;
-		color = webGL.bg_anim.getColor();
-		for(var i=0;i<links.length;i++)
-		{
-			if(links[i].href)
-			{
-				TweenLite.to(links[i], 0.5,{color:"rgb("+Math.floor(255*color[0]+30)+","+Math.floor(255*color[1]+30)+","+Math.floor(255*color[2]+30)+")"});
-			}
-		}
-
-
-		// webGL.bg_anim.getColor();
-
-	}
     let component = (<StoryComponent callback={this.nextStep}>
                         <p>
                           Bienvenue dans TaleAstory, vous allez bientôt écrire une histoire,
@@ -264,7 +270,7 @@ export default RouteComponent({
     this.setState({currentStep : component, currentStepID : 1});
   },
 
-
+  
 
   componentWillUnmount(){
 	  if(webGL.bg_anim != null){

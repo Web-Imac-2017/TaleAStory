@@ -25,7 +25,13 @@ function _animation(animationFunc){
                                                         ","+Math.floor(255*color[1]+30) + 
                                                         ","+Math.floor(255*color[2]+30)+")"});
 								}
-					  }}});
+					  }
+					  	links = document.getElementsByClassName("progress-bar");
+						for(var i=0;i<links.length;i++)
+						{
+							TweenLite.to(links[i], 0.5,{backgroundColor:"rgb("+Math.floor(255*color[0]+30)+","+Math.floor(255*color[1]+30)+","+Math.floor(255*color[2]+30)+")"});
+						}
+					  }});
     return anim;
   }
 }
