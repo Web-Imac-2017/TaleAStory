@@ -216,6 +216,7 @@ export default RouteComponent({
 	  if(webGL.bg_anim != null){
 		    webGL.bg_anim.unMuteAll();
 	  }
+	  
 	  TweenLite.fromTo(document.getElementById('analyser'), 1.3,{opacity:0},{opacity:1});
 
     return {
@@ -235,7 +236,7 @@ export default RouteComponent({
 		TweenLite.fromTo(document.getElementById('analyser'), 1.3,{opacity:0},{opacity:1});
 		var links = document.getElementsByTagName("a");
 		var color;
-    color = webGL.bg_anim.getColor();
+		color = webGL.bg_anim.getColor();
 		for(var i=0;i<links.length;i++)
 		{
 			if(links[i].href)
