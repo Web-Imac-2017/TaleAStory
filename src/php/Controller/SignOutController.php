@@ -2,7 +2,10 @@
 namespace Controller;
 use \Model\Player;
 use \Server\Response;
-class SignOutControllers{
+use \View\Error;
+use \View\Success;
+
+class SignOutController{
 
 
   static public function signOut() {

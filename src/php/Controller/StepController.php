@@ -7,6 +7,7 @@ use \Model\Player;
 use \Server\Response;
 use \View\Success;
 use \View\Error;
+use \Controller\CurrentUserController;
 
 class StepController {
 
@@ -62,11 +63,7 @@ class StepController {
 
 
   public static function addStep() {
-    $admin = Player::connectSession();
-    if(!$admin || $admin->admin == 0 || $admin->isAdmin() == 0){
-      $e = new Error("Tu n'as pas le droit d'effectuer cette action !");
-      Response::jsonResponse($e);
-    }
+      CurrentUserController::isAdmin();
     /*$imgpath = Form::uploadFile("ImgPath");
     if($imgpath->status == "error")
       return $imgpath; //on retourne l'erreur
@@ -93,11 +90,7 @@ class StepController {
   }
 
   public static function updateStep() {
-    $admin = Player::connectSession();
-    if(!$admin || $admin->admin == 0 || $admin->isAdmin() == 0){
-      $e = new Error("Tu n'as pas le droit d'effectuer cette action !");
-      Response::jsonResponse($e);
-    }
+      CurrentUserController::isAdmin();
     //$tmp = $imgpath;
     //$imgpath = Form::uploadFile("stepImg");
     //unlink ($tem);
@@ -129,11 +122,7 @@ class StepController {
   }
 
   public static function deleteStep() {
-    $admin = Player::connectSession();
-    if(!$admin || $admin->admin == 0 || $admin->isAdmin() == 0){
-      $e = new Error("Tu n'as pas le droit d'effectuer cette action !");
-      Response::jsonResponse($e);
-    }
+      CurrentUserController::isAdmin();
     $id = Form::getField("IDStep");
     if(!$id){
       $e = new Error("Impossible de supprimer la péripéthie !");

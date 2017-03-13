@@ -36,7 +36,7 @@ class Player {
           $playerData[0]["IDPlayer"],
           $playerData[0]["Pseudo"],
           $playerData[0]["Login"],
-          $playerData[0]["Pwd"],
+          "",
           $playerData[0]["Mail"],
           $playerData[0]["ImgPath"]
         );
@@ -79,10 +79,11 @@ class Player {
         $playerData[0]["IDPlayer"],
         $playerData[0]["Pseudo"],
         $playerData[0]["Login"],
-        $playerData[0]["Pwd"],
+        "",
         $playerData[0]["Mail"],
         $playerData[0]["ImgPath"]
       );
+      //var_dump($player);
       if(!$player){return NULL;}
       $player->admin = $player->isAdmin();
       Session::connectUser($player->id, true, $player->login);
@@ -101,6 +102,7 @@ class Player {
         $playerData[0]["IDPlayer"],
         $playerData[0]["Pseudo"],
         $playerData[0]["Login"],
+        "",
         $playerData[0]["Mail"],
         $playerData[0]["ImgPath"]
       );
