@@ -16,14 +16,20 @@ class StepController {
   }
 
   public static function getStepsList($start, $count) {
+      if ($start-1 < 0) {
+          
+
+      }
+
+      else {
       $stepParam = Database::instance()->query("Step", Array("IDStep"=> "",
                                                             "ImgPath"=>"",
                                                             "Body"=>"",
                                                             "Question"=>"",
                                                             "IDType"=>""),
                                                           "LIMIT ".$count." OFFSET ".$start);
-
     response::jsonResponse($stepParam);
+    }
   }
 
   public static function getTenStepsList($start) {
