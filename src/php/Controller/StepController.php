@@ -16,7 +16,8 @@ class StepController {
   }
 
   public static function getStepsList($start, $count) {
-      $stepParam = Database::instance()->query("Step", Array("IDStep"=> "",
+	$start--;
+     $stepParam = Database::instance()->query("Step", Array("IDStep"=> "",
                                                             "ImgPath"=>"",
                                                             "Body"=>"",
                                                             "Question"=>"",

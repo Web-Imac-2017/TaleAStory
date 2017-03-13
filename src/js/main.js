@@ -60,13 +60,11 @@ class Test extends React.Component{
             function(json){
                 console.log(json);
          });
-		// A partir de là, à vérifier. 
-		// ==> notamment, voir le type de données attendues, etc
-		Requester.stepList(0,0).then( 
+		Requester.stepList(1,3).then( 
             function(json){
                 console.log(json);
          });
-		Requester.stepList(0).then(
+		Requester.stepList(1).then(
             function(json){
                 console.log(json);
          });

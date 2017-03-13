@@ -83,7 +83,8 @@ class CurrentUserController{
   }
 
   static public function achievements(){
-    $player = Session::getCurrentUser();
+    $player = Player::connectSession();
+	//echo $player;
     //$player = Player::connect("login","pwd");
     if(!$player) {
       $error = new Error("Vous n'êtes pas connectés");
@@ -96,7 +97,7 @@ class CurrentUserController{
   }
 
   static public function unreadAchievements(){
-    $player = Session::getCurrentUser();
+    $player = Player::connectSession();
     //$player = Player::connect("login","pwd");
     if(!$player) {
       $error = new Error("Vous n'êtes pas connectés");

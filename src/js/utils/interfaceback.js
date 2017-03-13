@@ -69,7 +69,6 @@ class Requester {
             });
     } 
 
-    // message d'error OK si mauvais mail, sinon hard crash
   static signUp(_pseudo, _login, _mail, _pwd){
       return fetch(config.path('signup'), {
                 method: 'post',
@@ -94,12 +93,10 @@ class Requester {
             });
     } 
 
-    // !!!!!!!!! appel à makeGuest, qui ne fonctionne pas
     static signOut(){
       makeGuest();
     }  
 
-    // !!!!!!!!! buguée
     static makeGuest(){
       return fetch(config.path('makeguest'), {
                 method: 'post',
@@ -118,7 +115,7 @@ class Requester {
             });
     } 
 
-    // !!!!!!!!! message: "null" code:0 status:"ok"
+    // semble ok. Message doit valoir []  en cas de BDD vide
     static currentUserStats(){
       return fetch(config.path('currentuser/stats/'), {
                 method: 'post',
@@ -137,7 +134,7 @@ class Requester {
             });
     } 
 
-    // !!!!!!!!! message: "null" code:0 status:"ok"
+    // semble ok. Message doit valoir []  en cas de BDD vide
     static currentUserItems(){
       return fetch(config.path('currentuser/items/'), {
                 method: 'post',
@@ -156,7 +153,7 @@ class Requester {
             });
     } 
 
-    // !!!!!!!!! semble ok
+    // semble ok. Message doit valoir []  en cas de BDD vide
     static currentUserStep(){
       return fetch(config.path('currentuser/currentstep/'), {
                 method: 'post',
@@ -175,7 +172,7 @@ class Requester {
             });
     } 
 
-    // !!!!!!!!! message: "null" code:0 status:"ok"
+    // semble ok. Message doit valoir []  en cas de BDD vide
     static currentUserStory(){
       return fetch(config.path('currentuser/story/'), {
                 method: 'post',
@@ -194,7 +191,7 @@ class Requester {
             });
     } 
 
-    // !!!!!!!!!! hard error
+    // semble ok. Message doit valoir []  en cas de BDD vide
     static currentUserAchievements(){
       return fetch(config.path('currentuser/achievements/'), {
                 method: 'post',
@@ -213,7 +210,7 @@ class Requester {
             });
     } 
 
-    // !!!!!!!!!! hard error
+    // semble ok. Message doit valoir []  en cas de BDD vide
     static currentUserUnreadAchievements(){
       return fetch(config.path('currentuser/unreadachievements/'), {
                 method: 'post',
@@ -232,7 +229,7 @@ class Requester {
             });
     } 
 
-    // Réponse vide ?
+    // Réponse vide ==> ceci est une pb
     static stepCount(){
       return fetch(config.path('step/count/'), {
                 method: 'post',
@@ -252,9 +249,21 @@ class Requester {
     } 
 
 
-    // A tester
+    // Fonctionne mais ne gère pas les imprévus
+    // + renvoie uniquement la réponse, il faut que ça renvoie un
+    // status et un code à chaque fois.
+    
+    /* Renvoie une liste de 'count' steps, à partir de la step 'start'.
+    * sinon count n'est pas précisé, il est fixé à 10
+    */
     static stepList(start, count){
-      return fetch(config.path('step/list/'+start+'/'+count+'/'), {
+      let url = config.path('step/list/' + start);
+      if(typeof count !== "undefined") {
+        url += '/' + count;
+      } else {
+        url += '/' + 10;
+      }
+      return fetch(url, {
                 method: 'post',
                 headers: {
                   'Content-Type' : 'application/json'
@@ -271,26 +280,10 @@ class Requester {
             });
     }
 
-    // A tester - hard error
-    static stepList(start){
-      return fetch(config.path('step/list/'+start+'/'), {
-                method: 'post',
-                headers: {
-                  'Content-Type' : 'application/json'
-                 },
-                credentials: "same-origin"
-              }
-            ).then(
-              function(response){
-                return response.json();
-              }
-            ).then(
-              function(json){
-                return json;
-            });
-    } 
-
     // hard error
+    /* 
+    *
+    */
     static currentStepResponse(_answer){
       return fetch(config.path('currentstep/response'), {
                 method: 'post',
