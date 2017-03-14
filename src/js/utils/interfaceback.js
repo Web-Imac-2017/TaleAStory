@@ -4,6 +4,7 @@ import config from '../config';
 import ReactDOM from 'react-dom';
 import {Achievement} from '../model/achievement'
 import {Item} from '../model/item'
+import {Step} from '../model/step'
 
 class GlobalBack{
   static get(field){
@@ -263,6 +264,7 @@ class Requester {
     /* Renvoie une liste de 'count' steps, à partir de la step 'start'.
     * sinon count n'est pas précisé, il est fixé à 10
     */
+    /*
     static stepList(start, count){
       let url = config.path('step/list/' + start);
       if(typeof count !== "undefined") {
@@ -286,6 +288,41 @@ class Requester {
                 return json;
             });
     }
+    */
+
+    /* Renvoie une liste de 'count' steps, à partir de la step 'start'.
+    * sinon count n'est pas précisé, il est fixé à 10
+    */
+    static stepList(start, count){
+      let url = config.path('step/list/' + start);
+      if(typeof count !== "undefined") {
+        url += '/' + count;
+      } else {
+        url += '/' + 10;
+      }
+      return fetch(url, {
+                method: 'post',
+                headers: {
+                  'Content-Type' : 'application/json'
+                 },
+                credentials: "same-origin"
+              }
+            ).then(
+              function(response){
+                return response.json();
+              }, Requester.requestError
+            ).then(
+              function(json){
+                let obj = JSON.parse(json.message);
+                let steps = [];
+                for (let i=0; i<obj.length; i++) {
+                    let step = new Step( obj[i].IDStep, obj[i].ImgPath, obj[i].Body, obj[i].Question, obj[i].IDType, obj[i].Title );
+                    steps[i] = step;
+                }
+                return steps;
+            });
+    }
+
 
 /*
     fetch(config.path('/step/list?count=2&start=1'), {
@@ -351,7 +388,7 @@ class Requester {
     }*/
 
 
-    // A tester
+    // A tester avec un form - il semble que le php n'attend pas un 'form' ?
     static stepAdd(form){
       return fetch(config.path('addstep'), {
         method: 'POST',
@@ -362,11 +399,126 @@ class Requester {
         }, Requester.requestError
       ).then(
         function(json){
-        console.log(json);
-        this.context.router.push(config.path('profils/admin/steps/' + json.result.id));
+          return json;
+          //this.context.router.push(config.path('profils/admin/steps/' + json.result.id));
        }
       );
     }
+
+  static deleteChoice(_IDChoice){
+      return fetch(config.path('deletechoice'), {
+                method: 'post',
+                headers: {
+                  'Content-Type' : 'application/json'
+                 },
+                credentials: "same-origin",
+                body: JSON.stringify({
+                  IDChoice: _IDChoice
+                })
+              }
+            ).then(
+              function(response){
+                return response.json();
+              }, Requester.requestError
+            ).then(
+              function(json){
+                return json;
+            });
+    } 
+
+    // A tester avec un form
+    static updateChoice(form){
+      return fetch(config.path('updatechoice'), {
+        method: 'POST',
+        body: new FormData(form)
+      }).then(
+        function(response){
+          return response.json();
+        }, Requester.requestError
+      ).then(
+        function(json){
+          return json;
+          //this.context.router.push(config.path('profils/admin/steps/' + json.result.id));
+       }
+      );
+    }
+
+  // hard crash
+  static deleteStep(_idstep){
+      return fetch(config.path('deletestep'), {
+                method: 'post',
+                headers: {
+                  'Content-Type' : 'application/json'
+                 },
+                credentials: "same-origin",
+                body: JSON.stringify({
+                  idstep: _idstep
+                })
+              }
+            ).then(
+              function(response){
+                return response.json();
+              }, Requester.requestError
+            ).then(
+              function(json){
+                return json;
+            });
+    }
+
+    // A tester avec un form
+    static updateStep(form){
+      return fetch(config.path('updatestep'), {
+        method: 'POST',
+        body: new FormData(form)
+      }).then(
+        function(response){
+          return response.json();
+        }, Requester.requestError
+      ).then(
+        function(json){
+          return json;
+          //this.context.router.push(config.path('profils/admin/steps/' + json.result.id));
+       }
+      );
+    }
+
+    static stepListByTitle(_nameFilter){
+      return fetch(config.path('step/list'), {
+                method: 'post',
+                headers: {
+                  'Content-Type' : 'application/json'
+                 },
+                credentials: "same-origin",
+                body: JSON.stringify({
+                  nameFilter : _nameFilter
+                })
+              }
+            ).then(
+              function(response){
+                return response.json();
+              }, Requester.requestError
+            ).then(
+              function(json){
+                let obj = JSON.parse(json.message);
+                let steps = [];
+                for (let i=0; i<obj.length; i++) {
+                    let step = new Step( obj[i].IDStep, obj[i].ImgPath, obj[i].Body, obj[i].Question, obj[i].IDType, obj[i].Title );
+                    steps[i] = step;
+                }
+                return steps;
+            });
+    }
+
+
+
+
+
+
+
+
+
+
+
 
     static test(that){ /* == ancien 'componentDidMount' )*/
       fetch(config.path('connexion'), {
