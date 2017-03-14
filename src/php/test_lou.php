@@ -4,7 +4,9 @@ require_once("Server/Database.php");
 
 //$player = Player::signup("Louuuu", "Louuuuu", "Lou", "lou@gmailcom");
 $in = array("IN", "Login", array("lou", "Dori", "lol"));
-$test = Database::instance()->query("Player", array("Login"=>"login", "Mail"=>""), $in);
+$like = array("LIKE", "Login", "lou");
+$test = Database::instance()->query("Player", array("IDPlayer"=>2, "Mail"=>"", "Login"=>"", "IDCurrentStep"=>2));
+//$player = Database::instance()->insert("Player", array("Login"=>"KASS2", "mail"=>"gmalalaletetet"));
 //$player = Player::connect("login","pwd");
 //$test = Database::instance()->query("Player", array("Login"=>"Dori", "IDPlayer"=>""));
 //$test = Database::instance()->arrayMap($test, "Login", "IDPlayer");
