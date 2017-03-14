@@ -197,7 +197,10 @@ class Player {
   }
 
   public function setPassword($newPwd) {
-    $this->pwd = Database::instance()->encode($newPwd);
+    $new_pwd = Database::instance()->encode($newPwd);
+    $this->pwd = $new_pwd;
+    return $new_pwd;
+
   }
 
   static public function checkPwd($pwd, $login){
