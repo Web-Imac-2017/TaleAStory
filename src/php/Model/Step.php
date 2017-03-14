@@ -14,13 +14,15 @@ Class Step {
   public $question;
   public $accepted;
   public $idType;
+  public $title;
   public static $table = "Step";
 
-  public function __construct($imgpath, $body, $question,  $idType) {
+  public function __construct($imgpath, $body, $question,$idType,$title) {
     $this->imgpath=$imgpath;
     $this->body=$body;
     $this->question=$question;
     $this->idType=$idType;
+    $this->title=$title;
   }
   /*
   @function save
@@ -32,7 +34,8 @@ Class Step {
        'ImgPath' => $this->imgpath,
        'Body' => $this->body,
        'Question' => $this->question,
-       'IDType' => $this->idType
+       'IDType' => $this->idType,
+       'Title' =>$this->title
      );
      $id = Database::instance()->insert(self::$table, $entries);
      //var_dump($id);
@@ -102,8 +105,8 @@ Class Step {
      //var_dump($true_choice);
      if($true_choice && $true_choice->checkPlayerRequirements($player)) {
        $true_choice->alterPlayer($player);
-       $nextStepArray = Database::instance()->query("Step", array('IDStep' => "$true_choice->idNextStep", 'ImgPath' => '', 'Question'=>'', 'Body'=>'', 'IDType'=>''));
-       $nextStep = new Step($nextStepArray[0]['ImgPath'],$nextStepArray[0]['Body'],$nextStepArray[0]['Question'],1,$nextStepArray[0]['IDType']);
+       $nextStepArray = Database::instance()->query("Step", array('IDStep' => "$true_choice->idNextStep", 'ImgPath' => '', 'Question'=>'', 'Body'=>'', 'IDType'=>'', 'Title'=>''));
+       $nextStep = new Step($nextStepArray[0]['ImgPath'],$nextStepArray[0]['Body'],$nextStepArray[0]['Question'],1,$nextStepArray[0]['IDType'],$nextStepArray[0]['Title']);
        $nextStep->id = $choice->idNextStep;
        $player->passStep($nextStep);
        return true;

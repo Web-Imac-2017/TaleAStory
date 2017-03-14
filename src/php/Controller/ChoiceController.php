@@ -21,7 +21,7 @@ class ChoiceController {
     $transitionText = Form::getField("TransitionText");
     $idNextStep = intval(Form::getField("IDNextStep"));
     if ($answer == NULL || $idStep == NULL || $transitionText == NULL || $idNextStep == NULL){
-      $e = new Error(array("all"=>"Tu ne peux pas ajouter ce choix !"));
+      $e = new Error(array("all"=>"Il manque des champs pour ajouter ce choix !"));
       Response::jsonResponse($e);
     }
     $choice = new Choice($answer, $idStep, $transitionText, $idNextStep);
@@ -37,7 +37,7 @@ class ChoiceController {
     CurrentUserController::isAdmin();
     $data = Form::getFullForm(); //si l'id n'est pas présent, on retourne null
     if(!isset($data["IDChoice"]) || $data["IDChoice"]== null ){
-      $e = new Error(array("all"=>"Tu ne peux pas modifer ce choix !"));
+      $e = new Error(array("IDChoice"=>"ID Invalide, impossible de modifier ce choix"));
       Response::jsonResponse($e);
     }
 
@@ -64,7 +64,7 @@ class ChoiceController {
     CurrentUserController::isAdmin();
     $id = Form::getField("IDChoice");
     if(!$id){
-      $e = new Error("Impossible de supprimer le choix !");
+      $e = new Error(array("IDChoice"=>"ID Invalide, impossible de supprimer le choix !"));
       Response::jsonResponse($e);
     }
     else{

@@ -72,7 +72,7 @@ class Test extends React.Component{
             function(json){
                 console.log(json);
          });
-		Requester.stepAdd("mySuperBody","mySurperAnswer",0).then(
+		Requester.stepAdd("mySuperBody","mySurperAnswer",0,"mySuperTitle").then(
             function(json){
                 console.log(json);
          });

@@ -295,7 +295,7 @@ class Requester {
     }
 
     // A tester
-    static stepAdd(body, question, idType){
+    static stepAdd(body, question, idType, title){
       return fetch(config.path('addstep'), {
                 method: 'post',
                 headers: {
@@ -305,7 +305,8 @@ class Requester {
                 body: JSON.stringify({
                   Body: body,
                   Question: question,
-                  IDType: idType
+                  IDType: idType,
+                  Title: title
                 })
               }
             ).then(
