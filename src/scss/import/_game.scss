@@ -84,3 +84,130 @@
 	margin-top: 20px;
   min-width: 100px;
 }
+
+
+.enigma-text{
+  margin: 15px 10px;
+  letter-spacing: 3px;
+  opacity: 0;
+  line-height : 20px;
+  font-size : 11px;
+  text-align : left;
+  padding : 0 40px;
+}
+
+.enigma-img{
+	position: relative;
+	top:50%;
+	transform : translateY(-50%);
+	-webkit-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	opacity: 0;
+	width:100%;
+}
+
+.enigma-left{
+
+	display: flex;
+
+	flex-direction: column;
+	flex:1;
+	
+	&:empty{
+		display:none;
+	}
+	
+}
+.enigma-right{
+
+	float : right;
+	display: flex;
+
+	flex-direction: column;
+	flex:2;
+}
+
+.enigma{
+	
+	display : flex;
+	flex-direction: row;
+}
+
+.enigma-bottom{
+	width:100%;
+	display:flex;
+	flex-direction:row;
+	justify-content: center;
+}
+
+
+
+.enigma-form{
+	display:flex;
+	flex-direction:row;
+	justify-content:center;
+	width:100%;
+}
+
+form.enigma-form{
+				span {
+					display: block;
+					position: relative;
+					margin : 0 5% 2% 5%;
+					width: 100%;
+					height: 50px;
+					input {
+						width: 100%;
+						height: 100%;
+						display: block;
+						border: 1px solid #fff;
+						padding: 8px;
+					
+					}
+					
+					&.submit{
+						width:30%;
+						margin-left:0;
+						margin-right:10%;
+					}
+					
+					input[type="submit"]:after{
+						width: 104%;
+						height: 86%;
+						content: '';
+						border: 1px solid #fff;
+						position: absolute;
+						transition : all 0.4s;
+						z-index: -1!important;
+						bottom: 6%;
+						left: -2.25%;
+					}
+					
+					input[type="submit"]:before{
+						width: 100%;
+						height: 0%;
+						content: '';
+						background: rgba(255,255,255,0);
+						position: absolute;
+						transition : all 0.4s;
+						z-index: -1!important;
+						bottom: 0;
+						left: 0;
+					}
+					
+					
+					input[type="submit"]:hover{
+						width: 100%;
+						height: 100%;
+						content: '';
+						background: rgba(255,255,255,0.15);
+						position: absolute;
+						transition : all 0.3s;
+					}
+					
+					input[type="submit"]hover::after{
+						background: rgba(255,255,255,0.15);
+					}
+				}
+				
+}
