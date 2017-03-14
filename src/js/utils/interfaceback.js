@@ -509,7 +509,173 @@ class Requester {
             });
     }
 
+    // A tester avec un form - Pas fini côté php
+    static addItem(form){
+      return fetch(config.path('additem'), {
+        method: 'POST',
+        body: new FormData(form)
+      }).then(
+        function(response){
+          return response.json();
+        }, Requester.requestError
+      ).then(
+        function(json){
+          return json;
+          //this.context.router.push(config.path('profils/admin/steps/' + json.result.id));
+       }
+      );
+    }
 
+    // A tester avec un form
+    static updateItem(form){
+      return fetch(config.path('updateitem'), {
+        method: 'POST',
+        body: new FormData(form)
+      }).then(
+        function(response){
+          return response.json();
+        }, Requester.requestError
+      ).then(
+        function(json){
+          return json;
+          //this.context.router.push(config.path('profils/admin/steps/' + json.result.id));
+       }
+      );
+    }
+
+    // ok mais renvoie que l'item a été supprimé (sans erreur) même si l'item n'existait pas
+  static deleteItem(_IDItem){
+      return fetch(config.path('deleteitem'), {
+                method: 'post',
+                headers: {
+                  'Content-Type' : 'application/json'
+                 },
+                credentials: "same-origin",
+                body: JSON.stringify({
+                  IDItem: _IDItem
+                })
+              }
+            ).then(
+              function(response){
+                return response.json();
+              }, Requester.requestError
+            ).then(
+              function(json){
+                return json;
+            });
+    } 
+
+    // A tester avec un form - il semble que le php n'attend pas un 'form' ?
+    static addAchievement(form){
+      return fetch(config.path('addachievement'), {
+        method: 'POST',
+        body: new FormData(form)
+      }).then(
+        function(response){
+          return response.json();
+        }, Requester.requestError
+      ).then(
+        function(json){
+          return json;
+          //this.context.router.push(config.path('profils/admin/steps/' + json.result.id));
+       }
+      );
+    }
+
+  static deleteAchievement(_IDAchievement){
+      return fetch(config.path('deleteachievement'), {
+                method: 'post',
+                headers: {
+                  'Content-Type' : 'application/json'
+                 },
+                credentials: "same-origin",
+                body: JSON.stringify({
+                  IDAchievement: _IDAchievement
+                })
+              }
+            ).then(
+              function(response){
+                return response.json();
+              }, Requester.requestError
+            ).then(
+              function(json){
+                return json;
+            });
+    }
+
+    // A tester avec un form - Pas fini côté php
+    static updateAchievement(form){
+      return fetch(config.path('updateachievement'), {
+        method: 'POST',
+        body: new FormData(form)
+      }).then(
+        function(response){
+          return response.json();
+        }, Requester.requestError
+      ).then(
+        function(json){
+          return json;
+          //this.context.router.push(config.path('profils/admin/steps/' + json.result.id));
+       }
+      );
+    }
+
+    // hard crash
+    static signOut(){
+      return fetch(config.path('signout/'), {
+                method: 'post',
+                headers: {
+                  'Content-Type' : 'application/json'
+                 },
+                credentials: "same-origin"
+              }
+            ).then(
+              function(response){
+                return response.json();
+              }, Requester.requestError
+            ).then(
+              function(json){
+                return json;
+            });
+    } 
+
+  static deletePlayer(_IDPlayer){
+      return fetch(config.path('deleteplayer'), {
+                method: 'post',
+                headers: {
+                  'Content-Type' : 'application/json'
+                 },
+                credentials: "same-origin",
+                body: JSON.stringify({
+                  IDPlayer: _IDPlayer
+                })
+              }
+            ).then(
+              function(response){
+                return response.json();
+              }, Requester.requestError
+            ).then(
+              function(json){
+                return json;
+            });
+    } 
+
+    // A tester avec un form
+    static updatePlayer(form){
+      return fetch(config.path('updateplayer'), {
+        method: 'POST',
+        body: new FormData(form)
+      }).then(
+        function(response){
+          return response.json();
+        }, Requester.requestError
+      ).then(
+        function(json){
+          return json;
+          //this.context.router.push(config.path('profils/admin/steps/' + json.result.id));
+       }
+      );
+    }
 
 
 
