@@ -120,6 +120,14 @@ Class Step {
      return Database::instance()->count('Step','IDStep');
    }
 
+   static public function getStepImg($id) {
+     $stepdata = Database::instance()->query("Step", array("IDStep"=>$id, "*"=>""));
+     if ($stepdata != NULL) {
+         return $stepdata[0]["ImgPath"];
+     }
+     else return NULL;
+   }
+
 
 
 }

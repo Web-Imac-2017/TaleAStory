@@ -111,12 +111,12 @@ class StepController {
     CurrentUserController::isAdmin();
     $isError = false;
     $imgpath = Form::uploadFile("image");
-    if($imgpath->status == "error"){
+    if(is_object($imgpath)){ //error
       $isError = true;
       $errors["image"]=$imgpath->message;
     }
     else
-      $entries['imgpath'] = str_replace('\\','',$imgpath->message);
+      $entries['imgpath'] = $imgpath;
     //var_dump($_POST);
     $entries['body'] = Form::getField("body");
     $entries['question'] = Form::getField("question");
@@ -149,58 +149,69 @@ class StepController {
     CurrentUserController::isAdmin();
     $isError =false;
     $data = Form::getFullForm(); //si l'id n'est pas présent, on retourne null
-    if(!isset($data["IDStep"]) || $data["IDStep"]== null ){
-      $errors["IDStep"]="ID Invalide";
+    //var_dump($data);
+    if(!isset($data["idstep"]) || $data["idstep"]== null ){
+      $errors["idstep"]="ID Invalide";
       $isError = true;
     }
     //on prepare le tableau $entries pour la requete ("champ"=>"valeur" avec valeur = "" si le champ n'est pas modifié)
     $entries = array();
-    $fields = array("IDStep","ImgPath","Body","Question","IDType","Title");
-    foreach ($fields as $field) {
+    $data_fields = array("idstep","body","question","idtype","title");
+    foreach ($data_fields as $field) {
       if(!isset($data[$field]) || $data[$field]=="") {
-        if(substr($field,0,2) != "ID") //les champs ID inchangés (donc initialisés à null dans data) ne doivent pas être précisés dans entries
+        if(substr($field,0,2) != "id") //les champs ID inchangés (donc initialisés à null dans data) ne doivent pas être précisés dans entries
           $entries[$field]="";
       }
       else {
-        $entries[$field]=$data[$field];
+          $entries[$field]=$data[$field];
       }
       $errors[$field]="";
     }
     //on essaye d'uploader l'image si besoin et s'il n'y a pas eu d'erreurs avant
-    if(!$isError && $entries["ImgPath"]!=""){
-      $imgpath = Form::uploadFile("ImgPath");
-      if($imgpath->status == "error"){
+    //var_dump($oldimg);
+    if(!$isError){
+      $imgpath=Form::uploadFile("image");
+      if(is_object($imgpath)){
         $isError = true;
-        $errors["ImgPath"]=$imgpath->message;
+        $errors["image"]=$imgpath->message;
       }
-      else
-        $entries["ImgPath"] = str_replace('\\','',$imgpath->message);
+      else{
+        $entries["imgpath"] = $imgpath;
+        $oldimg =  Step::getStepImg($data["idstep"]);
+        if($oldimg != '../assets/images/default_image_tiny.png')
+          unlink($oldimg);
+      }
     }
     //s'il y a des erreurs on n'update pas et on arrete, maintenant ça suffit hein !
     if($isError){
       $e = new Error($errors);
       Response::jsonResponse($e);
     }
-    $step = new Step($entries["ImgPath"], $entries["Body"], $entries["Question"], 0,$entries["Title"]);
-    $step->id = $entries["IDStep"];
+    $step = new Step($entries["imgpath"], $entries["body"], $entries["question"], 0,$entries["title"]);
+    $step->id = $entries["idstep"];
     $step->update($entries);
     $e = new Success("Péripéthie modifiée !");
     Response::jsonResponse($e);
   }
 
   public static function deleteStep() {
-    CurrentUserController::isAdmin();
-    $id = Form::getField("IDStep");
+    //CurrentUserController::isAdmin();
+    $id = Form::getField("idstep");
     if(!$id){
-      $e = new Error(array("IDStep"=>"Impossible de supprimer la péripéthie !"));
+      $e = new Error(array("idstep"=>"Impossible de supprimer la péripéthie !"));
       Response::jsonResponse($e);
     }
     else{
+      $oldimg =  Step::getStepImg($id);
       $step = new Step("", "", "", 0,"");
       $step->id = $id;
       $step = $step->delete();
-      if($step)
+      if($step){
+        var_dump($oldimg);
+        if($oldimg != '../assets/images/default_image_tiny.png')
+          unlink($oldimg);
         $e = new Success("Péripéthie supprimée !");
+      }
       else
         $e = new Error(array("all"=>"Impossible de supprimer la péripéthie !"));
       Response::jsonResponse($e);
