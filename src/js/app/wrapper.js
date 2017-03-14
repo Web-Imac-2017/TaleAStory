@@ -8,6 +8,8 @@ import {GlobalBack} from '../utils/interfaceback';
 import RouteComponent from '../utils/routecomponent';
 import TransitionGroup from 'react-addons-transition-group';
 
+import editPicture from '../utils/ProfilePicture';
+
 class RightNavigation extends React.Component{
   render(){
     let links = this.props.links ?
@@ -230,10 +232,12 @@ let AccountWrapperSpec = Object.assign({}, WrapperSpec, {
 
     return  <div id="wrapper" className={this.props.route.className}>
               {this.header}
-              <div className="caca">
+              <div className="caca mediaBlock">
                 <div className="colGauche">
                   <div className="insideCol">
-                    <img id="bigProfil" className="bigProfil" src={config.imagePath('patulacci_large.jpg')}/>
+                    <div onClick={editPicture} className="roundProfil">
+                      <img className="bigProfil" src={config.imagePath('patulacci_large.jpg')}/>
+                    </div>
                     <h2 className="userName">Marcel Patullacci</h2>
                     <img className="element" src={config.imagePath('wave_large.png')}/>
                     <ul className="assideMenu">

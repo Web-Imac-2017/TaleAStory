@@ -3,6 +3,10 @@
 	color : #fff;
 	height : 100%;
 	align-items : center;
+
+	@media screen and (max-width: $break-medium) {
+		padding : 0 !important;
+	}
 }
 
 .colGauche{
@@ -16,17 +20,60 @@
 	.insideCol{
 		width : 100%;
 
-		.bigProfil{
-			display : block;
-			margin : 0 auto 30px auto;
+		.roundProfil{
+			width : 100px;
+			height : 100px;
+			background : #fff;
 			border-radius : 50%;
-			width : 40% ;
+			margin : 0 auto;
+			position : relative;
 			cursor : pointer;
+			margin-bottom : 10%;
+			transition: all 0.25s;
 
-			@media screen and (max-width: $break-medium) {
-				width : 20%;
+
+			.bigProfil{
+				width: inherit;
+  				height: inherit;
+  				border-radius: inherit;
 			}
+
 		}
+
+		.roundProfil:before{
+			border-radius : 50%;
+			content : '';
+			background: rgba(0,0,0,0);
+			width : 100%;
+			height : 100%;
+			position : absolute;
+			bottom : 0;
+			transition: all 0.25s;
+		}
+
+		.roundProfil:hover::before{
+			background: rgba(0,0,0,0.50);
+		}
+
+
+		.roundProfil:after{
+			bottom : 0;
+			left : 30px;
+			content : '';
+			background: rgba(255,255,255,0);
+			width : 40px;
+			height : 40px;
+			position : absolute;
+			bottom : 0;
+			transition: all 0.25s;
+		}
+
+		.roundProfil:hover::after{
+			bottom : 30px;
+			background: rgba(255,255,255,1);
+		}
+
+
 
 		img.element{
 			display : block ;
