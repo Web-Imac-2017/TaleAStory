@@ -55,7 +55,8 @@ class Router {
     \Response::generateIndex((object)array('userID' => '1',
                                           'userPseudo' => 'Marcel Patulacci',
                                           'userImgPath' => 'patulacci_tiny.jpg',
-                                          'time' => '16h45'));
+                                          'time' => '16h45',
+                                          'isAdmin' => false));
   }
 
   /**

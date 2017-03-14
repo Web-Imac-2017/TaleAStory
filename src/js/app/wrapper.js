@@ -33,6 +33,15 @@ let WrapperSpec = {
 
   contextTypes : {user: React.PropTypes.objectOf(User)},
 
+  getInitialState : function(){
+    return {profilImg : ''};
+  },
+
+  handleChange : function(){
+    this.setState({profilImg : this.refs.profilImg.value});
+    editPicture(this.refs.profilImg, this.refs.divImg);
+  },
+
   updateChilds : function(){
     let childProps = this.props.children.props;
     this.currentIndex = childProps.route.index ? childProps.route.index : 0;
@@ -235,16 +244,19 @@ let AccountWrapperSpec = Object.assign({}, WrapperSpec, {
               <div className="caca mediaBlock">
                 <div className="colGauche">
                   <div className="insideCol">
-                    <div onClick={editPicture} className="roundProfil">
+                    <div onClick={()=>{this.refs.profilImg.click();}} className="roundProfil" ref="divImg">
                       <img className="bigProfil" src={config.imagePath('patulacci_large.jpg')}/>
                     </div>
+                    <input name="inputImage" type="file" accept='image/*' value={this.state.profilImg}
+                                   onChange={this.handleChange} ref="profilImg"
+                                   multiple={false} style={{display:"none"}}/>
                     <h2 className="userName">Marcel Patullacci</h2>
                     <img className="element" src={config.imagePath('wave_large.png')}/>
                     <ul className="assideMenu">
                       { links }
                       <li><Link to={config.path('')}>Déconnexion</Link></li>
                     </ul>
-                    <a href="" className="element button">Jouer</a>
+                    <Link to={config.path('game')} className="element button">Jouer</Link>
                   </div>
                 </div>
                 <div className="scroller">

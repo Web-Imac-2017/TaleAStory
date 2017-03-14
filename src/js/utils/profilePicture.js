@@ -1,8 +1,6 @@
-function editPicture(){
+function editPicture(inputFile, divimg){
 
-	console.log("gros prout");
-
-	var file = this.refs.imgpath.files[0];
+	  var file = inputFile.files[0];
   	var reader = new FileReader();
   	let that = this;
     
@@ -11,7 +9,7 @@ function editPicture(){
     	image.height = 100;
     	image.title = file.name;
     	image.src = this.result;
-    	let divimg = ReactDOM.findDOMNode(that).getElementsByClassName('image')[0];
+      image.className = "bigProfil";
     	divimg.classList.remove('empty');
 
     	while (divimg.firstChild) {
@@ -21,7 +19,8 @@ function editPicture(){
     	divimg.appendChild( image );
 
     }, false);
- 
+
+     reader.readAsDataURL(file);
  }
 
  export default editPicture;
