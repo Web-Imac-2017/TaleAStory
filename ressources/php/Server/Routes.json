@@ -19,7 +19,7 @@
   "/additem":"Controller\\ItemController::addItem",
   "/updateitem":"Controller\\ItemController::updateItem",
   "/deleteitem":"Controller\\ItemController::deleteItem",
-  "/addAchievement":"Controller\\AchievementController::addAchievement",
+  "/addachievement":"Controller\\AchievementController::addAchievement",
   "/deleteachievement":"Controller\\AchievementController::deleteAchievement",
   "/updateachievement":"Controller\\AchievementController::updateAchievement",
   "currentuser/unreadachievements":"Controller\\CurrentUserController::unreadAchievements",

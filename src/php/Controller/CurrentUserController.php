@@ -17,6 +17,7 @@ class CurrentUserController{
     $player = CurrentUserController::isConnected();
     $stats = $player->stats();
     $stats = Database::instance()->arrayMap($stats, 'Name', 'Value');
+    if($stats==null){$stats=array();}
     $success = new Success($stats);
     Response::jsonResponse($success);
   }
@@ -114,12 +115,7 @@ class CurrentUserController{
     }
   }
 
-  public static function updatePlayer() {
-    //  CurrentUserController::isAdmin();
-    //$tmp = $imgpath;
-    //$imgpath = Form::uploadFile("stepImg");
-    //unlink ($tem);
-
+/*  public static function updatePlayer() {
     $data = Form::getFullForm(); //si l'id n'est pas présent, on retourne null
     if(!isset($data["IDPlayer"]) || $data["IDPlayer"]== null ){
       $e = new Error(array("IDPlayer"=>"Id invalide ! Péripéthie invalide"));
@@ -145,15 +141,11 @@ class CurrentUserController{
     $player->update($entries);
     $e = new Success("Joueur modifié !");
     Response::jsonResponse($e);
-  }
+  }*/
 
   public static function updatePseudo(){
     $pseudo = Form::getField('pseudo');
-    $player = Player::connectSession();
-    if(!$player){
-      $e = new Error(array("IDPlayer"=>"Vous n'êtes pas connecté!"));
-      Response::jsonResponse($e);
-    }
+    $player = CurrentUserController::isConnected();
     if(!$pseudo || !Player::validateEntry($pseudo)){
       $e = new Error(array("Pseudo"=>"nouveau pseudo invalide!"));
       Response::jsonResponse($e);
@@ -167,11 +159,7 @@ class CurrentUserController{
   public static function updatePwd(){
     $current_pwd = Form::getField('currentPwd');
     $new_pwd = Form::getField('newPwd');
-    $player = Player::connectSession();
-    if(!$player){
-      $e = new Error(array("IDPlayer"=>"Vous n'êtes pas connecté!"));
-      Response::jsonResponse($e);
-    }
+    $player = CurrentUserController::isConnected();
     $check_pwd = Player::checkPwd($current_pwd, $player->login);
     if(!$check_pwd){
       $e = new Error(array("Pwd"=>"Mot de passe actuel incorrect!"));
@@ -185,6 +173,25 @@ class CurrentUserController{
     $player->update(array("Pwd"=>$hashed_pwd));
     $s = new Success("Password modifié!");
     Response::jsonResponse($s);
+  }
+
+  public static function updateImage(){
+    $imgpath=Form::uploadFile("image");
+    $player = CurrentUserController::isConnected();
+    if(is_object($imgpath)){
+      Response::jsonResponse($imgpath);
+    }
+    else{
+      $oldimg =  $player->imgpath;
+      if($oldimg != '../assets/images/default_image_tiny.png'){
+        try {
+          unlink($oldimg);
+        } catch(Exception $e) { }
+      }
+      $player->update(array("ImgPath"=>$imgpath));
+      $s = new Success("Image modifiée!");
+      Response::jsonResponse($s);
+    }
   }
 
 }

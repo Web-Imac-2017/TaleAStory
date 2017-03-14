@@ -70,6 +70,7 @@ Class Step {
        Database::instance()->delete($table, array("IDCurrentStep"=>$this->id));
        $table = "Choice";
        Database::instance()->delete($table, array("IDStep"=>$this->id));
+       Database::instance()->delete($table, array("IDNextStep"=>$this->id));
        $table = "PastStep";
        Database::instance()->delete($table, array("IDStep"=>$this->id));
        Database::instance()->delete(self::$table, array("IDStep"=>$this->id));

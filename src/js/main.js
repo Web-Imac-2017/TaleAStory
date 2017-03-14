@@ -108,6 +108,26 @@ class Test extends React.Component{
                 console.log(steps[0].IDType);
                 console.log(steps[0].Title);*/
          });
+		Requester.deleteItem(4).then(
+            function(json){
+                console.log(json);
+         });
+		Requester.deleteAchievement(5).then(
+            function(json){
+                console.log(json);
+         });
+		Requester.signOut().then(
+            function(json){
+                console.log(json);
+         });
+		Requester.deletePlayer(6).then(
+            function(json){
+                console.log(json);
+         });
+
+
+
+
 
 		/*
 		let that = this;
