@@ -212,7 +212,7 @@ class Form {
     //on parse les data envoyées
     //var_dump($_FILES);
 
-    if(!isset($_FILES) || !isset($_FILES["$file_input"])){
+    if(empty($_FILES) || !isset($_FILES["$file_input"])){
       $e = new Error("Pas de fichier.");
       return $e;
     }
@@ -233,6 +233,7 @@ class Form {
     $ext = strtolower(pathinfo($_FILES[$file_input]['name'],PATHINFO_EXTENSION));
     do{
       $filename = sprintf('../assets/images/%s.%s',md5(uniqid(microtime(), true)),$ext);
+      $filename = str_replace('\\','',$filename);
     }while(file_exists($filename));
     //Upload
     if (!move_uploaded_file($_FILES["$file_input"]['tmp_name'], $filename))
@@ -241,7 +242,7 @@ class Form {
       return $e;
     }
     //self::createTinyImg($filename);
-    $e = new Success("$filename");
+    $e = new Success(str_replace('\\','',$filename));
     return $e;
   }
 
