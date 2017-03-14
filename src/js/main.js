@@ -87,9 +87,26 @@ class Test extends React.Component{
             function(json){
                 console.log(json);
          });
-		Requester.stepAdd("mySuperBody","mySurperAnswer",0,"mySuperTitle").then(
+		/*Requester.stepAdd("mySuperBody","mySurperAnswer",0,"mySuperTitle").then(
             function(json){
                 console.log(json);
+         });*/
+		Requester.deleteChoice(-1).then(
+            function(json){
+                console.log(json);
+         });
+		Requester.deleteStep(3).then(
+            function(json){
+                console.log(json);
+         });
+		Requester.stepListByTitle("JeSuisUnTitre").then(
+            function(steps){
+                /*console.log(steps[0].IDStep);
+                console.log(steps[0].ImgPath);
+                console.log(steps[0].Body);
+                console.log(steps[0].Question);
+                console.log(steps[0].IDType);
+                console.log(steps[0].Title);*/
          });
 
 		/*
