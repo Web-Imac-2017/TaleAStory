@@ -360,10 +360,10 @@ class StoryComponent extends GameComponent{
     if(this.state.current >= this.childs.length){
       dom.getElementsByClassName('button')[0].style = "display:none";
       dom.getElementsByClassName('button')[1].style = "";
-	  this.updateColor();
+	  //this.updateColor();
     }
     else{
-		if(this.state.current==0){
+		if(this.state.current==1){
 			this.updateColor();
 		}
 		if(webGL.bg_anim != null){
