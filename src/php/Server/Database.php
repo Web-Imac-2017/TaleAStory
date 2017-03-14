@@ -45,7 +45,7 @@ class Database {
         $pdo->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
         $this->pdo = $pdo;
       }
-      catch(Exception $e){
+      catch(PDOException $e){
           die('Erreur : '.$e->getMessage());
       }
     }
@@ -88,16 +88,26 @@ class Database {
     $from = $this->processFROM($tables);
     $where = $this->processWHERE($entries);
     $statement=$select.$from;
-    if($where) {
+    if($where && !is_array($addEndStatement)) {
       $statement .= $where;
+      $array_entries = $this->processArrayEntries($entries);
     }
-    if($addEndStatement) {
+    if($addEndStatement && !is_array($addEndStatement)) {
       $statement .= " ".$addEndStatement;
+    } else if ($addEndStatement && is_array($addEndStatement) && current($addEndStatement) == "IN") {
+      $in = $this->processIN($addEndStatement);
+      $array_entries = $addEndStatement[2];
+      $statement .= $in;
+    } else if ($addEndStatement && is_array($addEndStatement) && current($addEndStatement) == "LIKE") {
+      $like = $this->processLIKE($addEndStatement);
+      $array_entries = array("%".$addEndStatement[2]."%");
+      $statement .= $like;
     }
-    $array_entries = $this->processArrayEntries($entries);
-    //echo $statement;
+    echo $statement;
     return $this->sendQuery($statement, $array_entries);
   }
+
+
 
   /**
    * sendQuery : prépare la query puis l'execute en utilisant un objet \PDO
@@ -111,7 +121,7 @@ class Database {
       $qry = $this->getPDO()->prepare($statement);
       $qry->execute($array_entries) or die(print_r($qry->errorInfo()));
     }
-    catch(Exception $e){
+    catch(PDOException $e){
         die('Erreur : '.$e->getMessage());
         return NULL;
     }
@@ -137,9 +147,8 @@ class Database {
     $insert->execute($entries) or die(print_r($insert->errorInfo()));
     $id = $this->getPDO()->lastInsertId();
     }
-    catch(Exception $e){
-        die('Erreur : '.$e->getMessage());
-        return NULL;
+    catch(PDOException $e){
+        RouterException::send();
     }
     //echo "insert ok";
     return $id;
@@ -171,8 +180,8 @@ class Database {
       $update = $this->getPDO()->prepare($statement);
       $update->execute($array_entries) or die(print_r($update->errorInfo()));
     }
-    catch(Exception $e){
-        die('Erreur : '.$e->getMessage());
+    catch(PDOException $e){
+        throw('Erreur : '.$e->getMessage());
     }
     //echo "update ok";
   }
@@ -196,8 +205,8 @@ class Database {
       $delete = $this->getPDO()->prepare($statement);
       $delete->execute($array_entries) or die(print_r($delete->errorInfo()));
     }
-    catch(Exception $e){
-        die('Erreur : '.$e->getMessage());
+    catch(PDOException $e){
+        RouterException::send();
     }
   }
 
@@ -291,9 +300,9 @@ class Database {
   private function processSELECT($entries) {
     $fields = array_keys($entries);
     $process_select = "SELECT ";
-    foreach ($fields as $field) {
+    foreach ($fields as $key => $field) {
       $process_select .= $field;
-      if($field != end($fields)) {
+      if($key!= key(array_slice($fields, -1, 1, TRUE))) {
         $process_select .=", ";
       }
       if ($field == "*") {
@@ -342,10 +351,9 @@ class Database {
   private function processWHERE($entries) {
     $process_where = " WHERE ";
     $array_entries = $this->processArrayWhere($entries);
-    foreach ($array_entries as $entry) {
-      $field = array_search($entry, $entries);
+    foreach ($array_entries as $field => $entry) {
       $process_where .= $field." = ? ";
-      if($entry != end($array_entries)) {
+      if($field != key(array_slice($array_entries, -1, 1, TRUE))) {
         $process_where .="AND ";
       }
     }
@@ -390,9 +398,9 @@ class Database {
   private function processFields($entries) {
     $fields = array_keys($entries);
     $process_fields = "(";
-    foreach ($fields as $field) {
+    foreach ($fields as $key => $field) {
       $process_fields .= $field;
-      if($field != end($fields)) {
+      if($key!= key(array_slice($fields, -1, 1, TRUE))) {
         $process_fields .=", ";
       }
     }
@@ -403,9 +411,9 @@ class Database {
   private function processValues($entries) {
     $fields = array_keys($entries);
     $process_values = " VALUES(";
-    foreach ($fields as $field) {
+    foreach ($fields as $key => $field) {
       $process_values .= " :".$field;
-      if($field != end($fields)) {
+      if($key!= key(array_slice($fields, -1, 1, TRUE))) {
         $process_values .=", ";
       }
     }
@@ -420,12 +428,29 @@ class Database {
     foreach ($entries as $field => $entry) {
       if($entry !== ""){
         $process_set .= $field." = ?";
-        if($entry != end($entries)) {
+        if($field!= key(array_slice($entries, -1, 1, TRUE))) {
           $process_set .=", ";
         }
       }
     }
     return $process_set;
+  }
+
+  private function processIN($entry) {
+    $process_in = " WHERE ".$entry[1]." IN ( ";
+    foreach($entry[2] as $key => $value){
+      $process_in .= "?";
+      if($key!= key(array_slice($entry[2], -1, 1, TRUE))){
+        $process_in .= ", ";
+      }
+    }
+    $process_in .= " )";
+    return $process_in;
+  }
+
+  private function processLIKE($entry) {
+    $process_in = " WHERE ".$entry[1]." LIKE ?";
+    return $process_in;
   }
 
 
