@@ -15,38 +15,48 @@ class ItemController {
 
   public static function addItem() {
     CurrentUserController::isAdmin();
-
-    $name = Form::getField("Name");
-    //$imgpath = Form::uploadFile("ItemImg");
-    $imgpath="bidon";
-    $brief = Form::getField("Brief");
-    if ($name == NULL || $imgpath == NULL || $brief == NULL){
-      $e = new Error("Tu ne peux pas ajouter cet item !");
+    $isError = false;
+    $imgpath = Form::uploadFile("image");
+    if(is_object($imgpath)){ //error
+      $isError = true;
+      $errors["image"]=$imgpath->message;
+    }
+    else
+      $entries['imgpath'] = $imgpath;
+    $entries['name'] = Form::getField("name");
+    $entries['brief'] = Form::getField("brief");
+    foreach ($entries as $key => $value) {
+      if($value==NULL){
+        $errors[$key]="Champ invalide";
+        $isError = true;
+      }
+      else
+        $errors[$key]="";
+    }
+    if($isError){
+      $e = new Error($errors);
       Response::jsonResponse($e);
     }
     $item = new Item($name, $imgpath, $brief);
     $item = $item->save();
     if($item)
       $e = new Success("L'item a été ajouté.");
-    else{
-      $e = new Error("Tu ne peux pas ajouter cet item !");
-      }
+    else
+      $e = new Error(array("all"=>"Tu ne peux pas ajouter cet item !"));
     Response::jsonResponse($e);
     }
 
   public static function updateItem() {
     CurrentUserController::isAdmin();
-
-    //$tmp = $imgpath;
-    //$imgpath = Form::uploadFile("itemImg");
+    $isError =false;
     $data = Form::getFullForm();
-    if(!isset($data["IDItem"]) || $data["IDItem"]== null ){
-      $e = new Error("Item invalide");
-      Response::jsonResponse($e);
+    if(!isset($data["iditem"]) || $data["iditem"]== null ){
+      $errors["iditem"]="id invalide !";
+      $isError = true;
     }
 
     $entries = array();
-    $fields = array("Name","ImgPath","Brief");
+    $fields = array("name","brief");
     foreach ($fields as $field) {
       if(!isset($data[$field]) || $data[$field]=="") {
         if(substr($field,0,2) != "ID") //les champs ID inchangés (donc initialisés à null dans data) ne doivent pas être précisés dans entries
@@ -55,9 +65,30 @@ class ItemController {
       else {
         $entries[$field]=$data[$field];
       }
+      $errors[$field]="";
     }
-    $item = new Item ($entries["Name"],"bidon",$entries["Brief"]);
-    $item->id = $data["IDItem"];
+    if(!$isError){
+      $imgpath=Form::uploadFile("image");
+      if(is_object($imgpath)){
+        $isError = true;
+        $errors["image"]=$imgpath->message;
+      }
+      else{
+        $entries["imgpath"] = $imgpath;
+        $oldimg =  Item::getItemImg($data["iditem"]);
+        if($oldimg != '../assets/images/default_image_tiny.png'){
+          try {
+            unlink($oldimg);
+          } catch(Exception $e) { }
+        }
+      }
+    }
+    if($isError){
+      $e = new Error($errors);
+      Response::jsonResponse($e);
+    }
+    $item = new Item ($entries["name"],$entries["brief"],$entries["brief"]);
+    $item->id = $data["iditem"];
     $item->update($entries);
     $e = new Success("Item modifié !");
     Response::jsonResponse($e);
@@ -68,17 +99,24 @@ class ItemController {
 
     $id = Form::getField("IDItem");
     if(!$id){
-      $e = new Error("Impossible de supprimer l'item !");
+      $e = new Error(array("iditem"=>"Impossible de supprimer l'item !"));
       Response::jsonResponse($e);
     }
     else{
+      $oldimg =  Item::getItemImg($id);
       $item = new Item("", "", "");
       $item->id = $id;
       $item=$item->delete();
-      if($item)
-        $e = new Success("Item supprimé !");
+      if($item){
+        if($oldimg != '../assets/images/default_image_tiny.png'){
+          try {
+            unlink($oldimg);
+          } catch(Exception $e) { }
+          $e = new Success("Item supprimé !");
+        }
+      }
       else
-        $e = new Error("Impossible de supprimer l'item !");
+        $e = new Error(array("all"=>"Impossible de supprimer l'item !"));
       Response::jsonResponse($e);
     }
   }

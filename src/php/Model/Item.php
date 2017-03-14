@@ -74,6 +74,14 @@ Class Item {
       Database::instance()->update(self::$table, $entries, array("IDItem"=>$this->id));
     }
 
+    static public function getItemImg($id) {
+      $data = Database::instance()->query("Item", array("IDItem"=>$id, "*"=>""));
+      if ($data != NULL) {
+          return $data[0]["ImgPath"];
+      }
+      else return NULL;
+    }
+
   }
 
 ?>
