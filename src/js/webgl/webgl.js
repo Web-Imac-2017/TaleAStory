@@ -327,7 +327,7 @@ let webGL={
 		
 		
 		this.getColor = function(){
-			return bg2.activecol;
+			return bg.activecol;
 		};
 		
 		this.getSounds= function(){

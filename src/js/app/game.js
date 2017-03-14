@@ -25,26 +25,11 @@ class GameComponent extends React.Component{
 		webGL.bg_anim.unMuteAll();
 		document.getElementById('analyser').style = 'width:3%';
 		TweenLite.fromTo(document.getElementById('analyser'), 1.3,{opacity:0},{opacity:1});
-		var links = document.getElementsByTagName("a");
-		var color;
-		color = webGL.bg_anim.getColor();
-		for(var i=0;i<links.length;i++)
-		{
-			if(links[i].href)
-			{
-				TweenLite.to(links[i], 0.5,{color:"rgb("+Math.floor(255*color[0]+30)+","+Math.floor(255*color[1]+30)+","+Math.floor(255*color[2]+30)+")"});
-			}
-		}
-		
-		links = document.getElementsByClassName("progress-bar");
-		for(var i=0;i<links.length;i++)
-		{
-			TweenLite.to(links[i], 0.5,{backgroundColor:"rgb("+Math.floor(255*color[0]+30)+","+Math.floor(255*color[1]+30)+","+Math.floor(255*color[2]+30)+")"});
-		}
 
 		// webGL.bg_anim.getColor();
 
 	}
+	
   }
   componentWillAppear(callback){
     this.componentWillEnter(callback);
@@ -57,6 +42,28 @@ class GameComponent extends React.Component{
   }
   render(){
     return <div className="game-component"></div>
+  }
+  
+  
+  updateColor(){
+	  if(webGL.bg_anim != null){
+		  var links = document.getElementsByTagName("a");
+			var color;
+			color = webGL.bg_anim.getColor();
+			for(var i=0;i<links.length;i++)
+			{
+				if(links[i].href)
+				{
+					TweenLite.to(links[i], 0.5,{color:"rgb("+Math.floor(255*color[0]+30)+","+Math.floor(255*color[1]+30)+","+Math.floor(255*color[2]+30)+")"});
+				}
+			}
+			
+			links = document.getElementsByClassName("progress-bar");
+			for(var i=0;i<links.length;i++)
+			{
+				TweenLite.to(links[i], 0.5,{backgroundColor:"rgb("+Math.floor(255*color[0]+30)+","+Math.floor(255*color[1]+30)+","+Math.floor(255*color[2]+30)+")"});
+			}
+	  }
   }
 }
 
@@ -89,8 +96,9 @@ class Decision extends GameComponent{
 	  dom.getElementsByClassName('skip')[0].style = "display:none";
     }
     else{
-
-
+		if(this.state.current==0){
+			this.updateColor();
+		}
       this.animation = TweenLite.fromTo(this.childs[this.state.current], 2,
                                         {opacity:0},{opacity:1})
                                 .eventCallback("onComplete",this.nextText);
@@ -226,6 +234,9 @@ class EnigmaComponent extends GameComponent{
       dom.getElementsByClassName('form')[0].style = "";
     }
     else{
+		if(this.state.current==0){
+			this.updateColor();
+		}
 		if(webGL.bg_anim != null){
 			webGL.bg_anim.setLandscape(true);
 		 }
@@ -349,8 +360,12 @@ class StoryComponent extends GameComponent{
     if(this.state.current >= this.childs.length){
       dom.getElementsByClassName('button')[0].style = "display:none";
       dom.getElementsByClassName('button')[1].style = "";
+	  //this.updateColor();
     }
     else{
+		if(this.state.current==1){
+			this.updateColor();
+		}
 		if(webGL.bg_anim != null){
 			webGL.bg_anim.setLandscape(true);
 		 }
