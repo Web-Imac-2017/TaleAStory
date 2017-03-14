@@ -138,30 +138,53 @@ class CurrentUserController{
       }
     }
     $player = Player::getPlayer($data["IDPlayer"]);
+    if(!$player){
+      $e = new Error(array("IDPlayer"=>"Id non attribué!"));
+      Response::jsonResponse($e);
+    }
     $player->update($entries);
     $e = new Success("Joueur modifié !");
     Response::jsonResponse($e);
   }
 
   public static function updatePseudo(){
-    $id = Form::getField('IDPlayer');
-    $new_pseudo = $pseudo = Form::getField('pseudo');
-    if(!$id){
-      $e = new Error(array("IDPlayer"=>"Id invalide!"));
+    $pseudo = Form::getField('pseudo');
+    $player = Player::connectSession();
+    if(!$player){
+      $e = new Error(array("IDPlayer"=>"Vous n'êtes pas connecté!"));
       Response::jsonResponse($e);
     }
     if(!$pseudo || !Player::validateEntry($pseudo)){
-      $e = new Error(array("IDPlayer"=>"nouveau pseudo invalide!"));
-      Response::jsonResponse($e);
-    }
-    $player = getPlayer($id);
-    if(!$player){
-      $e = new Error(array("IDPlayer"=>"Id non attribué!"));
+      $e = new Error(array("Pseudo"=>"nouveau pseudo invalide!"));
       Response::jsonResponse($e);
     }
     $player->update(array("Pseudo"=>$pseudo));
-    $e = new Success("Pseudo modifié!");
-    Response::jsonResponse($e);
+    $player->pseudo = $pseudo;
+    $s = new Success("Pseudo modifié!");
+    Response::jsonResponse($s);
+  }
+
+  public static function updatePwd(){
+    $current_pwd = Form::getField('currentPwd');
+    $new_pwd = Form::getField('newPwd');
+    $player = Player::connectSession();
+    if(!$player){
+      $e = new Error(array("IDPlayer"=>"Vous n'êtes pas connecté!"));
+      Response::jsonResponse($e);
+    }
+    $check_pwd = Player::checkPwd($current_pwd, $player->login);
+    if(!$check_pwd){
+      $e = new Error(array("Pwd"=>"Mot de passe actuel incorrect!"));
+      Response::jsonResponse($e);
+    }
+    if(!$new_pwd || !Player::validateEntry($new_pwd)){
+      $e = new Error(array("Pwd"=>"Nouveau mot de passe invalide!"));
+      Response::jsonResponse($e);
+    }
+    $hashed_pwd = $player->setPassword($new_pwd);
+    $player->update(array("Pwd"=>$hashed_pwd));
+    $s = new Success("Password modifié!");
+    Response::jsonResponse($s);
   }
 
 }
