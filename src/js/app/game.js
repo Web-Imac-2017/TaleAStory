@@ -161,6 +161,126 @@ class Decision extends GameComponent{
   }
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+class EnigmaComponent extends GameComponent{
+  constructor(props){
+    super(props);
+    this.state = {
+      current : 0
+    }
+    this.childs = null;
+    this.nextText = this.nextText.bind(this);
+    this.handleSkip = this.handleSkip.bind(this);
+    this.handleNext = this.handleNext.bind(this);
+  }
+
+  componentDidMount(){
+      setTimeout(this.nextText, 1000);
+  }
+
+  nextText(){
+    let dom = ReactDOM.findDOMNode(this);
+    if(this.childs == null)
+      this.childs = dom.getElementsByClassName('enigma-text');
+    if(this.state.current >= this.childs.length){
+      dom.getElementsByClassName('button')[0].style = "display:none";
+      dom.getElementsByClassName('button')[1].style = "";
+    }
+    else{
+		if(webGL.bg_anim != null){
+			webGL.bg_anim.setLandscape(true);
+		 }
+      this.animation = TweenLite.fromTo(this.childs[this.state.current], 2,
+                                        {opacity:0},{opacity:1})
+                                .eventCallback("onComplete",this.nextText);
+      this.setState((prevState, props) => ({
+        current: prevState.current + 1
+      }));
+    }
+  }
+
+  handleSkip(){
+    if(this.childs == null)
+      this.childs = dom.getElementsByClassName('enigma-text');
+    this.state.current = this.childs.length;
+    this.animation.kill();
+    for(let i=0; i<this.childs.length; i++)
+      this.childs[i].style = "opacity: 1";
+    setTimeout(this.nextText, 10);
+  }
+  handleNext(){
+    if(this.props.callback)
+      this.props.callback();
+  }
+
+
+  render(){
+    const texts = this.props.children ?
+                    this.props.children.map((text, index) =>
+                      <p key={index} className="enigma-text" {...text.props}>
+                        {text.props.children}
+                      </p>
+                    ) : null;
+	const imag = this.props.children ?
+                    this.props.children.map((text, index) =>
+                      <img key={index} className="enigma-img" {...text.props} src={text.props.children}/>
+
+                    ) : null;				
+    let superDom = super.render();
+    return <div className="game-wrapper">
+            <div {...superDom.props}>
+			<div className="enigma-left">
+				{imag}
+			</div>
+			<div className="enigma-right">
+				{texts}
+			</div>
+               
+               <button id="skip" className="button small" onClick={this.handleSkip}>
+                 Passer
+               </button>
+               <button id="entrer" className="button small" style={{display:"none"}} onClick={this.handleNext}>
+                 Entrer
+               </button>
+             </div>
+          </div>
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class StoryComponent extends GameComponent{
   constructor(props){
     super(props);
@@ -284,23 +404,24 @@ export default RouteComponent({
   },
   nextStep(){
     //get the next step
-    let component = (<Decision callback={this.nextTransition}>
-                        <p className="text">
-                          Mes yeux sont fermés. Je reste là, couché.
-                           J’aimerais qu’il soit plus tard, avoir plus de temps pour me reposer.
-                           Mais je sens les rayons du soleil contre ma peau.
-                        </p>
-                        <p className="question">
-                          Le vent se lève...
-                        </p>
-                        <p className="answer" onClick={() => 1}>
-                          Encore quelques minutes
-                        </p>
-                        <p className="answer" onClick={() => 2}>
-                          J’ouvre les yeux
-                        </p>
-                      </Decision>);
-    this.setState({currentStep : component, currentStepID : 2, currentStats : [
+     let component = (<EnigmaComponent>
+                          <p className="enigma-text">
+                            Si correcte est la réponse vous passerez sans coup ferrir la salle aux 300 piques. 
+							Si mauvaise est la réponse vous finirez la journée sous forme de pâté sanglant. 
+							Si vous refusez d'écoutez la question, je fermerai la porte de la salle à tout jamais !
+                          </p>
+						  <p className="enigma-text">
+							Vous acceptez les modalités ? Bien.
+						  </p>
+                          <p className="enigma-text">
+                            Si 9 chèvres ont bla bla bla... 
+							Quelle quantité boira chaque chèvre au 7eme jour. Je déconseille de répondre 42.
+                          </p>
+						  <p className="enigma-img">
+								landscape_7.png
+						  </p>
+                        </EnigmaComponent>);
+    this.setState({currentStep : component, currentStepID : 1, currentStats : [
       {label: 'Fatigue', value: 50},
       {label: 'Force', value: 30},
       {label: 'Faim', value: 50}
@@ -329,22 +450,23 @@ export default RouteComponent({
       this.setState({currentStep : component, currentStepID : 2.5});
      }
     else{
-      let component = (<StoryComponent>
-                          <p>
-                            Après quelques hésitations, j’ouvre finalement les yeux.
-                            C’est une belle journée. Je souris en regardant autour de moi.
-                            Je récupère mes affaires et me prépare à partir.
-                            Bizarrement, mon arc est resté armé toute la nuit.
-                            Je devrais faire plus attention à mes armes…
-                            Je le débande et utilise la branche en canne improvisée.
-                             Je noue la corde autour de ma taille à l’aide d’un faux noeud.
-                             Je pourrais donc m’armer facilement en cas de besoin.
+      let component = (<EnigmaComponent>
+                          <p className="story-text">
+                            Si correcte est la réponse vous passerez sans coup ferrir la salle aux 300 piques. 
+							Si mauvaise est la réponse vous finirez la journée sous forme de pâté sanglant. 
+							Si vous refusez d'écoutez la question, je fermerai la porte de la salle à tout jamais !
                           </p>
-                          <p>
-                            Il est temps de partir, le vent se lève. Mon voyage me mène vers l’est, contre le vent.
-                            Parfait pour chasser, les proies ne me sentiront pas venir.
+						  <p className="story-text">
+							Vous acceptez les modalités ? Bien.
+						  </p>
+                          <p className="story-text">
+                            Si 9 chèvres ont bla bla bla... 
+							Quelle quantité boira chaque chèvre au 7eme jour. Je déconseille de répondre 42.
                           </p>
-                        </StoryComponent>);
+						  <p className="img">
+								landscape_7.png
+						  </p>
+                        </EnigmaComponent>);
       this.setState({currentStep : component, currentStepID : 1});
     }
 
