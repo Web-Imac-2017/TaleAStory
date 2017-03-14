@@ -389,7 +389,7 @@ class Requester {
 
 
     // A tester avec un form - il semble que le php n'attend pas un 'form' ?
-    static stepAdd(form){
+    static addStep(form){
       return fetch(config.path('addstep'), {
         method: 'POST',
         body: new FormData(form)
@@ -677,6 +677,22 @@ class Requester {
       );
     }
 
+    // A tester avec un form
+    static addChoice(form){
+      return fetch(config.path('addchoice'), {
+        method: 'POST',
+        body: new FormData(form)
+      }).then(
+        function(response){
+          return response.json();
+        }, Requester.requestError
+      ).then(
+        function(json){
+          return json;
+          //this.context.router.push(config.path('profils/admin/steps/' + json.result.id));
+       }
+      );
+    }
 
 
 
