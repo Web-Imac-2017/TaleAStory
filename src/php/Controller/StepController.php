@@ -31,18 +31,19 @@ class StepController {
 	  Response::jsonResponse($success);
 	}
 	else {
+    $limit = "LIMIT ".$count." OFFSET ".$start;
 		$stepParam = Database::instance()->query("Step", Array("IDStep"=> "",
-															"ImgPath"=>"",
-															"Body"=>"",
-															"Question"=>"",
-															"IDType"=>"",
+                                														"ImgPath"=>"",
+                                														"Body"=>"",
+                                														"Question"=>"",
+                                														"IDType"=>"",
                                                             "Title"=>""),
-														  "LIMIT ".$count." OFFSET ".$start);
+														                                 $limit);
 		$success = new Success($stepParam);
 		Response::jsonResponse($success);
 	}
   }
-  
+
 /*
   public static function getTenStepsList($start) {
 	$start--;
@@ -87,7 +88,7 @@ class StepController {
   public static function stepResponse(){
     $answer = Form::getField("answer");
     $player = Player::connectSession();
-	
+
 	//var_dump($player);
 
     if ($player == NULL) {
@@ -150,7 +151,7 @@ class StepController {
     if($step)
       $e = new Success("La péripéthie a été ajoutée.");
     else
-      $e = new Error("Tu ne peux pas ajouter cette péripéthie !");
+      $e = new Error(array("all"=>"Tu ne peux pas ajouter cette péripéthie !"));
     Response::jsonResponse($e);
   }
 

@@ -88,6 +88,7 @@ class Database {
     $from = $this->processFROM($tables);
     $where = $this->processWHERE($entries);
     $statement=$select.$from;
+    $array_entries = null;
     if($where && !is_array($addEndStatement)) {
       $statement .= $where;
       $array_entries = $this->processArrayEntries($entries);
