@@ -8,7 +8,7 @@ export default RouteComponent({
 	    return {
 			null
 	    };
- 
+
 	},
 
 	handleChange(event) {
@@ -27,12 +27,12 @@ export default RouteComponent({
 	},
 
     render(){
-		return  <div className="homePageRegisterScreen">
+		return  <div className="form-screen homePageRegisterScreen">
 					<div className="content">
 						<div className="block">
 							<h1 className="element pageTitle">Inscription</h1>
 							<form className="element" onSubmit={this.handleSubmit}>
-								<span><input name="username" type="text" placeholder="Nom d'utilisateur" value={this.state.username} onChange={this.handleChange} ref="username" /></span>  
+								<span><input name="username" type="text" placeholder="Nom d'utilisateur" value={this.state.username} onChange={this.handleChange} ref="username" /></span>
 								<span><input name="email" type="text" placeholder="Email" value={this.state.email} onChange={this.handleChange} ref="email" /></span>
 								<span><input name="password" type="password" placeholder="Password" value={this.state.password} onChange={this.handleChange} ref="password" /></span>
 								<span><input name="confirmPassword" type="password" placeholder="Confirmation Password" value={this.state.confirmPassword} onChange={this.handleChange} ref="confirmPassword" /></span>

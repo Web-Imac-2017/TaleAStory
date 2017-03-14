@@ -1,13 +1,12 @@
 import React from 'react';
-import TweenMax from '../greenshock/TweenMax.js';
 import TweenLite from '../greenshock/TweenMax.js';
-//import {Animation} from '../greenshock/TweenMax.js';
 import ReactDOM from 'react-dom'
 import config from '../config';
 import RouteComponent from '../utils/routecomponent';
 import {Link} from 'react-router';
 import Scroll from '../utils/scroll';
 import TransitionGroup from 'react-addons-transition-group';
+import {ProgressBar} from 'react-bootstrap';
 import webGL from '../webgl/webgl.js';
 
 class GameComponent extends React.Component{
@@ -20,8 +19,8 @@ class GameComponent extends React.Component{
     this.animation = TweenLite.fromTo(dom, 1.3,{opacity:0, scale:0},{opacity:1,scale:1})
                               .eventCallback("onComplete", callback);
   }
-  
-  
+
+
   componentWillAppear(callback){
     this.componentWillEnter(callback);
   }
@@ -51,7 +50,7 @@ class Decision extends GameComponent{
       setTimeout((that) => {that.nextText()}, 1700, this);
   }
   nextText(){
-	  
+
     let dom = ReactDOM.findDOMNode(this);
     if(this.childs == null)
       this.childs = dom.getElementsByClassName('story-text');
@@ -63,12 +62,12 @@ class Decision extends GameComponent{
       }
     }
     else{
-	
+
 
       this.animation = TweenLite.fromTo(this.childs[this.state.current], 2,
                                         {opacity:0},{opacity:1})
                                 .eventCallback("onComplete",this.nextText);
-								
+
       this.setState((prevState, props) => ({
         current: prevState.current + 1
       }));
@@ -148,9 +147,11 @@ class StoryComponent extends GameComponent{
     this.handleSkip = this.handleSkip.bind(this);
     this.handleNext = this.handleNext.bind(this);
   }
-  componentWillMount(){
-      setTimeout(this.nextText, 1700);
+
+  componentDidMount(){
+      setTimeout(this.nextText, 1000);
   }
+
   nextText(){
     let dom = ReactDOM.findDOMNode(this);
     if(this.childs == null)
@@ -213,12 +214,16 @@ export default RouteComponent({
   getInitialState(){
 	  // webGL.bg_anim.setLandscape(true);
 	  if(webGL.bg_anim != null){
-		webGL.bg_anim.unMuteAll();
-		
+		    webGL.bg_anim.unMuteAll();
 	  }
 	  TweenLite.fromTo(document.getElementById('analyser'), 1.3,{opacity:0},{opacity:1});
-	
+
     return {
+      currentStats : [
+        {label: 'Fatigue', value: 100},
+        {label: 'Force', value: 10},
+        {label: 'Faim', value: 50}
+      ],
       currentStep : null
     };
   },
@@ -238,7 +243,7 @@ export default RouteComponent({
 				TweenLite.to(links[i], 0.5,{color:"rgb("+Math.floor(255*color[0]+30)+","+Math.floor(255*color[1]+30)+","+Math.floor(255*color[2]+30)+")"});
 			}
 		}
-		
+
 		// webGL.bg_anim.getColor();
 
 	}
@@ -256,9 +261,9 @@ export default RouteComponent({
                       </StoryComponent>);
     this.setState({currentStep : component, currentStepID : 1});
   },
-  
 
-  
+
+
   componentWillUnmount(){
 	  if(webGL.bg_anim != null){
 		  webGL.bg_anim.setLandscape(false);
@@ -287,7 +292,11 @@ export default RouteComponent({
                           J’ouvre les yeux
                         </p>
                       </Decision>);
-    this.setState({currentStep : component, currentStepID : 2});
+    this.setState({currentStep : component, currentStepID : 2, currentStats : [
+      {label: 'Fatigue', value: 50},
+      {label: 'Force', value: 30},
+      {label: 'Faim', value: 50}
+    ]});
   },
   nextTransition(nextStep){
     //get the transition text
@@ -338,10 +347,19 @@ export default RouteComponent({
                       React.cloneElement(this.state.currentStep, {
                         key: this.state.currentStepID
                       }) : null;
+    let statsDisplay = this.state.currentStats.map((stat, index) =>
+      <span key={stat.label}>
+        <h4>{stat.label}</h4>
+        <ProgressBar now={stat.value}/>
+      </span>
+    )
     return  <div className="game-container">
               <TransitionGroup>
                 {this.children}
               </TransitionGroup>
+              <div className="stats">
+                {statsDisplay}
+              </div>
             </div>
   }
 });

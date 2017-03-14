@@ -210,15 +210,13 @@ class Form {
   static public function uploadFile($file_input){
     $whitelist = array('image/jpg', 'image/jpeg','image/png','image/gif','image/bmp');
     //on parse les data envoyées
-    //var_dump($_FILES);
-
-    if(!isset($_FILES) || !isset($_FILES["$file_input"])){
-      $e = new Error("Pas de fichier.");
+    if(empty($_FILES) || !isset($_FILES["$file_input"]) || empty($_FILES[$file_input]['tmp_name'])){
+      $filename = '../assets/images/default_image_tiny.png';
+      $e = $filename;
       return $e;
     }
     //Extension
-    if(empty($_FILES[$file_input]['tmp_name'])
-        || !in_array($_FILES[$file_input]['type'], $whitelist))
+    if(!in_array($_FILES[$file_input]['type'], $whitelist))
       {
         $e = new Error("Mauvaise extension de fichier.");
         return $e;
@@ -233,6 +231,7 @@ class Form {
     $ext = strtolower(pathinfo($_FILES[$file_input]['name'],PATHINFO_EXTENSION));
     do{
       $filename = sprintf('../assets/images/%s.%s',md5(uniqid(microtime(), true)),$ext);
+      $filename = str_replace('\\','',$filename);
     }while(file_exists($filename));
     //Upload
     if (!move_uploaded_file($_FILES["$file_input"]['tmp_name'], $filename))
@@ -241,7 +240,7 @@ class Form {
       return $e;
     }
     //self::createTinyImg($filename);
-    $e = new Success("$filename");
+    $e =$filename;
     return $e;
   }
 
