@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom';
 //import TweenMax from './greenshock/TweenMax.js';
 //import TweenLite from './greenshock/TweenMax.js';
 //import AppRouter from './app/router';
-import webGL from './webgl.js';
+import webGL from './webgl/webgl.js';
 import config from './config';
 import fetch from 'isomorphic-fetch';
 import Promise from 'es6-promise';
@@ -21,7 +21,7 @@ class Test extends React.Component{
 	}
 	componentDidMount(){
 		let that = this;
-		fetch(config.path('step/list/'), {
+		fetch(config.path('/step/list?count=2&start=1'), {
 		                method: 'post',
 		                headers: {
 											'Content-Type' : 'application/json'

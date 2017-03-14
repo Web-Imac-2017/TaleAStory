@@ -3,8 +3,57 @@ import config from '../config';
 import RouteComponent from '../utils/routecomponent';
 import {Link} from 'react-router';
 import Scroll from '../utils/scroll';
+import {User, Guest} from '../model/user';
 import {RightNavigation} from './wrapper';
 import Media from 'react-media';
+import {AppContextTypes} from './app'
+
+class Buttons extends React.Component{
+
+  constructor(props){
+      super(props);
+      this.start = this.start.bind(this);
+      this.guestStart = this.guestStart.bind(this);
+  }
+
+  guestStart(){
+    this.context.setUser(new Guest());
+    this.start();
+  }
+
+  start(){
+    this.context.router.push(config.path('game'));
+  }
+
+  render(){
+    this.user = this.context.user;
+    let buttons;
+    let className = "buttons " + this.props.layout;
+    if(this.user){
+      if(this.user.stepid){
+        buttons = <div className={className}>
+                    <button onClick={this.start} className="element button">Reprendre le jeu</button>
+                    <Link className="element button" to={config.path('sign/up')}>Inscription</Link>
+                  </div>
+      }
+      else{
+        buttons = <div className={className}>
+                      <button onClick={this.start} className="element button">Commencer le jeu</button>
+                      <Link className="element button" to={config.path('sign/up')}>Inscription</Link>
+                  </div>
+      }
+    }
+    else{
+      buttons = <div className={className}>
+                    <button onClick={this.guestStart} className="element button">Faites le test</button>
+                    <Link className="element button" to={config.path('sign/up')}>Inscription</Link>
+                </div>
+    }
+    return buttons;
+  }
+}
+
+Buttons.contextTypes = AppContextTypes;
 
 export default RouteComponent({
   render(){
@@ -20,18 +69,13 @@ export default RouteComponent({
     							<div className="sectionContent rows">
     								<img className="picto element" src={config.imagePath('pictoMountains_large.png')}/>
     								<img className="element" src={config.imagePath('wave_large.png')}/>
-    								<p>Lorem ipsum dolor sit amet consecteur nulla adispisin bacon ipsum jambon fromage poulet rotie. Bon alors ici faut pas trop de text pour le responsive, hein, déso.</p>
+    								<p>Lorem ipsum dolor sit amet consecteur nulla adispisin bacon ipsum jambon fromage poulet rotie.
+                       Bon alors ici faut pas trop de text pour le responsive, hein, déso.</p>
     								<Media query="(max-width: 599px)">
                         {matches => matches ? (
-                          <div className="buttons rows">
-                              <a href="" className="element button">Faites le test</a>
-                              <a href="" className="element button">Inscription</a>
-                          </div>
+                          <Buttons layout="rows"/>
                         ) : (
-                        <div className="buttons cols">
-                            <a href="" className="element button">Faites le test</a>
-                            <Link className="element button" to={config.path('sign/up')}>Inscription</Link>
-                        </div>
+                          <Buttons layout="cols"/>
                         )}
                     </Media>
     							</div>

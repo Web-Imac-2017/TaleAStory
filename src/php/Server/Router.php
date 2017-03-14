@@ -57,12 +57,14 @@ class Router {
   public static function index(){
     $id = Session::getCurrentUser();
     $player = Player::connectSession();
+    $token = Form::generateToken();
     if ($player == NULL){
       $e = (object)array();
     }
     else{
       $e = $player;
     }
+    $e->token = $token;
     Response::generateIndex($e);
   }
 

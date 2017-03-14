@@ -9,7 +9,7 @@ html {
 }
 
 .route-component{
-  width:100%;
+  width:95%;
   height : 100%;
   position: absolute;
   top: 0;
@@ -43,13 +43,13 @@ html, body, #root, #app{
     position: relative;
     width : 100%;
 		overflow-x: hidden;
-		overflow-y: auto;
-		margin-left: 5%;
+		overflow-y: scroll;
+		margin-left: 3.5%;
 		max-height: 100%;
 		height: 100%;
 		.route-component {
-			height: 103%;
-			padding-bottom: 10px;
+			height: 101%;
+      padding: 1% 0;
 		}
   }
 }
@@ -59,8 +59,8 @@ header {
 	width: 100%;
 	padding-left: 5%;
 	padding-right: 5%;
-	padding-top: 3%;
-	height: auto;
+	padding-top: 0%;
+	height: 10%;
 	font-size: 10px;
 	font-family: 'Bjorn';
 	font-weight: lighter;
@@ -99,6 +99,7 @@ header {
 		transition: all 0.25s;
 		border-bottom: 0px solid rgba(255,255,255,0.75);
 		position: relative;
+		color: black;
 	}
 
 	a:hover{
@@ -125,16 +126,27 @@ header {
 		transition : all 0.3s;
 	}
 
-	.profileMenu {
-		width: 250px;
-		display: block;
+	#profilePopup {
+		/*display: none;*/
 		position: absolute;
+		right: -250px;
+		top: 0px;
+		width: 300px;
+		padding-top: 80px;
+		padding-right: 100px;
+		padding-left: 40px;
+		transition : all 0.5s;
+		opacity: 0;
+		height: 250px;
+		z-index: 5;
+	}
+
+	.profileMenu {
 		background-color: rgba(0,0,0,0.50);
-		right: 5%;
-		top: 75px;
 		line-height: 2px;
 		padding: 5px;
-		z-index: 15;
+		margin: auto;
+		position: absolute;
 
 		div {
 			margin: 10px;
@@ -145,6 +157,11 @@ header {
 			height: 20px;
 		}
 	}
+
+	.profileLink {
+		z-index: 10;
+	}
+
 
 }
 
@@ -210,4 +227,102 @@ header {
 
    }
 
+}
+
+
+/* *** Screens - General *** */
+
+.screen {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	height:100vh;
+	color: white;
+
+	a, p {
+		letter-spacing: 4px;
+	}
+
+	.button{
+		padding: 18px 8px;
+		border: 1px solid rgba(255,255,255,0.85);
+		background: rgba(255,255,255,0);
+		display: block;
+		position: relative;
+		color: #fff;
+    @include defaultFont();
+		text-transform: uppercase;
+		font-size: 10px;
+		letter-spacing: 5px;
+		text-decoration: none;
+		margin: 0px 20px 0px 0px;
+		border-bottom: 8px solid transparent;
+		transition : all 0.3s;
+		z-index: 10;
+		border: 1px solid #fff;
+		margin: auto;
+		transition : all 0.3s;
+
+		min-width: 220px;
+		max-width: 350px;
+
+		@media screen and (max-width: $break-small) {
+			padding: 12px 5.5px;
+			font-size: 10px;
+		}
+
+	}
+
+	.button:after{
+		width: 104%;
+		height: 86%;
+		content: '';
+		border: 1px solid #fff;
+		position: absolute;
+		transition : all 0.4s;
+		z-index: -1!important;
+		bottom: 6%;
+		left: -2.25%;
+	}
+
+	.button:before{
+		width: 100%;
+		height: 0%;
+		content: '';
+		background: rgba(255,255,255,0);
+		position: absolute;
+		transition : all 0.4s;
+		z-index: -1!important;
+		bottom: 0;
+		left: 0;
+	}
+
+	.button:hover::before{
+		width: 100%;
+		height: 100%;
+		content: '';
+		background: rgba(255,255,255,0.15);
+		position: absolute;
+		transition : all 0.3s;
+	}
+
+	.button:hover::after{
+		background: rgba(255,255,255,0.15);
+	}
+
+}
+
+.picto {
+	@media screen and (max-width: $break-small) {
+    	width: 50px;
+    }
+	@media screen and (max-width: $break-tiny) {
+    	display: none !important;
+    }
+}
+.wave {
+	@media screen and (max-width: $break-tiny) {
+    	display: none !important;
+    }
 }

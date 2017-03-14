@@ -7,6 +7,9 @@ let config = {
   },
   imagePath : function(path){
     	return this.path('assets/images/' + path);
+  },
+  soundPath : function(path){
+    	return this.path('assets/sounds/' + path);
   }
 };
 
