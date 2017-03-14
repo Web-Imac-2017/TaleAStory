@@ -27,13 +27,13 @@ class ChoiceController {
       else
         $errors[$key]="";
     }
-    $entries['statsalteration'] = Form::getField('statsalteration');
-    if(!empty($entries['statsalteration'])){
-      $errors['statsalteration']=ChoiceController::setStats($entries['statsalteration'],"StatAlteration");
+    $entries['statalteration'] = Form::getField('statalteration');
+    if(!empty($entries['statalteration'])){
+      $errors['statalteration']=ChoiceController::setStats($entries['statalteration'],"StatAlteration");
     }
-    $entries['statsrequierements'] = Form::getField('statsrequierements');
-    if(!empty($entries['statsrequierements'])){
-      $errors['statsrequierements']=ChoiceController::setStats($entries['statsrequierements'],'StatRequierement');
+    $entries['statrequirement'] = Form::getField('statrequirement');
+    if(!empty($entries['statrequirement'])){
+      $errors['statrequirement']=ChoiceController::setStats($entries['statrequirement'],'StatRequierement');
     }
     if($isError){
       $e = new Error($errors);
@@ -105,10 +105,8 @@ class ChoiceController {
         if($value==NULL){
           return "valeur de stat altérée invalide";
         }
-        else {
-          //$insert = Database::insert();
-          if( $insert==null) return "impossible d'ajouter les stats altérées";
-        }
+        else if( Database::instance()->insert($table, $entries[$key])==null)
+          return "impossible d'ajouter les stats altérées";
     }
     return "";
   }

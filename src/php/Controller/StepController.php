@@ -188,8 +188,11 @@ class StepController {
       else{
         $entries["imgpath"] = $imgpath;
         $oldimg =  Step::getStepImg($data["idstep"]);
-        if($oldimg != '../assets/images/default_image_tiny.png')
-          unlink($oldimg);
+        if($oldimg != '../assets/images/default_image_tiny.png'){
+          try {
+            unlink($oldimg);
+          } catch(Exception $e) { }
+        }
       }
     }
     //s'il y a des erreurs on n'update pas et on arrete, maintenant ça suffit hein !
@@ -218,8 +221,10 @@ class StepController {
       $step = $step->delete();
       if($step){
         var_dump($oldimg);
-        if($oldimg != '../assets/images/default_image_tiny.png')
-          unlink($oldimg);
+        if($oldimg != '../assets/images/default_image_tiny.png'){
+          try {
+            unlink($oldimg);
+          } catch(Exception $e) { }
         $e = new Success("Péripéthie supprimée !");
       }
       else
