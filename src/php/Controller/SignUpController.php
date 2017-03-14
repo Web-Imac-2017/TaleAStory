@@ -15,24 +15,9 @@ class SignUpController{
     $mail = Form::getField('mail');
     $pwd = Form::getField('pwd');
     $pseudo = Form::getField('pseudo');
-    if(!$mail || !$pseudo || !$pwd){
-      $e = new Error("Impossible d'ajouter le player - champs manquants");
-      Response::jsonResponse($e);
-    }
     $login = $mail;
     $player = Player::signUp($pseudo, $login, $pwd, $mail);
-    if(!$player){
-      $error = new Error("tu sais pas rentrer ton login trou duc ni ton password d'ailleur... je suppose");
-      Response::jsonResponse($error);
-    } else if(!is_object($player)){
-      if($player == -1){
-        $error = new Error("Login déjà existant");
-        Response::jsonResponse($error);
-      } else if($player == -3){
-        $error = new Error("Format des entrées non conformes");
-        Response::jsonResponse($error);
-      }
-    } else {
+    if (get_class($player)=="Player"){
       //INIT STATS
       $statsQuery = Database::instance()->query("Stat",array("IDStat"=>""));
       $statsQuery = Database::instance()->arrayMap($statsQuery,0,'IDStat');
@@ -49,6 +34,8 @@ class SignUpController{
       $playerData['mail']= $player->mail;
       $success = new Success($playerData);
       Response::jsonResponse($success);
+    } else {
+      Response::jsonResponse($player);
     }
   }
 
