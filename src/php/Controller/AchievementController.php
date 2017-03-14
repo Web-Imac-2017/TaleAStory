@@ -81,6 +81,26 @@ class AchievementController {
     }
   }
 
+  public static function getAchievementList($start, $count) {
+  	$start--;
+  	if ($start < 0) {
+  	  $error = new Error("Variable de départ incorrecte");
+  	  Response::jsonResponse($error);
+  	}
+  	else if ($count <= 0){
+  	  $empty = array();
+  	  $success = new Success($empty);
+  	  Response::jsonResponse($success);
+  	}
+  	else {
+      $limit = "LIMIT ".$count." OFFSET ".$start;
+  		$achievements = Database::instance()->query("Achievement", Array("*"=>""), $limit);
+      $achievements = Database::instance()->dataClean($achievements, true);
+  		$success = new Success($achievements);
+  		Response::jsonResponse($success);
+  	}
+  }
+
 }
 
 ?>

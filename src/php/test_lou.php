@@ -1,11 +1,22 @@
 <?php
 use \Server\Database;
+use \Server\Form;
+use \Model\Item;
+use \Model\Player;
+use \Server\Response;
+use \View\Success;
+use \View\Error;
+use \Controller\AchievementController;
 require_once("Server/Database.php");
+require_once("View/Success.php");
+require_once("View/Error.php");
+require_once("Controller/AchievementController.php");
 
 //$player = Player::signup("Louuuu", "Louuuuu", "Lou", "lou@gmailcom");
+/*
 $in = array("IN", "Login", array("lou", "Dori", "kass"));
 $like = array("LIKE", "Login", "kass");
-$test = Database::instance()->query("Player", array("IDPlayer"=>2, "Mail"=>"", "Login"=>"", "IDCurrentStep"=>2));
+$test = Database::instance()->query("Player", array("IDPlayer"=>"", "Mail"=>"", "Login"=>"", "IDCurrentStep"=>""), GROUP);
 echo "<pre>".var_export($test, true)."</pre>";
 $test = Database::instance()->insert("Player", array("Login"=>"KASS5", "mail"=>"gmalalaletetet"));
 echo "<pre>".var_export($test, true)."</pre>";
@@ -16,7 +27,8 @@ echo "<pre>".var_export($test, true)."</pre>";
 $test = Database::instance()->query("Player", array("IDPlayer"=>2, "Mail"=>"", "Login"=>"", "IDCurrentStep"=>2), $in);
 echo "<pre>".var_export($test, true)."</pre>";
 $test = Database::instance()->query("Player", array("IDPlayer"=>2, "Mail"=>"", "Login"=>"", "IDCurrentStep"=>2), $like);
-
+*/
+$test = AchievementController::getAchievementList(1,4);
 //$player = Player::connect("login","pwd");
 //$test = Database::instance()->query("Player", array("Login"=>"Dori", "IDPlayer"=>""));
 //$test = Database::instance()->arrayMap($test, "Login", "IDPlayer");

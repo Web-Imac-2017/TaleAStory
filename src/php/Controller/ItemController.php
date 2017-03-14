@@ -83,6 +83,26 @@ class ItemController {
     }
   }
 
+  ublic static function getItemList($start, $count) {
+  	$start--;
+  	if ($start < 0) {
+  	  $error = new Error("Variable de départ incorrecte");
+  	  Response::jsonResponse($error);
+  	}
+  	else if ($count <= 0){
+  	  $empty = array();
+  	  $success = new Success($empty);
+  	  Response::jsonResponse($success);
+  	}
+  	else {
+      $limit = "LIMIT ".$count." OFFSET ".$start;
+  		$items = Database::instance()->query("Item", Array("*"=>""), $limit);
+      $items = Database::instance()->dataClean($items, true);
+  		$success = new Success($items);
+  		Response::jsonResponse($success);
+  	}
+  }
+
 }
 
  ?>
