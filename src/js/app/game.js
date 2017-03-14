@@ -78,13 +78,15 @@ class Decision extends GameComponent{
 
     let dom = ReactDOM.findDOMNode(this);
     if(this.childs == null)
-      this.childs = dom.getElementsByClassName('story-text');
+      this.childs = dom.getElementsByClassName('story-step');
     if(this.state.current >= this.childs.length){
-      dom.getElementsByClassName('skip')[0].style = "display:none";
+      
       let childs = dom.getElementsByTagName('button');
       for(let i = 0; i<childs.length; i++){
         TweenLite.fromTo(childs[i], 1, {opacity:0},{opacity:1});
+		childs[i].style="";
       }
+	  dom.getElementsByClassName('skip')[0].style = "display:none";
     }
     else{
 
@@ -103,7 +105,7 @@ class Decision extends GameComponent{
   handleSkip(){
     let dom = ReactDOM.findDOMNode(this);
     if(this.childs == null)
-      this.childs = dom.getElementsByClassName('story-text');
+      this.childs = dom.getElementsByClassName('story-step');
     this.state.current = this.childs.length;
     this.animation.kill();
     for(let i=0; i<this.childs.length;i++){
@@ -123,7 +125,7 @@ class Decision extends GameComponent{
                     this.props.children.map((text, index) => {
                       if(text.props.className == "text")
                       {
-                        return <p key={index} className="story-text">
+                        return <p key={index} className="story-text story-step">
                                 { text.props.children }
                               </p>
                       }
@@ -132,7 +134,7 @@ class Decision extends GameComponent{
                     this.props.children.map((text, index) => {
                       if(text.props.className == "question")
                       {
-                        return <p key={index} className="story-text">
+                        return <p key={index} className="story-text story-step">
                               {text.props.children}
                               </p>
                       }
@@ -141,21 +143,45 @@ class Decision extends GameComponent{
                     this.props.children.map((text, index) => {
                       if(text.props.className == "answer")
                       {
-                        return <button key={index} className="button story-answer"
+                        return <button key={index} className="button story-answer" style={{display:"none"}}
                                       onClick={() => { this.selectAnswer(text.props.onClick());}}>
                                     { text.props.children }
                               </button>
                       }
                     }) : null;
+					
+	const imag = this.props.children ?
+                    this.props.children.map((text, index) =>{
+					  if(text.props.className == "img")
+                      {
+						return <img key={index} className="enigma-img story-step" src={config.imagePath(text.props.children)}/>
+					  }
+					}
+                    ) : null;	
     let superDom = super.render();
     return <div className="game-wrapper">
             <div {...superDom.props}>
-              {texts}
-              {question}
-              {answers}
-              <button id="skip" className="button small skip" onClick={this.handleSkip}>
-                Skip
-              </button>
+			
+			<div className="enigma">
+				<div className="enigma-left">
+					{imag}
+				</div>
+				<div className="enigma-right">
+					{texts}
+					{question}
+				</div>
+			</div>
+			<div className="enigma-bottom" >
+				<button id="skip" className="button small skip" onClick={this.handleSkip}>
+					Passer
+				  </button>
+				   {answers}
+				  
+			</div>
+			
+			
+              
+              
             </div>
           </div>
   }
@@ -192,11 +218,12 @@ class EnigmaComponent extends GameComponent{
 
   nextText(){
     let dom = ReactDOM.findDOMNode(this);
-    if(this.childs == null)
-      this.childs = dom.getElementsByClassName('enigma-text');
+    if(this.childs == null){
+      this.childs = dom.getElementsByClassName('enigma-step');
+	}
     if(this.state.current >= this.childs.length){
       dom.getElementsByClassName('button')[0].style = "display:none";
-      dom.getElementsByClassName('button')[1].style = "";
+      dom.getElementsByClassName('form')[0].style = "";
     }
     else{
 		if(webGL.bg_anim != null){
@@ -213,11 +240,12 @@ class EnigmaComponent extends GameComponent{
 
   handleSkip(){
     if(this.childs == null)
-      this.childs = dom.getElementsByClassName('enigma-text');
+      this.childs = dom.getElementsByClassName('enigma-step');
     this.state.current = this.childs.length;
     this.animation.kill();
     for(let i=0; i<this.childs.length; i++)
       this.childs[i].style = "opacity: 1";
+
     setTimeout(this.nextText, 10);
   }
   handleNext(){
@@ -228,33 +256,50 @@ class EnigmaComponent extends GameComponent{
 
   render(){
     const texts = this.props.children ?
-                    this.props.children.map((text, index) =>
-                      <p key={index} className="enigma-text" {...text.props}>
-                        {text.props.children}
-                      </p>
+                    this.props.children.map((text, index) =>{
+					  if(text.props.className == "enigma-text")
+                      {
+                        return <p key={index} className="enigma-text enigma-step">
+                                { text.props.children }
+                              </p>
+                      }
+
+					}
                     ) : null;
 	const imag = this.props.children ?
-                    this.props.children.map((text, index) =>
-                      <img key={index} className="enigma-img" {...text.props} src={text.props.children}/>
+                    this.props.children.map((text, index) =>{
+					  if(text.props.className == "enigma-img")
+                      {
+						return <img key={index} className="enigma-img enigma-step" src={config.imagePath(text.props.children)}/>
+					  }
+					}
+                    ) : null;	
 
-                    ) : null;				
     let superDom = super.render();
     return <div className="game-wrapper">
             <div {...superDom.props}>
-			<div className="enigma-left">
-				{imag}
+			<div className="enigma">
+				<div className="enigma-left">
+					{imag}
+				</div>
+				<div className="enigma-right">
+					{texts}
+				</div>
 			</div>
-			<div className="enigma-right">
-				{texts}
+			<div className="enigma-bottom" >
+				   <button id="skip" className="button small" onClick={this.handleSkip}>
+					 Passer
+				   </button>
+				   <form className="form enigma-form" style={{display:"none"}}>
+					<span>
+						<input type="text" name="answer" placeholder="Votre réponse"/>
+					</span>
+					<span className="submit">
+						<input type="submit" onClick={this.handleNext} value="Entrer"/>
+					</span>
+				   </form>
 			</div>
-               
-               <button id="skip" className="button small" onClick={this.handleSkip}>
-                 Passer
-               </button>
-               <button id="entrer" className="button small" style={{display:"none"}} onClick={this.handleNext}>
-                 Entrer
-               </button>
-             </div>
+		  </div>
           </div>
   }
 }
@@ -355,6 +400,7 @@ class StoryComponent extends GameComponent{
   }
 }
 
+
 export default RouteComponent({
   getInitialState(){
 	  // webGL.bg_anim.setLandscape(true);
@@ -404,24 +450,23 @@ export default RouteComponent({
   },
   nextStep(){
     //get the next step
-     let component = (<EnigmaComponent>
-                          <p className="enigma-text">
-                            Si correcte est la réponse vous passerez sans coup ferrir la salle aux 300 piques. 
-							Si mauvaise est la réponse vous finirez la journée sous forme de pâté sanglant. 
-							Si vous refusez d'écoutez la question, je fermerai la porte de la salle à tout jamais !
-                          </p>
-						  <p className="enigma-text">
-							Vous acceptez les modalités ? Bien.
-						  </p>
-                          <p className="enigma-text">
-                            Si 9 chèvres ont bla bla bla... 
-							Quelle quantité boira chaque chèvre au 7eme jour. Je déconseille de répondre 42.
-                          </p>
-						  <p className="enigma-img">
-								landscape_7.png
-						  </p>
-                        </EnigmaComponent>);
-    this.setState({currentStep : component, currentStepID : 1, currentStats : [
+    let component = (<Decision callback={this.nextTransition}>
+                        <p className="text">
+                          Mes yeux sont fermés. Je reste là, couché.
+                           J’aimerais qu’il soit plus tard, avoir plus de temps pour me reposer.
+                           Mais je sens les rayons du soleil contre ma peau.
+                        </p>
+                        <p className="question">
+                          Le vent se lève...
+                        </p>
+                        <p className="answer" onClick={() => 1}>
+                          Encore quelques minutes
+                        </p>
+                        <p className="answer" onClick={() => 2}>
+                          J’ouvre les yeux
+                        </p>
+                      </Decision>);
+    this.setState({currentStep : component, currentStepID : 2, currentStats : [
       {label: 'Fatigue', value: 50},
       {label: 'Force', value: 30},
       {label: 'Faim', value: 50}
@@ -446,30 +491,31 @@ export default RouteComponent({
                           <p className="answer" onClick={() => 2}>
                             J’ouvre les yeux
                           </p>
+						  <p className="img">
+                            landscape_7_large.png
+                          </p>
                         </Decision>);
       this.setState({currentStep : component, currentStepID : 2.5});
      }
     else{
-      let component = (<EnigmaComponent>
-                          <p className="story-text">
-                            Si correcte est la réponse vous passerez sans coup ferrir la salle aux 300 piques. 
-							Si mauvaise est la réponse vous finirez la journée sous forme de pâté sanglant. 
-							Si vous refusez d'écoutez la question, je fermerai la porte de la salle à tout jamais !
+      let component = (<StoryComponent>
+                          <p>
+                            Après quelques hésitations, j’ouvre finalement les yeux.
+                            C’est une belle journée. Je souris en regardant autour de moi.
+                            Je récupère mes affaires et me prépare à partir.
+                            Bizarrement, mon arc est resté armé toute la nuit.
+                            Je devrais faire plus attention à mes armes…
+                            Je le débande et utilise la branche en canne improvisée.
+                             Je noue la corde autour de ma taille à l’aide d’un faux noeud.
+                             Je pourrais donc m’armer facilement en cas de besoin.
                           </p>
-						  <p className="story-text">
-							Vous acceptez les modalités ? Bien.
-						  </p>
-                          <p className="story-text">
-                            Si 9 chèvres ont bla bla bla... 
-							Quelle quantité boira chaque chèvre au 7eme jour. Je déconseille de répondre 42.
+                          <p>
+                            Il est temps de partir, le vent se lève. Mon voyage me mène vers l’est, contre le vent.
+                            Parfait pour chasser, les proies ne me sentiront pas venir.
                           </p>
-						  <p className="img">
-								landscape_7.png
-						  </p>
-                        </EnigmaComponent>);
+                        </StoryComponent>);
       this.setState({currentStep : component, currentStepID : 1});
     }
-
   },
 
   render(){
