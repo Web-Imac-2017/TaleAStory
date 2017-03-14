@@ -24,7 +24,7 @@ class CurrentUserController{
   static public function items(){
     $player = CurrentUserController::isConnected();
       $items = $player->items();
-      $items = Database::instance()->dataClean($items, true, array('Brief', 'ImgPath', 'Name', 'quantity'));
+      $items = Database::instance()->dataClean($items, true, array('Brief', 'ImgPath', 'Name', 'quantity', 'IDItem'));
       if($items == NULL){$items = array();}
       $success = new Success($items);
       Response::jsonResponse($success);
@@ -48,7 +48,7 @@ class CurrentUserController{
       if($story == NULL){$story = array();}
       $success = new Success($story);
       Response::jsonResponse($success);
-    
+
   }
 
   static public function currentUser() {
@@ -140,6 +140,27 @@ class CurrentUserController{
     $player = Player::getPlayer($data["IDPlayer"]);
     $player->update($entries);
     $e = new Success("Joueur modifié !");
+    Response::jsonResponse($e);
+  }
+
+  public static function updatePseudo(){
+    $id = Form::getField('IDPlayer');
+    $new_pseudo = $pseudo = Form::getField('pseudo');
+    if(!$id){
+      $e = new Error(array("IDPlayer"=>"Id invalide!"));
+      Response::jsonResponse($e);
+    }
+    if(!$pseudo || !Player::validateEntry($pseudo)){
+      $e = new Error(array("IDPlayer"=>"nouveau pseudo invalide!"));
+      Response::jsonResponse($e);
+    }
+    $player = getPlayer($id);
+    if(!$player){
+      $e = new Error(array("IDPlayer"=>"Id non attribué!"));
+      Response::jsonResponse($e);
+    }
+    $player->update(array("Pseudo"=>$pseudo));
+    $e = new Success("Pseudo modifié!");
     Response::jsonResponse($e);
   }
 

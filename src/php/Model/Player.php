@@ -2,6 +2,8 @@
 namespace Model;
 use \Server\Database;
 use \Server\Session;
+use \View\Error;
+use \View\Success;
 
 const ERR_LOGIN = -1;
 const ERR_PWD = -2;
@@ -46,21 +48,45 @@ class Player {
 
   static public function signUp($pseudo, $login, $pwd, $mail, $imgpath = NULL) {
     //echo "SIGN UP!";
-    if(Player::checkLogin($login)) {return ERR_LOGIN;}
-    else if
-    (
-      !Player::formatMail($mail) ||
-      !Player::formatMail($login) ||
-      !Player::validateEntry($pseudo) ||
-      !Player::validateEntry($pwd)
-    )
-    {return NON_VALID_ENTRY;}
-    else {
+    $nb_error = 0;
+    $error_mssg = array("mail"=>"ok", "pseudo"=>"ok", "pwd"=>"ok", "player"=>"ok");
+    //check function parameters
+    if(!$mail){
+      $error_mssg['mail']="paramètre maquant";
+      $nb_error++;
+    } else if(!Player::formatMail($mail)){
+      $error_mssg['mail']="ce n'est pas une adresse mail valide";
+      $nb_error++;
+    } else if(Player::checkLogin($mail)){
+      $error_mssg['mail']="cet identifiant est déjà utilisé";
+      $nb_error++;
+    }
+    if(!$pwd){
+      $error_mssg['pwd']="paramètre maquant";
+      $nb_error++;
+    } else if(!Player::validateEntry($pwd)){
+      $error_mssg['pwd']="ce n'est pas un password valide";
+      $nb_error++;
+    }
+    if(!$pseudo){
+      $error_mssg['pseudo']="paramètre maquant";
+      $nb_error++;
+    } else if(!Player::validateEntry($pseudo)){
+      $error_mssg['pseudo']="ce n'est pas un pseudo valide";
+      $nb_error++;
+    }
+    if($nb_error!= 0){
+      $error_mssg['player']="les paramètres sont inadaptés, le joueur n'a pas pu être créé";
+      $error = new Error($error_mssg);
+      return $error;
+    } else {
       $player = new Player(0, $pseudo, $login, $pwd, $mail, $imgpath);
       $player->id = $player->save();
       $player->admin = $player->isAdmin();
-      if($player->id == NULL) {
-        return NULL;
+      if($player->id == NULL || $player == NULL) {
+        $error_mssg['player']="inexplicablement, le joueur n'a pas pu être créé";
+        $error = new Error($error_mssg);
+        return $error;
       }
       Session::connectUser($player->id, true, $player->login);
       return $player;

@@ -21,12 +21,11 @@ class MakeGuestController{
       $login++;
     }
     $guest = Player::signup("Guest", strval($login), "Guest", "fake@mail.com", $imgpath = NULL);
-    if(!$guest) {
-      $error = new Error("Oh bah ça n'a pas marché!");
-      Response::jsonResponse($error);
-    } else {
+    if (get_class($guest)=="Player") {
       $success = new Success($guest);
       Response::jsonResponse($success);
+    } else {
+      Response::jsonResponse($guest);
     }
   }
 
