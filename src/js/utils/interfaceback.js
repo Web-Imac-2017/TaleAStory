@@ -269,6 +269,18 @@ class Requester {
             });
     }
 
+/*
+    fetch(config.path('/step/list?count=2&start=1'), {
+                    method: 'post',
+                    headers: {
+                      'Content-Type' : 'application/json'
+                    },
+                    credentials: "same-origin",
+                    body: JSON.stringify({
+                      "nameFilter" : "JeNeSuisPasUnTitre",
+                    })
+                  }
+*/
     // OK mais si dans pastStep le couple existe déjà, hard crash
     /* 
     * _answer est le text de la réponse

@@ -1,16 +1,18 @@
-import React from 'react';
 import RouteComponent from '../utils/routecomponent'
+import React from 'react';
 import config from '../config';
 import {Link} from 'react-router';
+import User from '../model/user'
+import {AppContextTypes} from './app';
 
 export default RouteComponent({
-
+	contextTypes : AppContextTypes,
 	getInitialState() {
 		this.state = [];
 	    return {
 			null
 	    };
- 
+
 	},
 
 	handleChange(event) {
@@ -22,16 +24,18 @@ export default RouteComponent({
 	handleSubmit(event) {
 		event.preventDefault();
 
-		
-
 		if (this.context.requestedPage == null || this.context.requestedPage == undefined ) {
 			this.context.requestedPage = config.path('home');
 		}
 		this.context.router.push(this.context.requestedPage)
+		/*
+		this.context.setUser(new User(1,this.state.login, 'default_tiny.png'));
+		this.context.goRequestedPage();
+		*/
 	},
 
     render(){
-		return  <div className="homePageConnectionScreen">
+		return  <div className="form-screen homePageConnectionScreen">
 					<div className="content">
 						<div className="block">
 							<h1 className="element pageTitle">Connexion</h1>
@@ -44,6 +48,5 @@ export default RouteComponent({
 						</div>
 					</div>
 				</div>
-
     }
 });

@@ -8,8 +8,8 @@ let animationDuration  = 1.22;
 function _animation(animationFunc){
   return (component, callback) => {
     let dom = ReactDOM.findDOMNode(component);
-	 
-	 
+
+
     let anim = animationFunc(dom);
     anim.eventCallback("onComplete",
                       () => { callback();
@@ -21,7 +21,9 @@ function _animation(animationFunc){
 								if(links[i].href)
 								{
 									color = webGL.bg_anim.getColor();
-									TweenLite.to(links[i], 0.5,{color:"rgb("+Math.floor(255*color[0]+30)+","+Math.floor(255*color[1]+30)+","+Math.floor(255*color[2]+30)+")"});
+									TweenLite.to(links[i], 0.5,{color:"rgb("+ Math.floor(255*color[0]+30)+
+                                                        ","+Math.floor(255*color[1]+30) + 
+                                                        ","+Math.floor(255*color[2]+30)+")"});
 								}
 					  }}});
     return anim;

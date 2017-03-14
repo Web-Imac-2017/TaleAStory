@@ -29,7 +29,6 @@ class StepController {
 	  $empty = array();
 	  $success = new Success($empty);
 	  Response::jsonResponse($success);
-
 	}
 	else {
 		$stepParam = Database::instance()->query("Step", Array("IDStep"=> "",
@@ -43,6 +42,7 @@ class StepController {
 		Response::jsonResponse($success);
 	}
   }
+  
 /*
   public static function getTenStepsList($start) {
 	$start--;
@@ -64,6 +64,7 @@ class StepController {
     }
   }
 */
+
   public static function getSteps() {
     $option = Form::getField("nameFilter");
     $stepArray =  Database::instance()->query("Step", Array("Title"=> $option,
@@ -71,8 +72,7 @@ class StepController {
                                                                     "ImgPath"=>"",
                                                                     "Body"=>"",
                                                                     "Question"=>"",
-                                                                    "IDType"=>"",
-                                                                    "Title"=>""));
+                                                                    "IDType"=>""));
     if ($stepArray != null) {
       $success = New Success($stepArray);
       Response::jsonResponse($success);
@@ -82,7 +82,7 @@ class StepController {
       $error = new Error("Aucun step correspondant n'a été trouvé");
       Response::jsonResponse($error);
     }
-}
+  }
 
   public static function stepResponse(){
     $answer = Form::getField("answer");
@@ -118,23 +118,34 @@ class StepController {
 
   public static function addStep() {
     CurrentUserController::isAdmin();
-    $imgpath = Form::uploadFile("ImgPath");
-    if($imgpath->status == "error")
-      Response::jsonResponse($imgpath); //on retourne l'erreur
+    $isError = false;
+    $imgpath = Form::uploadFile("image");
+    if(is_object($imgpath)){ //error
+      $isError = true;
+      $errors["image"]=$imgpath->message;
+    }
     else
-      $entries['imgpath'] = "bidon";
-    $entries['body'] = Form::getField("Body");
-    $entries['question'] = Form::getField("Question");
-    $entries['title'] = Form::getField("Title");
+      $entries['imgpath'] = $imgpath;
+    //var_dump($_POST);
+    $entries['body'] = Form::getField("body");
+    $entries['question'] = Form::getField("question");
+    $entries['title'] = Form::getField("title");
     $entries['accepted'] = 1;
-    $entries['idType'] = intval(Form::getField("IDType"));
+    $entries['idType'] = intval(Form::getField("idtype"));
+    //var_dump($entries);
     foreach ($entries as $key => $value) {
       if($value==NULL){
-        $e = new Error(array("$key"=>"Champs invalide ! Tu ne peux pas ajouter cette péripéthie !"));
-        Response::jsonResponse($e);
+        $errors[$key]="Champ invalide";
+        $isError = true;
       }
+      else
+        $errors[$key]="";
     }
-    $step = new Step($imgpath, $body, $question, $idType,$title);
+    if($isError){
+      $e = new Error($errors);
+      Response::jsonResponse($e);
+    }
+    $step = new Step($entries['imgpath'], $entries['body'], $entries['question'], $entries['idType'],$entries['title']);
     $step = $step->save();
     if($step)
       $e = new Success("La péripéthie a été ajoutée.");
@@ -144,48 +155,72 @@ class StepController {
   }
 
   public static function updateStep() {
-      CurrentUserController::isAdmin();
-    //$tmp = $imgpath;
-    //$imgpath = Form::uploadFile("stepImg");
-    //unlink ($tem);
-
+    CurrentUserController::isAdmin();
+    $isError =false;
     $data = Form::getFullForm(); //si l'id n'est pas présent, on retourne null
-    if(!isset($data["IDStep"]) || $data["IDStep"]== null ){
-      $e = new Error(array("IDStep"=>"Id invalide ! Péripéthie invalide"));
-      Response::jsonResponse($e);
+    //var_dump($data);
+    if(!isset($data["idstep"]) || $data["idstep"]== null ){
+      $errors["idstep"]="ID Invalide";
+      $isError = true;
     }
-
+    //on prepare le tableau $entries pour la requete ("champ"=>"valeur" avec valeur = "" si le champ n'est pas modifié)
     $entries = array();
-    $fields = array("IDStep","ImgPath","Body","Question","IDType","Title");
-    foreach ($fields as $field) {
+    $data_fields = array("idstep","body","question","idtype","title");
+    foreach ($data_fields as $field) {
       if(!isset($data[$field]) || $data[$field]=="") {
-        if(substr($field,0,2) != "ID") //les champs ID inchangés (donc initialisés à null dans data) ne doivent pas être précisés dans entries
+        if(substr($field,0,2) != "id") //les champs ID inchangés (donc initialisés à null dans data) ne doivent pas être précisés dans entries
           $entries[$field]="";
       }
       else {
-        $entries[$field]=$data[$field];
+          $entries[$field]=$data[$field];
+      }
+      $errors[$field]="";
+    }
+    //on essaye d'uploader l'image si besoin et s'il n'y a pas eu d'erreurs avant
+    //var_dump($oldimg);
+    if(!$isError){
+      $imgpath=Form::uploadFile("image");
+      if(is_object($imgpath)){
+        $isError = true;
+        $errors["image"]=$imgpath->message;
+      }
+      else{
+        $entries["imgpath"] = $imgpath;
+        $oldimg =  Step::getStepImg($data["idstep"]);
+        if($oldimg != '../assets/images/default_image_tiny.png')
+          unlink($oldimg);
       }
     }
-    $step = new Step("bidon", $entries["Body"], $entries["Question"],0,$entries["Title"]);
-    $step->id = $entries["IDStep"];
+    //s'il y a des erreurs on n'update pas et on arrete, maintenant ça suffit hein !
+    if($isError){
+      $e = new Error($errors);
+      Response::jsonResponse($e);
+    }
+    $step = new Step($entries["imgpath"], $entries["body"], $entries["question"], 0,$entries["title"]);
+    $step->id = $entries["idstep"];
     $step->update($entries);
     $e = new Success("Péripéthie modifiée !");
     Response::jsonResponse($e);
   }
 
   public static function deleteStep() {
-      CurrentUserController::isAdmin();
-    $id = Form::getField("IDStep");
+    //CurrentUserController::isAdmin();
+    $id = Form::getField("idstep");
     if(!$id){
-      $e = new Error(array("IDStep"=>"Impossible de supprimer la péripéthie !"));
+      $e = new Error(array("idstep"=>"Impossible de supprimer la péripéthie !"));
       Response::jsonResponse($e);
     }
     else{
-      $step = new Step("", "", "", 0,0,"");
+      $oldimg =  Step::getStepImg($id);
+      $step = new Step("", "", "", 0,"");
       $step->id = $id;
       $step = $step->delete();
-      if($step)
+      if($step){
+        var_dump($oldimg);
+        if($oldimg != '../assets/images/default_image_tiny.png')
+          unlink($oldimg);
         $e = new Success("Péripéthie supprimée !");
+      }
       else
         $e = new Error(array("all"=>"Impossible de supprimer la péripéthie !"));
       Response::jsonResponse($e);
