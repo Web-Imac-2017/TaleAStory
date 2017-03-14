@@ -70,6 +70,16 @@ class ChoiceController {
       }
       $errors[$field]="";
     }
+    //STATS LIEES AU CHOIX - updatées si non vide
+    $entries['statalteration'] = Form::getField('statalteration');
+    if(!empty($entries['statalteration'])){
+      $errors['statalteration']=ChoiceController::setStats($entries['statalteration'],"StatAlteration");
+    }
+    $entries['statrequirement'] = Form::getField('statrequirement');
+    if(!empty($entries['statrequirement'])){
+      $errors['statrequirement']=ChoiceController::setStats($entries['statrequirement'],'StatRequierement');
+    }
+    //si erreur, on arrête
     if($isError){
       $e = new Error($errors);
       Response::jsonResponse($e);
