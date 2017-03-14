@@ -2,6 +2,8 @@ import fetch from 'isomorphic-fetch';
 import Promise from 'es6-promise';
 import config from '../config';
 import ReactDOM from 'react-dom';
+import {Achievement} from '../model/achievement'
+import {Item} from '../model/item'
 
 class GlobalBack{
   static get(field){
@@ -29,6 +31,10 @@ export {GlobalBack};
 
 class Requester {
 
+  static requestError(error) {
+
+  }
+
   static currentUser(){
     return fetch(config.path('currentuser/getcurrentuser'), {
               method: 'post',
@@ -40,7 +46,7 @@ class Requester {
           ).then(
             function(response){
               return response.json();
-            }
+            }, Requester.requestError
           ).then(
             function(json){
               return json;
@@ -62,7 +68,7 @@ class Requester {
             ).then(
               function(response){
                 return response.json();
-              }
+              }, Requester.requestError
             ).then(
               function(json){
                 return json;
@@ -86,7 +92,7 @@ class Requester {
             ).then(
               function(response){
                 return response.json();
-              }
+              }, Requester.requestError
             ).then(
               function(json){
                 return json;
@@ -108,7 +114,7 @@ class Requester {
             ).then(
               function(response){
                 return response.json();
-              }
+              }, Requester.requestError
             ).then(
               function(json){
                 return json;
@@ -126,7 +132,7 @@ class Requester {
             ).then(
               function(response){
                 return response.json();
-              }
+              }, Requester.requestError
             ).then(
               function(json){
                 return json;
@@ -144,10 +150,16 @@ class Requester {
             ).then(
               function(response){
                 return response.json();
-              }
+              }, Requester.requestError
             ).then(
               function(json){
-                return json;
+                let obj = JSON.parse(json.message);
+                let items = [];
+                for (let i=0; i<obj.length; i++) {
+                    let it = new Item( obj[i].IDItem, obj[i].Name, obj[i].ImgPath, obj[i].Brief );
+                    items[i] = it;
+                }
+                return items;
             });
     } 
 
@@ -162,7 +174,7 @@ class Requester {
             ).then(
               function(response){
                 return response.json();
-              }
+              }, Requester.requestError
             ).then(
               function(json){
                 return json;
@@ -180,7 +192,7 @@ class Requester {
             ).then(
               function(response){
                 return response.json();
-              }
+              }, Requester.requestError
             ).then(
               function(json){
                 return json;
@@ -198,10 +210,16 @@ class Requester {
             ).then(
               function(response){
                 return response.json();
-              }
+              }, Requester.requestError
             ).then(
               function(json){
-                return json;
+                let obj = JSON.parse(json.message);
+                let achievements = [];
+                for (let i=0; i<obj.length; i++) {
+                    let ach = new Achievement( obj[i].IDPlayer, obj[i].IDAchievement, obj[i].isRead );
+                    achievements[i] = ach;
+                }
+                return achievements;
             });
     } 
 
@@ -216,7 +234,7 @@ class Requester {
             ).then(
               function(response){
                 return response.json();
-              }
+              }, Requester.requestError
             ).then(
               function(json){
                 return json;
@@ -234,7 +252,7 @@ class Requester {
             ).then(
               function(response){
                 return response.json();
-              }
+              }, Requester.requestError
             ).then(
               function(json){
                 return json;
@@ -262,7 +280,7 @@ class Requester {
             ).then(
               function(response){
                 return response.json();
-              }
+              }, Requester.requestError
             ).then(
               function(json){
                 return json;
@@ -299,14 +317,15 @@ class Requester {
             ).then(
               function(response){
                 return response.json();
-              }
+              }, Requester.requestError
             ).then(
               function(json){
                 return json;
             });
     }
 
-    // A tester
+    // En voie d'obsolecence
+    /*
     static stepAdd(body, question, idType, title){
       return fetch(config.path('addstep'), {
                 method: 'post',
@@ -324,11 +343,29 @@ class Requester {
             ).then(
               function(response){
                 return response.json();
-              }
+              }, Requester.requestError
             ).then(
               function(json){
                 return json;
             });
+    }*/
+
+
+    // A tester
+    static stepAdd(form){
+      return fetch(config.path('addstep'), {
+        method: 'POST',
+        body: new FormData(form)
+      }).then(
+        function(response){
+          return response.json();
+        }, Requester.requestError
+      ).then(
+        function(json){
+        console.log(json);
+        this.context.router.push(config.path('profils/admin/steps/' + json.result.id));
+       }
+      );
     }
 
     static test(that){ /* == ancien 'componentDidMount' )*/

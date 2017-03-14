@@ -23,7 +23,6 @@
   "/deleteachievement":"Controller\\AchievementController::deleteAchievement",
   "/updateachievement":"Controller\\AchievementController::updateAchievement",
   "currentuser/unreadachievements":"Controller\\CurrentUserController::unreadAchievements",
-  "currentuser/items":"Controller\\CurrentUserController::items",
   "currentuser/currentstep":"Controller\\CurrentUserController::currentStep",
   "currentuser/story":"Controller\\CurrentUserController::story",
   "currentuser/getcurrentuser":"Controller\\CurrentUserController::currentUser",

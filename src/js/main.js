@@ -45,8 +45,15 @@ class Test extends React.Component{
                 console.log(json);
          });
 		Requester.currentUserItems().then(
-            function(json){
-                console.log(json);
+            function(items){
+                /*console.log(items[0].IDItem);
+                console.log(items[0].Name);
+                console.log(items[0].ImgPath);
+                console.log(items[0].Brief);
+                console.log(items[1].IDItem);
+                console.log(items[1].Name);
+                console.log(items[1].ImgPath);
+                console.log(items[1].Brief);*/
          });
 		Requester.currentUserStep().then(
             function(json){
@@ -57,8 +64,8 @@ class Test extends React.Component{
                 console.log(json);
          });
 		Requester.currentUserAchievements().then(
-            function(json){
-                console.log(json);
+            function(achievements){
+                //console.log(achievements[0].isRead);
          });
 		Requester.currentUserUnreadAchievements().then(
             function(json){
