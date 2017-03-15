@@ -92,7 +92,7 @@ class Player {
         $error = new Error($error_mssg);
         return $error;
       }
-      Session::connectUser($player->id, true, $player->login);
+      Session::connectUser($player->id, false, $player->login);
       return $player;
     }
   }
@@ -115,7 +115,7 @@ class Player {
       //var_dump($player);
       if(!$player){return NULL;}
       $player->admin = $player->isAdmin();
-      Session::connectUser($player->id, true, $player->login);
+      Session::connectUser($player->id, false, $player->login);
       return $player;
     /*} else {
       return NULL;
@@ -150,7 +150,7 @@ class Player {
 
   public function disconnect(){
     Session::disconnectUser();
-    
+
     return NULL;
   }
 

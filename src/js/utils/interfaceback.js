@@ -70,12 +70,10 @@ class Requester {
               }
             ).then(
               function(response){
-                console.log(response);
                 return response.json();
               }, Requester.requestError
             ).then(
               function(json){
-                console.log(result);
                 return json;
             });
     }

@@ -27,6 +27,7 @@ Class Session {
     if(isset($_SESSION["userid"]))
       return $_SESSION["userid"];
     else if (isset($_COOKIE["userid"]) && isset($_COOKIE["hash_id"])){
+        var_dump($_COOKIE);
         $userid = $_COOKIE["userid"];
         $userlogin = Database::instance()->query("Player",array("IDPlayer"=>$userid,"login"=>""));
         if($userlogin)
@@ -66,10 +67,10 @@ Class Session {
     if(isset($_SESSION["userid"]))
       unset($_SESSION["userid"]);
     if (isset($_COOKIE["userid"]) && isset($_COOKIE["hash_id"])){
-      unset($_COOKIE["userid"]);
-      unset($_COOKIE["hash_id"]);
       setcookie('userid',$_COOKIE["userid"],time()-3600,'/');
       setcookie('hashed_id',$_COOKIE["hash_id"],time()-3600,'/');
+      unset($_COOKIE["userid"]);
+      unset($_COOKIE["hash_id"]);
     }
   }
   /*

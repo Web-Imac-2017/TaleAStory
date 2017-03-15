@@ -28,7 +28,6 @@ export default RouteComponent({
 		let that = this;
 		Requester.signIn(this.state.mail, this.state.pwd).then(
 			function(result){
-				console.log(result);
 				if(result.status == "error"){
 					Object.keys(result.message).map(function(key, index) {
 					    var value = result.message[key];
@@ -44,7 +43,8 @@ export default RouteComponent({
 					});
 				}
 				else{
-					that.context.setUser(new User(result.id, result.mail, result.pseudo,result.imgpath,result.isAdmin));
+					result = JSON.parse(result.message);
+					that.context.setUser(new User(result.id, result.mail, result.pseudo,result.imgpath,result.admin!=null));
 					if (that.context.requestedPage == null || that.context.requestedPage == undefined ) {
 						that.context.requestedPage = config.path('home');
 					}

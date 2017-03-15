@@ -17,6 +17,13 @@ class User{
       {label: 'faim', value: 50}
     ];
   }
+
+  updateCurrentStep(){
+    let that = this;
+    return Requester.currentUserStep().then(function(result){
+      that.currentStep = result;
+    });
+  }
 }
 
 class LoggedUser extends User{
@@ -55,7 +62,7 @@ function currentUser(){
 function updateCurrentUser(){
   if(_currentuser == null)
     return currentUser();
-  return fetch(config.path('currentuser'), {
+  return fetch(config.path('currentuser/getcurrentuser'), {
                       method: 'get',
                       headers: {
                           'Accept': 'application/json'
