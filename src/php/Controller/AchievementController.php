@@ -77,6 +77,7 @@ class AchievementController {
         $entries["imgpath"] = $imgpath;
         $oldimg =  Achievement::getAchievementImg($data["idachievement"]);
         if($oldimg != '../assets/images/default_image_tiny.png' && file_exists ($oldimg)){
+          try{
             unlink($oldimg);
           } catch(Exception $e) { }
         }
@@ -106,11 +107,7 @@ class AchievementController {
       $a->id = $id;
       $a=$a->delete();
       if($a){
-<<<<<<< HEAD
         if($oldimg != '../assets/images/default_image_tiny.png' && file_exists ($oldimg)){
-=======
-        if($oldimg != '../assets/images/default_image_tiny.png'){
->>>>>>> da456742cca170791aec8fe21cb622894c59b129
           try {
             unlink($oldimg);
           } catch(Exception $e) { }
@@ -124,6 +121,7 @@ class AchievementController {
   }
 
   public static function getAchievementList($start, $count) {
+    $search = Form::getField('search');
   	$start--;
   	if ($start < 0) {
   	  $error = new Error("Variable de départ incorrecte");
@@ -136,7 +134,13 @@ class AchievementController {
   	}
   	else {
       $limit = "LIMIT ".$count." OFFSET ".$start;
-  		$achievements = Database::instance()->query("Achievement", Array("*"=>""), $limit);
+      if ($search) {
+        $like = array("LIKE","Name",$search);
+        $like2 = array("LIKE","Brief",$search);
+    		$achievements = Database::instance()->query("Achievement", Array("*"=>""), array($like, " OR ", $like2, $limit));
+      } else {
+        $achievements = Database::instance()->query("Achievement", Array("*"=>""), array($limit));
+      }
       $achievements = Database::instance()->dataClean($achievements, true);
   		$success = new Success($achievements);
   		Response::jsonResponse($success);

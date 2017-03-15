@@ -150,6 +150,7 @@ class Player {
 
   public function disconnect(){
     Session::disconnectUser();
+    
     return NULL;
   }
 

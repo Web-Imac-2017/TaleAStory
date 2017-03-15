@@ -66,7 +66,7 @@ Class Step {
     try {
        $table = "AdminWriting";
        Database::instance()->delete($table, array("IDStep"=>$this->id));
-       $table = "Player";
+       /*$table = "Player";
        Database::instance()->delete($table, array("IDCurrentStep"=>$this->id));
        $table = "Choice";
        $c = Choice::getChoiceByStep($this->id);
@@ -82,7 +82,7 @@ Class Step {
          }
        }
        $table = "PastStep";
-       Database::instance()->delete($table, array("IDStep"=>$this->id));
+       Database::instance()->delete($table, array("IDStep"=>$this->id));*/
        Database::instance()->delete(self::$table, array("IDStep"=>$this->id));
 
      }catch (RuntimeException $e) {
