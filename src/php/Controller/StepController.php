@@ -19,7 +19,8 @@ class StepController {
 
   }
 
-  public static function getStepsList($start, $count, $search = 0) {
+  public static function getStepsList($start, $count) {
+  $search = Form::getField('search');
 	$start--;
 	if ($start < 0) {
 	  $error = new Error("Variable de départ incorrecte");

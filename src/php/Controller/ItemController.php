@@ -121,7 +121,8 @@ class ItemController {
     }
   }
 
-  public static function getItemList($start, $count, $search = 0) {
+  public static function getItemList($start, $count) {
+    $search = Form::getField('search');
   	$start--;
   	if ($start < 0) {
   	  $error = new Error("Variable de départ incorrecte");
