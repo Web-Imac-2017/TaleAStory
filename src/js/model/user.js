@@ -1,13 +1,14 @@
 import fetch from 'isomorphic-fetch';
 import Promise from 'es6-promise';
 import config from '../config';
-import {GlobalBack} from '../utils/interfaceback';
+import {GlobalBack, Requester} from '../utils/interfaceback';
 
 
 class User{
-  constructor(id, pseudo, imgpath, isAdmin = false){
+  constructor(id, mail, pseudo, imgpath, isAdmin = false){
     this.id = id;
     this.pseudo = pseudo;
+    this.login = this.mail = mail;
     this.imgpath = imgpath;
     this.isAdmin = isAdmin;
     this.stats = [
@@ -33,29 +34,17 @@ class Guest extends User{
 let _currentuser = null;
 function currentUser(){
   if(_currentuser == null){
-    let id = GlobalBack.get('userID');
+    let id = GlobalBack.get('id');
     if(id){
-      _currentuser = new User(id, GlobalBack.get('userPseudo'),
-                                  GlobalBack.get('userImgPath'),
-                                 GlobalBack.get('isAdmin'));
+      _currentuser = new User(id, GlobalBack.get('pseudo'),
+                                  GlobalBack.get('imgpath'),
+                                 GlobalBack.get('admin'));
       return new Promise((resolve, reject) =>
                         {
                             resolve(_currentuser);
                         });
     }
-    return fetch(config.path('currentuser'), {
-                        method: 'get',
-                        headers: {
-                            'Accept': 'application/json'
-                        }
-                      }
-          ).then(function(response){
-            return _currentuser;
-            //return response.json();
-          }).then(function(json){
-            _currentuser = json;
-            return _currentuser;
-          });
+    return Requester.currentUser();
   }
   else{
     return updateCurrentUser();

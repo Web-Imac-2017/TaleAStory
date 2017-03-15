@@ -27,9 +27,6 @@ class GlobalBack{
 }
 document.globalBack = GlobalBack;
 document._globalBackValues = {};
-export {GlobalBack};
-
-
 class Requester {
 
   static requestError(error) {
@@ -52,7 +49,7 @@ class Requester {
             function(json){
               return json;
           });
-  }  
+  }
 
   static signIn(log, pass){
       return fetch(config.path('signin'), {
@@ -74,9 +71,9 @@ class Requester {
               function(json){
                 return json;
             });
-    } 
+    }
 
-  static signUp(_pseudo, _login, _mail, _pwd){
+  static signUp(_pseudo, _mail, _pwd, _confirmpwd){
       return fetch(config.path('signup'), {
                 method: 'post',
                 headers: {
@@ -85,9 +82,9 @@ class Requester {
                 credentials: "same-origin",
                 body: JSON.stringify({
                   pseudo: _pseudo,
-                  login: _login,
                   mail: _mail,
-                  pwd: _pwd
+                  pwd: _pwd,
+                  confirmpwd: _confirmpwd
                 })
               }
             ).then(
@@ -96,13 +93,11 @@ class Requester {
               }, Requester.requestError
             ).then(
               function(json){
+                if(json.status == "error")
+                  json.message = JSON.parse(json.message);
                 return json;
             });
-    } 
-
-    static signOut(){
-      makeGuest();
-    }  
+    }
 
     static makeGuest(){
       return fetch(config.path('makeguest'), {
@@ -120,7 +115,7 @@ class Requester {
               function(json){
                 return json;
             });
-    } 
+    }
 
     static currentUserStats(){
       return fetch(config.path('currentuser/stats/'), {
@@ -138,7 +133,7 @@ class Requester {
               function(json){
                 return json;
             });
-    } 
+    }
 
     static currentUserItems(){
       return fetch(config.path('currentuser/items/'), {
@@ -162,7 +157,7 @@ class Requester {
                 }
                 return items;
             });
-    } 
+    }
 
     static currentUserStep(){
       return fetch(config.path('currentuser/currentstep/'), {
@@ -180,7 +175,7 @@ class Requester {
               function(json){
                 return json;
             });
-    } 
+    }
 
     static currentUserStory(){
       return fetch(config.path('currentuser/story/'), {
@@ -198,7 +193,7 @@ class Requester {
               function(json){
                 return json;
             });
-    } 
+    }
 
     static currentUserAchievements(){
       return fetch(config.path('currentuser/achievements/'), {
@@ -222,7 +217,7 @@ class Requester {
                 }
                 return achievements;
             });
-    } 
+    }
 
     static currentUserUnreadAchievements(){
       return fetch(config.path('currentuser/unreadachievements/'), {
@@ -240,7 +235,7 @@ class Requester {
               function(json){
                 return json;
             });
-    } 
+    }
 
     static stepCount(){
       return fetch(config.path('step/count/'), {
@@ -258,7 +253,7 @@ class Requester {
               function(json){
                 return json;
             });
-    } 
+    }
 
 
     /* Renvoie une liste de 'count' steps, à partir de la step 'start'.
@@ -337,7 +332,7 @@ class Requester {
                   }
 */
     // OK mais si dans pastStep le couple existe déjà, hard crash
-    /* 
+    /*
     * _answer est le text de la réponse
     */
     static currentStepResponse(_answer){
@@ -424,7 +419,7 @@ class Requester {
               function(json){
                 return json;
             });
-    } 
+    }
 
     // A tester avec un form
     static updateChoice(form){
@@ -563,7 +558,7 @@ class Requester {
               function(json){
                 return json;
             });
-    } 
+    }
 
     // A tester avec un form - il semble que le php n'attend pas un 'form' ?
     static addAchievement(form){
@@ -637,7 +632,7 @@ class Requester {
               function(json){
                 return json;
             });
-    } 
+    }
 
   static deletePlayer(_IDPlayer){
       return fetch(config.path('deleteplayer'), {
@@ -658,7 +653,7 @@ class Requester {
               function(json){
                 return json;
             });
-    } 
+    }
 
     // A tester avec un form
     static updatePlayer(form){
@@ -693,46 +688,8 @@ class Requester {
        }
       );
     }
-
-
-
-
-
-
-
-
-
-    static test(that){ /* == ancien 'componentDidMount' )*/
-      fetch(config.path('connexion'), {
-                method: 'post',
-                headers: {
-                  'Content-Type' : 'application/json'
-                 },
-                credentials: "same-origin",
-                body: JSON.stringify({
-                  yolo : "bonjour",
-                  lol : 5
-                })
-              }
-            ).then(
-              function(response){
-                return response.json();
-              },
-              function(error) {
-                that.setState({ text : error.message});
-              }
-            ).then(
-              function(json){
-                let dom = ReactDOM.findDOMNode(that);
-                dom.innerHTML = JSON.stringify(json);
-                that.setState({ text : JSON.stringify(json)});
-                console.log(json);
-            });
-      }  
-
-
 }
 
 document.requester = Requester;
 document._requesterValues = {};
-export {Requester};
+export {GlobalBack, Requester};

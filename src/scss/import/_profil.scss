@@ -151,10 +151,17 @@
 
 	@media screen and (max-width: $break-medium) {
 		display : block;
-		margin : 6% 0 !important;
+		margin : 4% 0 !important;
 		height : auto;
 		width : 100%;
 		padding : 20px;
+
+		.insideCol .roundProfil{
+			margin: 0 auto 2%;
+		}
+		img.element {
+	    padding: 10px;
+		}
 	}
 }
 
@@ -178,9 +185,9 @@
 		}
 
 		img{
-			padding-left : 10px; 
+			padding-left : 10px;
 			cursor : pointer;
-		} 
+		}
 
 		@media screen and (max-width: $break-medium) {
 			width : 80%;
@@ -191,7 +198,7 @@
 
 	@media screen and (max-width: $break-medium) {
 		display : block;
-		height : auto;
+		height: 120%;
 		width : 100%;
 	}
 

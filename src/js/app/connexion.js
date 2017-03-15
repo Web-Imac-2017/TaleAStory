@@ -3,35 +3,55 @@ import React from 'react';
 import config from '../config';
 import {Link} from 'react-router';
 import User from '../model/user'
+import {Requester} from '../utils/interfaceback'
 import {AppContextTypes} from './app';
 
 export default RouteComponent({
 	contextTypes : AppContextTypes,
 	getInitialState() {
-		this.state = [];
-	    return {
-			null
-	    };
-
+		return {
+			mail : '',
+			pwd : ''
+    };
 	},
 
 	handleChange(event) {
-		const target = event.target;
-		const name = target.name;
-		this.state[name] = target.value;
+		let state = {
+			mail : this.refs.mail.value,
+			pwd : this.refs.pwd.value
+		};
+		this.setState(state);
 	},
 
 	handleSubmit(event) {
 		event.preventDefault();
-
-		if (this.context.requestedPage == null || this.context.requestedPage == undefined ) {
-			this.context.requestedPage = config.path('home');
-		}
-		this.context.router.push(this.context.requestedPage)
-		/*
-		this.context.setUser(new User(1,this.state.login, 'default_tiny.png'));
-		this.context.goRequestedPage();
-		*/
+		let that = this;
+		Requester.signIn(this.state.mail, this.state.pwd).then(
+			function(result){
+				if(result.status == "error"){
+					Object.keys(result.message).map(function(key, index) {
+					    var value = result.message[key];
+							let dom = document.getElementById(key+'-error');
+							if(value != "ok" && dom){
+								dom.classList.remove('empty');
+								dom.innerHTML = value;
+							}
+							else if(dom){
+								dom.classList.add('empty');
+								dom.innerHTML = '';
+							}
+					});
+				}
+				else{
+					that.context.setUser(new User(result.id,result.pseudo,result.imgpath,result.isAdmin));
+					if (that.context.requestedPage == null || that.context.requestedPage == undefined ) {
+						that.context.requestedPage = config.path('home');
+					}
+					that.context.router.push(that.context.requestedPage)
+				}
+			}
+		);
+		return false;
 	},
 
     render(){
@@ -40,8 +60,12 @@ export default RouteComponent({
 						<div className="block">
 							<h1 className="element pageTitle">Connexion</h1>
 							<form className="element" onSubmit={this.handleSubmit}>
-								<span><input name="login" type="text" placeholder="Login" value={this.state.login} onChange={this.handleChange} ref="login" /></span>
-								<span><input name="password" type="password" placeholder="Password" value={this.state.password} onChange={this.handleChange} ref="password" /></span>
+								<p id="mail-error" className="error empty"></p>
+								<span><input name="mail" type="text" placeholder="Login"
+															value={this.state.mail} onChange={this.handleChange} ref="mail" /></span>
+								<p id="pwd-error" className="error empty"></p>
+								<span><input name="pwd" type="password" placeholder="Password"
+															value={this.state.pwd} onChange={this.handleChange} ref="pwd" /></span>
 								<span className="button" ><input className="submit" type="submit" value="Connexion"/></span>
 							</form>
 							<p>Pas encore de compte ?<Link className="link linkAnim" to={config.path('sign/up')}>Inscrivez-vous !</Link></p>

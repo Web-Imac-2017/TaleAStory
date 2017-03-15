@@ -17,7 +17,7 @@ class Player {
   public $mail;
   public $imgpath;
   public $admin;
-  public $defaultImgpath = "../../defaultImg.jpg";
+  public $defaultImgpath = "defaultImg.png";
 
   private function __construct($id, $pseudo, $login, $pwd=NULL, $mail, $imgpath = NULL){
     $this->pseudo = $pseudo;
@@ -46,10 +46,10 @@ class Player {
     else return NULL;
   }
 
-  static public function signUp($pseudo, $login, $pwd, $mail, $imgpath = NULL) {
+  static public function signUp($pseudo, $login, $pwd, $confirm, $mail, $imgpath = NULL) {
     //echo "SIGN UP!";
     $nb_error = 0;
-    $error_mssg = array("mail"=>"ok", "pseudo"=>"ok", "pwd"=>"ok", "player"=>"ok");
+    $error_mssg = array("mail"=>"ok", "pseudo"=>"ok", "pwd"=>"ok", "confirmpwd"=>"ok");
     //check function parameters
     if(!$mail){
       $error_mssg['mail']="paramètre maquant";
@@ -67,7 +67,11 @@ class Player {
     } else if(!Player::validateEntry($pwd)){
       $error_mssg['pwd']="ce n'est pas un password valide";
       $nb_error++;
+    } else if($confirm != $pwd){
+      $error_mssg['confirmpwd']="le mot de passe ne correspond pas à la première saisie";
+      $nb_error++;
     }
+
     if(!$pseudo){
       $error_mssg['pseudo']="paramètre maquant";
       $nb_error++;
@@ -121,7 +125,7 @@ class Player {
   static public function connectSession() {
     $id = Session::getCurrentUser();
     if($id){
-
+      //var_dump($id);
       $playerData = Database::instance()->query("Player", array("IDPlayer"=>$id, "*"=>""));
       $player = new Player(
         $playerData[0]["IDPlayer"],

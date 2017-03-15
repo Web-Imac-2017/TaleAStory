@@ -5,6 +5,7 @@ import {User} from '../model/user';
 import TransitionGroup from 'react-addons-transition-group';
 import Dialog from '../utils/dialog'
 import webGL from '../webgl/webgl.js';
+import {Requester} from '../utils/interfaceback';
 
 let AppInstance = null;
 
@@ -23,7 +24,15 @@ class App extends React.Component{
       setUser : function(user){
         that.setState({'user': user});
       },
+      updateUser : function(){
+        let response = currentUser();
+        response.then(function(user){
+          that.setState({'user': user});
+        });
+      },
       unsetUser : function(){
+        Requester.signOut().then(function(result){
+        });
         that.setState({'user':null});
       },
       goRequestedPage : function(){
@@ -82,7 +91,6 @@ class App extends React.Component{
 				TweenLite.to(links[i], 0.5,{backgroundColor:"rgb("+Math.floor(255*color[0]+30)+","+Math.floor(255*color[1]+30)+","+Math.floor(255*color[2]+30)+")"});
 			}
 	  }
-	  console.log("test");
   }
 
   getChildContext() {
@@ -111,6 +119,7 @@ App.childContextTypes = {
   user: React.PropTypes.objectOf(User),
   dialog : React.PropTypes.func,
   setUser: React.PropTypes.func,
+  updateUser : React.PropTypes.func,
   requestPage : React.PropTypes.func,
   goRequestedPage : React.PropTypes.func,
   requestedPage : React.PropTypes.string,

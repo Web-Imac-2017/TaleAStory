@@ -55,7 +55,7 @@ export default RouteComponent({
     }).then(function(response){
       return response.json()
     }).then(function(json){
-      console.log(json);
+
       this.context.router.push(config.path('profils/admin/steps/' + json.result.id));
     });
 

@@ -14,9 +14,10 @@ class SignUpController{
   static public function signUp(){
     $mail = Form::getField('mail');
     $pwd = Form::getField('pwd');
+    $confirm = Form::getField('confirmpwd');
     $pseudo = Form::getField('pseudo');
     $login = $mail;
-    $player = Player::signUp($pseudo, $login, $pwd, $mail);
+    $player = Player::signUp($pseudo, $login, $pwd, $confirm, $mail);
     if (get_class($player)=="Player"){
       //INIT STATS
       $statsQuery = Database::instance()->query("Stat",array("IDStat"=>""));
@@ -26,9 +27,9 @@ class SignUpController{
         $stats[$s]=0;
       }
       $player->alterStats($stats);
-
+      \Server\Session::connectUser($player->id, false, $player->mail);
       $playerData = array();
-      //$playerData['id']= $player->id;
+      $playerData['id']= $player->id;
       $playerData['pseudo']= $player->pseudo;
       $playerData['imgpath']= $player->imgpath;
       $playerData['mail']= $player->mail;

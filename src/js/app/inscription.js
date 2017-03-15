@@ -1,29 +1,62 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import RouteComponent from '../utils/routecomponent';
+import {Requester} from '../utils/interfaceback'
+import config from '../config';
+import {AppContextTypes} from './app'
+import User from '../model/user';
 
 export default RouteComponent({
-
+	contextTypes : AppContextTypes,
 	getInitialState() {
-		this.state = [];
-	    return {
-			null
-	    };
+    return {
+			pseudo : '',
+			mail : '',
+			pwd : '',
+			confirmpwd : ''
+    };
 
 	},
 
 	handleChange(event) {
-		const target = event.target;
-		const name = target.name;
-		this.state[name] = target.value;
+		let state = {
+			pseudo : this.refs.pseudo.value,
+			mail : this.refs.mail.value,
+			pwd : this.refs.pwd.value,
+			confirmpwd : this.refs.confirmpwd.value
+		};
+		this.setState(state);
 	},
 
 	handleSubmit(event) {
-		/* alert(this.state.login + '-' + this.state.password ); */
 		event.preventDefault();
-		if (this.context.requestedPage == null || this.context.requestedPage == undefined ) {
-			this.context.requestedPage = config.path('home');
-		}
-		this.context.router.push(this.context.requestedPage)
+		let that = this;
+		Requester.signUp(this.state.pseudo, this.state.mail, this.state.pwd, this.state.confirmpwd).then(
+			function(result){
+				if(result.status == "error"){
+					Object.keys(result.message).map(function(key, index) {
+					    var value = result.message[key];
+							let dom = document.getElementById(key+'-error');
+							if(value != "ok" && dom){
+								dom.classList.remove('empty');
+								dom.innerHTML = value;
+							}
+							else if(dom){
+								dom.classList.add('empty');
+								dom.innerHTML = '';
+							}
+					});
+				}
+				else{
+					that.context.setUser(new User(result.id,result.pseudo,result.imgpath,result.isAdmin));
+					if (that.context.requestedPage == null || that.context.requestedPage == undefined ) {
+						that.context.requestedPage = config.path('home');
+					}
+					that.context.router.push(that.context.requestedPage)
+				}
+			}
+		);
+		return false;
 	},
 
     render(){
@@ -32,10 +65,18 @@ export default RouteComponent({
 						<div className="block">
 							<h1 className="element pageTitle">Inscription</h1>
 							<form className="element" onSubmit={this.handleSubmit}>
-								<span><input name="username" type="text" placeholder="Nom d'utilisateur" value={this.state.username} onChange={this.handleChange} ref="username" /></span>
-								<span><input name="email" type="text" placeholder="Email" value={this.state.email} onChange={this.handleChange} ref="email" /></span>
-								<span><input name="password" type="password" placeholder="Password" value={this.state.password} onChange={this.handleChange} ref="password" /></span>
-								<span><input name="confirmPassword" type="password" placeholder="Confirmation Password" value={this.state.confirmPassword} onChange={this.handleChange} ref="confirmPassword" /></span>
+								<p id="mail-error" className="error empty"></p>
+								<span><input name="mail" type="text" placeholder="Email"
+															value={this.state.mail} onChange={this.handleChange} ref="mail" /></span>
+								<p id="pseudo-error" className="error empty"></p>
+								<span><input name="pseudo" type="text" placeholder="Pseudo utilisateur"
+															value={this.state.pseudo} onChange={this.handleChange} ref="pseudo" /></span>
+								<p id="pwd-error" className="error empty"></p>
+								<span><input name="pwd" type="password" placeholder="Mot de passe"
+															value={this.state.pwd} onChange={this.handleChange} ref="pwd" /></span>
+								<p id="mail-confirmpwd" className="error empty"></p>
+								<span><input name="confirmpwd" type="password" placeholder="Confirmation mot de passe"
+									 						value={this.state.confirmpwd} onChange={this.handleChange} ref="confirmpwd" /></span>
 								<span className="button" ><input className="submit" type="submit" value="Inscription"/></span>
 							</form>
 						</div>

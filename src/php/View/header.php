@@ -6,7 +6,7 @@
   <link rel="stylesheet" type="text/css" href="<?= \Server\Router::$webRoot ?>assets/css/main.min.css">
   <script type="text/javascript" src= "<?= \Server\Router::$webRoot ?>assets/js/main.min.js"></script>
   <script type="text/javascript">
-    document.globalBack.setObject(<?= json_encode($param) ?>);//$param contient les infos de l'utilisateur courant
+    document.globalBack.setObject(<?= json_encode($param) ?>);
     document.globalBack.set('webRoot', '<?= \Server\Router::$webRoot ?>');
   </script>
 </head>

@@ -52,10 +52,10 @@ AppRouter =
             <IndexRedirect to={config.path('profils/account')} />
             <Route path='account' component={Account} index={1}/>
             <Route path='trophy' component={Trophy} index={2}/>
-            <Route path='admin/steps(/:stepid)'component={Steps} index={4}/>,
-            <Route path='admin/achievements' component={Achievements} index={5}/>,
-            <Route path='admin/items' component={Items} index={6}/>,
-            <Route path='admin/choices' component={Choices} index={7}/>
+            <Route path='admin/steps(/:stepid)'component={Steps} index={4} admin='true'/>,
+            <Route path='admin/achievements' component={Achievements} index={5} admin='true'/>,
+            <Route path='admin/items' component={Items} index={6} admin='true'/>,
+            <Route path='admin/choices' component={Choices} index={7} admin='true'/>
           </Route>
           <Route path='admin' index={1} className="screen">
             <IndexRedirect to={config.path('profils/admin/steps')} />

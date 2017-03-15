@@ -117,7 +117,6 @@ class ItemNav extends React.Component{
   }
 
   resizeHandle(){
-    console.log(this.stepCount);
     this.setState({count: this.stepCount()});
   }
 

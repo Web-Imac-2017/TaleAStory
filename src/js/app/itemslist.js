@@ -15,7 +15,6 @@ let StepsList = RouteComponent(Object.assign({}, EditList, {
     this.context.router.push(config.path('edit/item/'+item.id));
   },
   removeItem(item){
-    console.log(item);
   },
   addItem(){
     this.context.router.push(config.path('edit/item'));

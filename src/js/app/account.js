@@ -4,15 +4,16 @@ import {Link} from 'react-router';
 import config from '../config';
 
 export default RouteComponent({
+  contextTypes : {user: React.PropTypes.objectOf(User)},
   render(){
     return  <div>
               <div className="columnsContainer">
                 <div className="content contentProfil">
                   <div className="contentRight">
                   	<div className="insideContent">
-                      <p>Email :<span>marcel.patullaci@gmail.com</span></p>
+                      <p>Email :<span>{this.context.user.mail}</span></p>
                   		<p>Pseudo :
-                        <span>Marcel Patullacci</span>
+                        <span>this.context.user.pseudo}</span>
                         <img className="editElement" src={config.imagePath('pen_large.png')}/>
                       </p>
                   		<p>Changer de mot de passe

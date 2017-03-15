@@ -1,0 +1,12 @@
+p.error{
+  color:red;
+  height: auto;
+  font-size: 11pt;
+  transition: ease-in 0.75s;
+}
+
+p.error.empty{
+  height: 0;
+  font-size: 0;
+  transition: ease-in 0.5s;
+}

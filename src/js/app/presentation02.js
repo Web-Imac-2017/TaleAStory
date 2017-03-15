@@ -81,7 +81,6 @@ export default RouteComponent({
     							</div>
     						</div>
               </div>
-              <Scroll/>
             </div>
   }
 });

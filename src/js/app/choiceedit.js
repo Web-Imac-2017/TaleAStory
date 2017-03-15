@@ -48,7 +48,6 @@ export default RouteComponent({
     }).then(function(response){
       return response.json()
     }).then(function(json){
-      console.log(json);
       this.context.router.push(config.path('profils/admin/steps/' + json.result.id));
     });
 
@@ -61,10 +60,8 @@ export default RouteComponent({
     this.context.router.push(config.path('profils/admin/steps'));
   },
   setStartStep(){
-    console.log(this.state.selectedItem);
   },
   setEndStep(){
-    console.log(this.state.selectedItem);
   },
   loadSteps(offset, count){
     let steps = [];
@@ -73,7 +70,6 @@ export default RouteComponent({
     return steps;
   },
   selectHandler(item){
-    console.log(item);
     this.setState({selectedItem:item});
   },
   cancelDialog(){

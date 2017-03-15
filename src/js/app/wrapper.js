@@ -63,6 +63,20 @@ let WrapperSpec = {
         this.childs = this.childs.concat(this.props.route.indexRoute);
       else
         this.childs = [this.props.route.indexRoute];
+    if(this.context.user){
+      if(!this.context.user.isAdmin){
+        for(let i=0; i<this.childs.length;){
+          if(this.childs[i].admin)
+          {
+            this.childs.splice(i,1);
+          }
+          else {
+            i++;
+          }
+        }
+        console.log(this.childs);
+      }
+    }
   },
   findNext : function(){
     this.updateChilds();
@@ -115,7 +129,7 @@ let WrapperSpec = {
   },
 
   componentWillUnmount : function(){
-    this.scrollListener.removeScrollEndHandler('transition-scroll', that.handleScroll);
+    this.scrollListener.removeScrollEndHandler('transition-scroll', this.handleScroll);
   },
 
   shouldComponentUpdate : function(nextProps, nextState, nextContext){
@@ -145,8 +159,7 @@ let WrapperSpec = {
     let scrollMax = dom.getElementsByClassName('route-component')[0].clientHeight - dom.clientHeight;
     if(!this.scroll){
       let scrollTop = dom.scrollTop;
-      console.log(scrollTop);
-      if(scrollTop<=1){
+      if(scrollTop<=0){
         if(this.previous){
           this.scroll = true;
           let path = '';
@@ -155,12 +168,12 @@ let WrapperSpec = {
             path += this.props.routes[i].path + '/';
           }
           path = path + (this.previous.path ? this.previous.path : '');
-          path = path.replace('//','/').replace(/\(.*\)/,'');
+          path = path.replace('//','/').replace(/\(.w*\)/,'');
           this.context.router.push(path);
           return;
         }
       }
-      else if(scrollTop>=scrollMax-1){
+      else if(scrollTop>=scrollMax){
         if(this.next){
           this.scroll = true;
           let path = '';

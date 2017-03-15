@@ -64,9 +64,34 @@ a {
 #app .caca.mediaBlock{
 
 	@media screen and (max-width: $break-medium) {
-		display: block;
+		display: flex;
+    flex-direction: column;
 		margin : 0 auto;
 		width : 80%;
+
+    .colGauche{
+      margin-bottom: 3% !important;
+      margin-top: 1% !important;
+      padding: 10px;
+      height: 55%;
+      .insideCol img.element {
+         display: block;
+         margin: 0 auto;
+         padding: 10px;
+      }
+
+      .insideCol {
+        ul{
+          display: flex;
+          flex-direction: column;
+          flex-wrap: wrap;
+          height: 33%;
+        }
+      }
+    }
+    .scroller {
+      height: 35%;
+    }
 	}
 }
 

@@ -24,7 +24,7 @@ export default RouteComponent({
     							</div>
     						</div>
               </div>
-              <Scroll/>
+              <Scroll next={config.path('home/brief2')}/>
             </div>
   }
 });
