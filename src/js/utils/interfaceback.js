@@ -387,12 +387,18 @@ class Requester {
             });
     }*/
 
-
-    // A tester avec un form - il semble que le php n'attend pas un 'form' ?
-    static addStep(form){
+/*
+    // A tester avec un form
+    static addStep(image, body, zerty){
       return fetch(config.path('addstep'), {
         method: 'POST',
-        body: new FormData(form)
+        body: new FormData(form),
+              JSON.stringify({
+                body: _body,
+                IDChoice: _IDChoice,
+                IDChoice: _IDChoice,
+                IDChoice: _IDChoice
+              })
       }).then(
         function(response){
           return response.json();
@@ -404,6 +410,21 @@ class Requester {
        }
       );
     }
+*/
+    function sendData(url, data) {
+    var formData  = new FormData();
+
+    for(name in data) {
+      formData.append(name, data[name]);
+    }
+
+    fetch(url, {
+      method: 'POST',
+      body: formData
+    });
+  }
+
+
 
   static deleteChoice(_IDChoice){
       return fetch(config.path('deletechoice'), {
@@ -441,28 +462,6 @@ class Requester {
           //this.context.router.push(config.path('profils/admin/steps/' + json.result.id));
        }
       );
-    }
-
-  // hard crash
-  static deleteStep(_idstep){
-      return fetch(config.path('deletestep'), {
-                method: 'post',
-                headers: {
-                  'Content-Type' : 'application/json'
-                 },
-                credentials: "same-origin",
-                body: JSON.stringify({
-                  idstep: _idstep
-                })
-              }
-            ).then(
-              function(response){
-                return response.json();
-              }, Requester.requestError
-            ).then(
-              function(json){
-                return json;
-            });
     }
 
     // A tester avec un form
@@ -509,7 +508,7 @@ class Requester {
             });
     }
 
-    // A tester avec un form - Pas fini côté php
+    // A tester avec un form
     static addItem(form){
       return fetch(config.path('additem'), {
         method: 'POST',
@@ -603,7 +602,7 @@ class Requester {
             });
     }
 
-    // A tester avec un form - Pas fini côté php
+    // A tester avec un form
     static updateAchievement(form){
       return fetch(config.path('updateachievement'), {
         method: 'POST',
@@ -661,23 +660,6 @@ class Requester {
     } 
 
     // A tester avec un form
-    static updatePlayer(form){
-      return fetch(config.path('updateplayer'), {
-        method: 'POST',
-        body: new FormData(form)
-      }).then(
-        function(response){
-          return response.json();
-        }, Requester.requestError
-      ).then(
-        function(json){
-          return json;
-          //this.context.router.push(config.path('profils/admin/steps/' + json.result.id));
-       }
-      );
-    }
-
-    // A tester avec un form
     static addChoice(form){
       return fetch(config.path('addchoice'), {
         method: 'POST',
@@ -693,6 +675,70 @@ class Requester {
        }
       );
     }
+
+    static updatePlayerPseudo(newPseudo){
+      return fetch(config.path('updateplayerpseudo'), {
+                method: 'post',
+                headers: {
+                  'Content-Type' : 'application/json'
+                 },
+                credentials: "same-origin",
+                body: JSON.stringify({
+                  pseudo: newPseudo
+                })
+      }).then(
+        function(response){
+          return response.json();
+        }, Requester.requestError
+      ).then(
+        function(json){
+          return json;
+       }
+      );
+    }
+
+    static updatePlayerPass(_currentPwd, _newPwd){
+      return fetch(config.path('updateplayerpwd'), {
+                method: 'post',
+                headers: {
+                  'Content-Type' : 'application/json'
+                 },
+                credentials: "same-origin",
+                body: JSON.stringify({
+                  currentPwd: _currentPwd,
+                  newPwd: _newPwd
+                })
+      }).then(
+        function(response){
+          return response.json();
+        }, Requester.requestError
+      ).then(
+        function(json){
+          return json;
+       }
+      );
+    }
+
+    static updatePlayerImage(image){
+      return fetch(config.path('updateplayerpwd'), {
+                method: 'post',
+                headers: {
+                  'Content-Type' : 'application/json'
+                 },
+                credentials: "same-origin",
+                body: new FormData(image)
+      }).then(
+        function(response){
+          return response.json();
+        }, Requester.requestError
+      ).then(
+        function(json){
+          return json;
+       }
+      );
+    }
+
+
 
 
 

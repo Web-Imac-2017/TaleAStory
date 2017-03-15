@@ -8,7 +8,6 @@
   "/deletechoice":"Controller\\ChoiceController::deleteChoice",
   "/updatechoice":"Controller\\ChoiceController::updateChoice",
   "/addstep":"Controller\\StepController::addStep",
-  "/deletestep":"Controller\\StepController::deleteStep",
   "/updatestep":"Controller\\StepController::updateStep",
   "/step/list/:start/:count":"Controller\\StepController::getStepsList",
   "step/count/":"Controller\\StepController::stepCount",
@@ -30,5 +29,7 @@
   "/signup":"Controller\\SignUpController::signUp",
   "/signout":"Controller\\SignOutController::signOut",
   "/deleteplayer":"Controller\\CurrentUserController::deletePlayer",
-  "/updateplayer":"Controller\\CurrentUserController::updatePlayer"
+  "/updateplayerpseudo":"Controller\\CurrentUserController::updatePseudo",
+  "/updateplayerpwd":"Controller\\CurrentUserController::updatePwd",
+  "/updateplayerimage":"Controller\\CurrentUserController::updateImage"
 }

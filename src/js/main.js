@@ -95,10 +95,6 @@ class Test extends React.Component{
             function(json){
                 console.log(json);
          });
-		Requester.deleteStep(3).then(
-            function(json){
-                console.log(json);
-         });
 		Requester.stepListByTitle("JeSuisUnTitre").then(
             function(steps){
                 /*console.log(steps[0].IDStep);
@@ -121,6 +117,14 @@ class Test extends React.Component{
                 console.log(json);
          });
 		Requester.deletePlayer(6).then(
+            function(json){
+                console.log(json);
+         });
+		/*Requester.updatePlayerPseudo("BABAR_LE_MAGNIFIQUE").then(
+            function(json){
+                console.log(json);
+         });*/
+		Requester.updatePlayerPass("newPassWord", "inconnus").then(
             function(json){
                 console.log(json);
          });
