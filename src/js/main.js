@@ -67,6 +67,10 @@ class Test extends React.Component{
             function(achievements){
                 //console.log(achievements[0].isRead);
          });
+		Requester.currentUserAchievements("enigma").then(
+            function(achievements){
+                //console.log(achievements[0].isRead);
+         });
 		Requester.currentUserUnreadAchievements().then(
             function(json){
                 console.log(json);

@@ -13,7 +13,7 @@ try {
   Session::setSession();
   Router::init();
   Router::setRoutes("Server/Routes.json");
-  $_SESSION["userid"] = 2; //3 est un admin
+  $_SESSION["userid"] = 3; //3 est un admin
   Router::run();
 } catch (RouterException $error) {
   $error->send();
