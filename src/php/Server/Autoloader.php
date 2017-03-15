@@ -1,5 +1,5 @@
 <?php
-
+namespace Server;
 class Autoloader{
     static function register(){
         spl_autoload_register(array(__CLASS__, 'autoload'));
@@ -14,7 +14,7 @@ class Autoloader{
      $className = array_pop($parts);
      $path = implode(DS, $parts);
      $file = $className.'.php';
-     $filepath = ROOT.strtolower($path).DS.$file;
+     $filepath = ROOT.$path.DS.$file;
      require_once ($filepath);
     }
 }

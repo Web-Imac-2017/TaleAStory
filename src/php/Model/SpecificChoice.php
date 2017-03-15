@@ -1,6 +1,6 @@
 <?php
-require_once 'Choice.php';
-require_once 'Response.php';
+namespace Model;
+
 
 class SpecificChoice extends Choice {
 

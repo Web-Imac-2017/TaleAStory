@@ -1,4 +1,7 @@
 <?php
+namespace Model;
+
+use \Server\Database;
 
 Class Item {
   public $id;
@@ -21,9 +24,9 @@ Class Item {
 
   public function save() {
     $entries = array(
-      'name' => $this->name,
-      'imgpath' => $this->imgpath,
-      'brief' => $this->brief
+      'Name' => $this->name,
+      'ImgPath' => $this->imgpath,
+      'Brief' => $this->brief
     );
     $id=Database::instance()->insert(self::$table, $entries);
     if($id != null){
@@ -54,7 +57,7 @@ Class Item {
         Database::instance()->delete($table, $entries);
         Database::instance()->delete(self::$table, $entries);
       }catch (RuntimeException $e) {
-          echo $e->getMessage();
+          //echo $e->getMessage();
           return false;
       }
       return true;
@@ -69,6 +72,14 @@ Class Item {
 
     public function update($entries) {
       Database::instance()->update(self::$table, $entries, array("IDItem"=>$this->id));
+    }
+
+    static public function getItemImg($id) {
+      $data = Database::instance()->query("Item", array("IDItem"=>$id, "*"=>""));
+      if ($data != NULL) {
+          return $data[0]["ImgPath"];
+      }
+      else return NULL;
     }
 
   }

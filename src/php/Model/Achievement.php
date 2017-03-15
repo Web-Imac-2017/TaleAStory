@@ -1,4 +1,7 @@
 <?php
+namespace Model;
+
+use \Server\Database;
 
 Class Achievement {
   public $id;
@@ -21,10 +24,11 @@ Class Achievement {
 
   public function save() {
     $entries = array(
-      'name' => $this->name,
-      'imgpath' => $this->imgpath,
-      'brief' => $this->brief
+      'Name' => $this->name,
+      'ImgPath' => $this->imgpath,
+      'Brief' => $this->brief
     );
+    //var_dump($entries);
     $id=Database::instance()->insert(self::$table, $entries);
     if($id != null){
       $this->id = $id;
@@ -48,7 +52,7 @@ Class Achievement {
         Database::instance()->delete($table, $entries);
         Database::instance()->delete(self::$table, $entries);
       } catch (RuntimeException $e) {
-          echo $e->getMessage();
+          //echo $e->getMessage();
           return false;
       }
       return true;
@@ -63,6 +67,14 @@ Class Achievement {
 
     public function update($entries) {
       Database::instance()->update(self::$table, $entries, array("IDAchievement"=>$this->id));
+    }
+
+    static public function getAchievementImg($id) {
+      $data = Database::instance()->query("Achievement", array("IDAchievement"=>$id, "*"=>""));
+      if ($data != NULL) {
+          return $data[0]["ImgPath"];
+      }
+      else return NULL;
     }
   }
 

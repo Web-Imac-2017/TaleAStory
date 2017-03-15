@@ -1,6 +1,11 @@
 <?php
-require_once 'Choice.php';
-require_once 'Response.php';
+namespace Model;
+
+use \Model\Choice;
+use \Server\Response;
+use \Model\Player;
+use \Server\Database;
+use \Server\RouterException;
 
 Class Step {
   public $id;
@@ -9,14 +14,15 @@ Class Step {
   public $question;
   public $accepted;
   public $idType;
+  public $title;
   public static $table = "Step";
 
-  public function __construct($imgpath, $body, $question, $accepted, $idType) {
+  public function __construct($imgpath, $body, $question,$idType,$title) {
     $this->imgpath=$imgpath;
     $this->body=$body;
     $this->question=$question;
-    $this->accepted=$accepted;
     $this->idType=$idType;
+    $this->title=$title;
   }
   /*
   @function save
@@ -28,7 +34,8 @@ Class Step {
        'ImgPath' => $this->imgpath,
        'Body' => $this->body,
        'Question' => $this->question,
-       'IDType' => $this->idType
+       'IDType' => $this->idType,
+       'Title' =>$this->title
      );
      $id = Database::instance()->insert(self::$table, $entries);
      //var_dump($id);
@@ -63,12 +70,12 @@ Class Step {
        Database::instance()->delete($table, array("IDCurrentStep"=>$this->id));
        $table = "Choice";
        Database::instance()->delete($table, array("IDStep"=>$this->id));
+       Database::instance()->delete($table, array("IDNextStep"=>$this->id));
        $table = "PastStep";
        Database::instance()->delete($table, array("IDStep"=>$this->id));
        Database::instance()->delete(self::$table, array("IDStep"=>$this->id));
 
      }catch (RuntimeException $e) {
-         echo $e->getMessage();
          return false;
      }
      return true;
@@ -81,26 +88,49 @@ Class Step {
    Vérifie la réponse donnée, regarde si le joueur peut faire le choix correspondant, met à jour le joueur si oui
    */
    public function processAnswer($player, $answer) {
-     $choiceArray = Database::instance()->query("Choice", array('Answer' => "$answer", 'IDStep' => $this->id, 'TransitionText'=>'', 'IDNextStep'=>'', 'IDChoice'=>''));
+     /*pour chaque choix du step, vérifier checkanswer et prendre celle qui est vrai */
+     $choiceArray = Database::instance()->query("Choice", array( 'IDStep' => $this->id, 'TransitionText'=>'', 'IDNextStep'=>'', 'IDChoice'=>'', 'Answer'=>''));
+     //var_dump($this);
      //var_dump($choiceArray);
-     $choice = new Choice($choiceArray[0]['Answer'],$choiceArray[0]['IDStep'],$choiceArray[0]['TransitionText'],$choiceArray[0]['IDNextStep']);
-     $choice->id = $choiceArray[0]['IDChoice'];
-     //var_dump($choice);
-     if($choice && $choice->checkAnswer($answer) && $choice->checkPlayerRequirements($player)) {
-       $choice->alterPlayer($player);
-       $nextStepArray = Database::instance()->query("Step", array('IDStep' => "$choice->IDNextStep", 'ImgPath' => '', 'Question'=>'', 'Body'=>'', 'IDType'=>''));
-       $nextStep = new Step($nextStepArray[0]['ImgPath'],$nextStepArray[0]['Body'],$nextStepArray[0]['Question'],1,$nextStepArray[0]['IDType']);
-       $nextStep->id = $choice->iDNextStep;
+     if(!$choiceArray)
+      return false;
+     $true_choice = null;
+     foreach ($choiceArray as $c) {
+       $choice = new Choice($c['Answer'],$c['IDStep'],$c['TransitionText'],$c['IDNextStep']);
+       $choice->id = $c['IDChoice'];
+       if( $choice->checkAnswer($answer)){
+         $true_choice = $choice;
+         break;
+       }
+     }
+     //var_dump($true_choice);
+     if($true_choice && $true_choice->checkPlayerRequirements($player)) {
+       $true_choice->alterPlayer($player);
+       $nextStepArray = Database::instance()->query("Step", array('IDStep' => "$true_choice->idNextStep", 'ImgPath' => '', 'Question'=>'', 'Body'=>'', 'IDType'=>'', 'Title'=>''));
+       $nextStep = new Step($nextStepArray[0]['ImgPath'],$nextStepArray[0]['Body'],$nextStepArray[0]['Question'],1,$nextStepArray[0]['IDType'],$nextStepArray[0]['Title']);
+       $nextStep->id = $choice->idNextStep;
        $player->passStep($nextStep);
-       return $player;
+       return true;
      }
      else {
-       return Response::jsonResponse(array(
-         'status' => "error",
-         'message' => "ta race tu ne peux pas faire ce choix !"
-       ));
+       return false;
      }
    }
+
+
+   public static function countSteps(){
+     return Database::instance()->count('Step','IDStep');
+   }
+
+   static public function getStepImg($id) {
+     $stepdata = Database::instance()->query("Step", array("IDStep"=>$id, "*"=>""));
+     if ($stepdata != NULL) {
+         return $stepdata[0]["ImgPath"];
+     }
+     else return NULL;
+   }
+
+
 
 }
 ?>

@@ -1,4 +1,5 @@
 <?php
+namespace Server;
 class Database {
   public $pdo;
   protected $server;
@@ -21,13 +22,13 @@ class Database {
     $this->password = $config_data['database']['password'];
     $this->dbName = $config_data['database']['name'];
     $this->options = array(
-      PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
+      \PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
     );
   }
 
   static public function instance(){
     if(is_null(self::$_instance)){
-      self::$_instance = new Database("database_config.json");
+      self::$_instance = new Database("Server/database_config.json");
     }
     return self::$_instance;
   }
@@ -39,12 +40,12 @@ class Database {
   private function getPDO() {
     if($this->pdo === null) {
       try{
-        $pdo = new PDO('mysql:host='.$this->server.';dbname='.$this->dbName,$this->userName,$this->password,$this->options);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+        $pdo = new \PDO('mysql:host='.$this->server.';dbname='.$this->dbName,$this->userName,$this->password,$this->options);
+        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $pdo->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
         $this->pdo = $pdo;
       }
-      catch(Exception $e){
+      catch(PDOException $e){
           die('Erreur : '.$e->getMessage());
       }
     }
@@ -87,19 +88,30 @@ class Database {
     $from = $this->processFROM($tables);
     $where = $this->processWHERE($entries);
     $statement=$select.$from;
-    if($where) {
+    $array_entries = null;
+    if($where && !is_array($addEndStatement)) {
       $statement .= $where;
+      $array_entries = $this->processArrayEntries($entries);
     }
-    if($addEndStatement) {
+    if($addEndStatement && !is_array($addEndStatement)) {
       $statement .= " ".$addEndStatement;
+    } else if ($addEndStatement && is_array($addEndStatement) && current($addEndStatement) == "IN") {
+      $in = $this->processIN($addEndStatement);
+      $array_entries = $addEndStatement[2];
+      $statement .= $in;
+    } else if ($addEndStatement && is_array($addEndStatement) && current($addEndStatement) == "LIKE") {
+      $like = $this->processLIKE($addEndStatement);
+      $array_entries = array("%".$addEndStatement[2]."%");
+      $statement .= $like;
     }
-    $array_entries = $this->processArrayEntries($entries);
-    echo $statement;
+    //echo $statement;
     return $this->sendQuery($statement, $array_entries);
   }
 
+
+
   /**
-   * sendQuery : prépare la query puis l'execute en utilisant un objet PDO
+   * sendQuery : prépare la query puis l'execute en utilisant un objet \PDO
    * @param  [string] $statement     [texte de la query: variables de type "?"]
    * @param  [array] $array_entries [[0...n] => "variables à executer dans la query"]
    * @return [array]          [contient toutes les données retournées par la requête]
@@ -110,7 +122,7 @@ class Database {
       $qry = $this->getPDO()->prepare($statement);
       $qry->execute($array_entries) or die(print_r($qry->errorInfo()));
     }
-    catch(Exception $e){
+    catch(PDOException $e){
         die('Erreur : '.$e->getMessage());
         return NULL;
     }
@@ -125,20 +137,19 @@ class Database {
     $fields = $this->processFields($entries);
     $values = $this->processValues($entries);
     $statement = $into.$fields.$values;
-    echo "\n".$statement."\n";
+    //echo "\n".$statement."\n";
     return $this->sendInsert($statement, $entries);
   }
 
   private function sendInsert($statement, $entries) {
-    echo '<pre>' . var_export($entries, true) . '</pre>';
+    //echo '<pre>' . var_export($entries, true) . '</pre>';
     try {
     $insert = $this->getPDO()->prepare($statement);
     $insert->execute($entries) or die(print_r($insert->errorInfo()));
     $id = $this->getPDO()->lastInsertId();
     }
-    catch(Exception $e){
-        die('Erreur : '.$e->getMessage());
-        return NULL;
+    catch(PDOException $e){
+        RouterException::send();
     }
     //echo "insert ok";
     return $id;
@@ -159,17 +170,19 @@ class Database {
     $where = $this->processWHERE($identification);
     $array_entries = array_merge($this->processArrayEntries($entries), $this->processArrayEntries($identification));
     $statement = $update.$from.$set.$where;
-    echo "\n".$statement."\n";
+    //echo "\n".$statement."\n";
     return $this->sendUpdate($statement, $array_entries);
   }
 
   private function sendUpdate($statement, $array_entries) {
+    //var_dump($statement);
+    //var_dump($array_entries);
     try {
       $update = $this->getPDO()->prepare($statement);
       $update->execute($array_entries) or die(print_r($update->errorInfo()));
     }
-    catch(Exception $e){
-        die('Erreur : '.$e->getMessage());
+    catch(PDOException $e){
+        throw('Erreur : '.$e->getMessage());
     }
     //echo "update ok";
   }
@@ -180,7 +193,7 @@ class Database {
     $where = $this->processWHERE($identification);
     $statement = $delete.$from.$where;
     $array_entries = $this->processArrayEntries($identification);
-    echo $statement;
+    //echo $statement;
     if (strstr($statement, "WHERE") == FALSE) {
       //echo "BUG DELETE";
       return 0;
@@ -193,9 +206,24 @@ class Database {
       $delete = $this->getPDO()->prepare($statement);
       $delete->execute($array_entries) or die(print_r($delete->errorInfo()));
     }
-    catch(Exception $e){
-        die('Erreur : '.$e->getMessage());
+    catch(PDOException $e){
+        RouterException::send();
     }
+  }
+
+  public function count($table, $count, $entries = NULL){
+    $count = 'SELECT COUNT('.$count.')';
+    $from = $this->processFROM($table);
+    $statement = $count.$from;
+    $array_entries = [];
+    if($entries) {
+      $where = $this->processWHERE($entries);
+      $statement .= $where;
+      $array_entries = $this->processArrayEntries($entries);
+    }
+    //echo $statement;
+    $data = $this->sendQuery($statement, $array_entries);
+    return $data[0][0];
   }
 
   /**
@@ -205,29 +233,61 @@ class Database {
    * @param  [type] $value [description]
    * @return [type]        [description]
    */
-  public function arrayMap($entry, $key, $value) {
+  public function arrayMap($entry, $key=0, $value) {
+    if(!$entry){
+      return NULL;
+    }
     $map = array();
     foreach($entry as $data){
-      $map[$data[$key]] = $data[$value];
+      if($key){$map[$data[$key]] = $data[$value];}
+      else {array_push($map, $data[$value]);}
     }
     return $map;
   }
 
-  public function count($table, $count, $entries = NULL){
-    $count = 'SELECT COUNT('.$count.')';
-    $from = $this->processFROM($table);
-    $statement = $count.$from;
-    if($entries) {
-      $where = $this->processWHERE($entries);
-      $statement .= $where;
+
+
+  public function arrayClean($entries ,$key_alpha, $relevant=0){
+    $array_clean = array();
+    if($entries == NULL){
+      return NULL;
     }
-    $array_entries = $this->processArrayEntries($entries);
-    echo $statement;
-    $data = $this->sendQuery($statement, $array_entries);
-    return $data[0][0];
+    if (!$key_alpha) {
+      foreach($entries as $key=>$value) {
+        if(is_int($key)){
+          if($relevant) {
+            if(in_array($key, $relevant)){array_push($array_clean, $value);}
+          } else {array_push($array_clean, $value);}
+        }
+      }
+    } else {
+      foreach($entries as $key=>$value) {
+        if(!is_int($key)){
+          if($relevant) {
+            if(in_array($key, $relevant)){$array_clean[$key] = $value;}
+          } else {$array_clean[$key] = $value;}
+        }
+      }
+    }
+    return $array_clean;
   }
-
-
+  /**
+   * [dataClean Nettoie la réponse d'une query]
+   * @param  [array]  $query_response [réponse envoyée par la query]
+   * @param  [booléen]  $key_alpha        [true : ne garde que les index alphabétiques, false : ne garde que les index numériques]
+   * @param  [array] $relevant       [facultatif, liste des champs à conserver]
+   * @return [array]                  [une liste de tableaux soit indexés (!$key_alpha) soit associatif ($key_alpha)]
+   */
+  public function dataClean($query_response, $key_alpha, $relevant=0){
+    if(!$query_response){
+      return NULL;
+    }
+    $data_clean = array();
+    foreach($query_response as $array) {
+      array_push($data_clean, $this->arrayClean($array, $key_alpha, $relevant));
+    }
+    return $data_clean;
+  }
 
 
   //////////*****TRAITEMENTS DES PARAMETRES POUR LA CONSTRUCTION DES REQUETES******//////////
@@ -241,9 +301,9 @@ class Database {
   private function processSELECT($entries) {
     $fields = array_keys($entries);
     $process_select = "SELECT ";
-    foreach ($fields as $field) {
+    foreach ($fields as $key => $field) {
       $process_select .= $field;
-      if($field != end($fields)) {
+      if($key!= key(array_slice($fields, -1, 1, TRUE))) {
         $process_select .=", ";
       }
       if ($field == "*") {
@@ -291,11 +351,10 @@ class Database {
    */
   private function processWHERE($entries) {
     $process_where = " WHERE ";
-    $array_entries = $this->processArrayEntries($entries);
-    foreach ($array_entries as $entry) {
-      $field = array_search($entry, $entries);
+    $array_entries = $this->processArrayWhere($entries);
+    foreach ($array_entries as $field => $entry) {
       $process_where .= $field." = ? ";
-      if($entry != end($array_entries)) {
+      if($field != key(array_slice($array_entries, -1, 1, TRUE))) {
         $process_where .="AND ";
       }
     }
@@ -308,7 +367,24 @@ class Database {
 /**
  * processArrayEntries: extrait les valeurs non nulles du tableau passé en param et en fait un nouveau tableau
  * @param  [array] $entries ["champ" => "entrée"]
- * @return [array]          [[0...n] => "entrée non nulle"]
+ * @return [array]          [[champ] => "entrée différente de "" "]
+ */
+  private function processArrayWhere($entries) {
+    $tabEntries = array();
+    foreach ($entries as $champ => $entry) {
+      if ($entry !== "") {
+        $tabEntries[$champ] = $entry;
+      }
+    }
+    //var_dump($tabEntries);
+    return $tabEntries;
+  }
+
+
+/**
+ * processArrayEntries: extrait les valeurs non nulles du tableau passé en param et en fait un nouveau tableau
+ * @param  [array] $entries ["champ" => "entrée"]
+ * @return [array]          [[0...n] => "entrée différente de """]
  */
   private function processArrayEntries($entries) {
     $tabEntries = array();
@@ -317,16 +393,15 @@ class Database {
         array_push($tabEntries, $entry);
       }
     }
-    //var_dump($tabEntries);
     return $tabEntries;
   }
 
   private function processFields($entries) {
     $fields = array_keys($entries);
     $process_fields = "(";
-    foreach ($fields as $field) {
+    foreach ($fields as $key => $field) {
       $process_fields .= $field;
-      if($field != end($fields)) {
+      if($key!= key(array_slice($fields, -1, 1, TRUE))) {
         $process_fields .=", ";
       }
     }
@@ -337,9 +412,9 @@ class Database {
   private function processValues($entries) {
     $fields = array_keys($entries);
     $process_values = " VALUES(";
-    foreach ($fields as $field) {
+    foreach ($fields as $key => $field) {
       $process_values .= " :".$field;
-      if($field != end($fields)) {
+      if($key!= key(array_slice($fields, -1, 1, TRUE))) {
         $process_values .=", ";
       }
     }
@@ -349,14 +424,34 @@ class Database {
 
 
   private function processUPDATE($entries) {
-    $process_set;
+    $entries = $this->processArrayWhere($entries);
+    $process_set= "";
     foreach ($entries as $field => $entry) {
-      $process_set .= $field." = ?";
-      if($entry != end($entries)) {
-        $process_set .=", ";
+      if($entry !== ""){
+        $process_set .= $field." = ?";
+        if($field!= key(array_slice($entries, -1, 1, TRUE))) {
+          $process_set .=", ";
+        }
       }
     }
     return $process_set;
+  }
+
+  private function processIN($entry) {
+    $process_in = " WHERE ".$entry[1]." IN ( ";
+    foreach($entry[2] as $key => $value){
+      $process_in .= "?";
+      if($key!= key(array_slice($entry[2], -1, 1, TRUE))){
+        $process_in .= ", ";
+      }
+    }
+    $process_in .= " )";
+    return $process_in;
+  }
+
+  private function processLIKE($entry) {
+    $process_in = " WHERE ".$entry[1]." LIKE ?";
+    return $process_in;
   }
 
 

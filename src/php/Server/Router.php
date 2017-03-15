@@ -1,5 +1,9 @@
 <?php
-namespace Router;
+namespace Server;
+use \Controller\CurrentUserController;
+use \Server\Session;
+use \Model\Player;
+use \View\Success;
 class Router {
 
     static $routes = [];
@@ -12,7 +16,6 @@ class Router {
 */
     public static function init() {
         $script_path = $_SERVER['SCRIPT_NAME'];
-        var_dump($script_path);
         self::$webRoot = str_replace('php/index.php', '', $script_path);
     }
 
@@ -52,11 +55,17 @@ class Router {
 *
 */
   public static function index(){
-    \Response::generateIndex((object)array('userID' => '1',
-                                          'userPseudo' => 'Marcel Patulacci',
-                                          'userImgPath' => 'patulacci_tiny.jpg',
-                                          'time' => '16h45',
-                                          'isAdmin' => false));
+    $id = Session::getCurrentUser();
+    $player = Player::connectSession();
+    $token = Form::generateToken();
+    if ($player == NULL){
+      $e = (object)array();
+    }
+    else{
+      $e = $player;
+    }
+    $e->token = $token;
+    Response::generateIndex($e);
   }
 
   /**
@@ -64,7 +73,11 @@ class Router {
   *
   */
   public static function connexion(){
-    require"../connexion.html";
+    Response::jsonResponse((object)array( 'post_converted' => json_decode(file_get_contents('php://input'), true),
+                                          'post' => $_POST,
+                                          'userPseudo' => 'Marcel Patulacci',
+                                          'userImgPath' => 'patulacci_tiny.jpg',
+                                          'time' => '16h45'));
   }
 
 /**

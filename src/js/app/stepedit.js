@@ -48,7 +48,6 @@ export default RouteComponent({
 		event.preventDefault();
 
     var form = ReactDOM.findDOMNode(this).getElementsByTagName('form')[0];
-    console.log(form);
     fetch(config.path('addstep'), {
       method: 'POST',
       body: new FormData(form)
@@ -81,37 +80,37 @@ export default RouteComponent({
                 <img src={config.imagePath('default_image_tiny.png')} alt="image de la péripétie"></img>
               </div>
     }
-		return  <div className="form-screen editing">
-    				  <div className="content">
+    return  <div className="form-screen editing">
+              <div className="content">
                 <div className="block">
                   <button onClick={this.returnSteps}>&lt;</button>
                 </div>
-    						<div className="block form">
+                <div className="block form">
                   <h1 className="element pageTitle">Péripétie</h1>
-                  <div>
-                    {image}
-                    <form className="element" onSubmit={this.handleSubmit} method="post" encType="multipart/form-data">
-                      <input name="image" type="file" accept='image/*' value={this.state.imgpath}
-                                   onChange={this.handleChange} ref="imgpath"
-                                   multiple={false} style={{display:"none"}}/>
-                     <span>
-                        <select name="idtype">
-                          <option value="2">Décision</option>
-                          <option value="4">Enigme</option>
-                        </select>
-                     </span>
-                      <span><input name="title" type="text" placeholder="Titre de la péripétie"
-                        value={this.state.title} onChange={this.handleChange} ref="title" /></span>
-                     <textarea name="body" type="text" placeholder="Que fait le personnage ?" value={this.state.body}
-                        onChange={this.handleChange} ref="body" />
-                      <span><input name="question" type="text" placeholder="Question au joueur"
-                       value={this.state.question} onChange={this.handleChange} ref="question" /></span>
-                     <span className="button" ><input className="submit" type="submit" value="Enregistrer"/></span>
-                    </form>
+                    <div>
+                      {image}
+                      <form className="element" onSubmit={this.handleSubmit} method="post" encType="multipart/form-data">
+                        <input name="image" type="file" accept='image/*' value={this.state.imgpath}
+                                       onChange={this.handleChange} ref="imgpath"
+                                       multiple={false} style={{display:"none"}}/>
+                        <span>
+                          <select name="idtype">
+                            <option value="2">Décision</option>
+                            <option value="4">Enigme</option>
+                          </select>
+                        </span>
+                        <span><input name="title" type="text" placeholder="Titre de la péripétie"
+                            value={this.state.title} onChange={this.handleChange} ref="title" /></span>
+                        <textarea name="body" type="text" placeholder="Que fait le personnage ?" value={this.state.body}
+                            onChange={this.handleChange} ref="body" />
+                        <span><input name="question" type="text" placeholder="Question au joueur"
+                           value={this.state.question} onChange={this.handleChange} ref="question" /></span>
+                        <span className="button" ><input className="submit" type="submit" value="Enregistrer"/></span>
+                      </form>
+                    </div>
                   </div>
-    						</div>
-    					</div>
-            </div>
+                </div>
+              </div>
 
-    }
+        }
 });

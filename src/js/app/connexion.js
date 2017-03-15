@@ -22,10 +22,16 @@ export default RouteComponent({
 	},
 
 	handleSubmit(event) {
-		/* alert(this.state.login + '-' + this.state.password ); */
 		event.preventDefault();
+
+		if (this.context.requestedPage == null || this.context.requestedPage == undefined ) {
+			this.context.requestedPage = config.path('home');
+		}
+		this.context.router.push(this.context.requestedPage)
+		/*
 		this.context.setUser(new User(1,this.state.login, 'default_tiny.png'));
 		this.context.goRequestedPage();
+		*/
 	},
 
     render(){

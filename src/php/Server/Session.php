@@ -1,4 +1,8 @@
 <?php
+namespace Server;
+
+use \Server\Database;
+
 Class Session {
 
   /*
