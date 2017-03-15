@@ -17,13 +17,8 @@ class SignUpController{
     $confirm = Form::getField('confirmpwd');
     $pseudo = Form::getField('pseudo');
     $login = $mail;
-<<<<<<< HEAD
-    $player = Player::signUp($pseudo, $login, $pwd, $confirm, $mail);
-    if (get_class($player)=="Player"){
-=======
     $player = Player::signUp($pseudo, $login, $pwd, $mail);
     if (get_class($player)=="Model\\Player"){
->>>>>>> 53db45948b6d3c3548581d921213f03b54d341d5
       //INIT STATS
       $statsQuery = Database::instance()->query("Stat",array("IDStat"=>""));
       $statsQuery = Database::instance()->arrayMap($statsQuery,0,'IDStat');
