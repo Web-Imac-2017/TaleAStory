@@ -51,6 +51,7 @@
   }
   .game-component {
     padding: 50px;
+    width : 100%;
   }
 
 	.game-wrapper {
@@ -80,9 +81,9 @@
 }
 
 .button.small{
-  padding: 12px 5px;
+  	padding: 12px 60px;
 	margin-top: 20px;
-  min-width: 100px;
+  	min-width: auto;
 }
 
 
@@ -138,6 +139,19 @@
 	display:flex;
 	flex-direction:row;
 	justify-content: center;
+
+	.button{
+		min-width : 305px;
+		margin : 10px 25px 0 25px !important;
+
+		@media screen and (max-width: $break-medium) {
+			margin : 10px auto !important;
+		}
+	}
+
+	@media screen and (max-width: $break-medium) {
+		flex-direction : column;
+	}
 }
 
 

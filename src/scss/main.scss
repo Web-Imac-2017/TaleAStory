@@ -229,6 +229,10 @@
 	color: rgba(255,255,255,1);
 }
 
+.disableScroll{
+	display: none;
+}
+
 button {
     background-color: Transparent;
     color: white;
@@ -381,11 +385,10 @@ form {
 				width: 100%;
 			}
 			.pageTitle {
-				letter-spacing: 5px;
+				letter-spacing: 12px;
 				@media screen and (max-width: $break-medium) {
 					font-size: 26px;
-					letter-spacing: 12px;
-			  }
+			  	}
 			}
 			p {
 				margin: 5% 0px;
@@ -535,7 +538,10 @@ form {
 		margin-top: 5%;
 		width: 100%;
 		height: 50px;
+
 		input {
+			font-family: OpenSans;
+			letter-spacing: 2px;
 			width: 100%;
 			height: 100%;
 			display: block;
@@ -553,13 +559,16 @@ form {
 		left: -1.25%;
 		z-index: -1;
 	}
+
 	.button {
+		margin-top: 5% !important;
 		padding: 0px;
 		width: 250px;
 		@media screen and (max-width: $break-small) {
 			width: 100%;
 		}
 		.submit {
+			font-family: Bjorn;
 			border: none;
 			padding: 0px;
 		}

@@ -81,6 +81,10 @@ export default RouteComponent({
     							</div>
     						</div>
               </div>
+<<<<<<< HEAD
+=======
+              <Scroll className="disableScroll"/>
+>>>>>>> 603d2cd8319c576c0175083a21b6b1ec656eea66
             </div>
   }
 });

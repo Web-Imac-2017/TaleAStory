@@ -22,7 +22,6 @@ export default RouteComponent({
                   		<p>Changer de mot de passe
                         <img className="editElement" src={config.imagePath('pen_large.png')}/>
                       </p>
-                  		<a href="" className="element button">Sauvegarder le profil</a>
                   	</div>
                   </div>
                 </div>

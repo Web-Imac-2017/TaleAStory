@@ -55,6 +55,7 @@ let WrapperSpec = {
     editPicture(this.refs.profilImg, this.refs.divImg);
     Requester.updatePlayerImage(this.refs.form);
   },
+<<<<<<< HEAD
   handleConfirm : function(){
    let that = this;
    this.setState({profilImg : this.refs.profilImg.value});
@@ -79,6 +80,34 @@ let WrapperSpec = {
        }
      });
  },
+=======
+
+   handleConfirm : function(){
+
+    let that = this;
+
+    this.refs.dialog.show({
+        title: 'Modification de la photo de profil',
+        body: 'Voulez-vous actualiser votre photo de profil ?',
+        actions: [
+          Dialog.Action(
+            'Non',
+            () => {},
+            'button btn-cancel'
+          ),
+          Dialog.Action(
+            'Oui',
+            that.handleChange,
+            'button btn-confirm'
+          ),
+        ],
+        bsSize: 'medium',
+        onHide: (dialog) => {
+          dialog.hide()
+        }
+      });
+  },
+>>>>>>> 603d2cd8319c576c0175083a21b6b1ec656eea66
 
   updateChilds : function(){
     let childProps = this.props.children.props;
