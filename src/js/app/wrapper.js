@@ -48,18 +48,18 @@ let WrapperSpec = {
     let that = this;
 
     this.refs.dialog.show({
-        title: 'Modifier photo de profil',
+        title: 'Modification de la photo de profil',
         body: 'Voulez-vous actualiser votre photo de profil ?',
         actions: [
-          Dialog.Action(
-            'Oui',
-            that.handleChange,
-            'button btn-confirm'
-          ),
           Dialog.Action(
             'Non',
             () => {},
             'button btn-cancel'
+          ),
+          Dialog.Action(
+            'Oui',
+            that.handleChange,
+            'button btn-confirm'
           ),
         ],
         bsSize: 'medium',

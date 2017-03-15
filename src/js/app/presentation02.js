@@ -81,7 +81,7 @@ export default RouteComponent({
     							</div>
     						</div>
               </div>
-              <Scroll/>
+              <Scroll className="disableScroll"/>
             </div>
   }
 });

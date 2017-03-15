@@ -21,20 +21,19 @@
 		width : 100%;
 
 		.roundProfil{
-			width : 100px;
-			height : 100px;
+			width : 90px;
+			height : 90px;
 			background : #fff;
 			border-radius : 50%;
-			margin : 0 auto;
+			margin : 0 auto 20px auto;
 			position : relative;
 			cursor : pointer;
-			margin-bottom : 10%;
 			transition: all 0.25s;
 
 
 			.bigProfil{
-				width: inherit;
-  				height: inherit;
+				width: 100%;
+  				height: 100%;
   				border-radius: inherit;
 			}
 
@@ -52,25 +51,27 @@
 		}
 
 		.roundProfil:hover::before{
-			background: rgba(0,0,0,0.50);
+			background: rgba(0,0,0,0.70);
 		}
 
 
 		.roundProfil:after{
 			bottom : 0;
-			left : 30px;
+			left : 25px;
 			content : '';
-			background: rgba(255,255,255,0);
+			background-image: url("../images/editPicture_large.png");
+			background-repeat:no-repeat;
 			width : 40px;
 			height : 40px;
 			position : absolute;
 			bottom : 0;
 			transition: all 0.25s;
+			opacity : 0;
 		}
 
 		.roundProfil:hover::after{
-			bottom : 30px;
-			background: rgba(255,255,255,1);
+			bottom : 25px;
+			opacity : 1;
 		}
 
 
@@ -86,6 +87,7 @@
 			text-align : center;
 			font-size : 11px;
 			letter-spacing : 5px;
+			padding: 0 10px;
 		}
 
 		ul{
@@ -94,7 +96,7 @@
 			letter-spacing : 4px;
 
 			li{
-				padding : 10px;
+				padding : 15px 10px;
 				color : #fff;
 
 				a{
@@ -207,7 +209,7 @@
 	border : 1px solid #fff;
 	min-width : 30%;
 	height : 48%;
-	margin: 1%;
+	margin: 0 1%;
 	flex: 1;
 
 	.insideItem{
