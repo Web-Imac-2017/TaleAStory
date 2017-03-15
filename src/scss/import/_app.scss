@@ -10,7 +10,7 @@ html {
 
 
 .route-component{
-  width:95%;
+  width: 100%;
   height : 100%;
   position: absolute;
   top: 0;
@@ -60,6 +60,23 @@ a {
   text-decoration: none;
   color: white;
 }
+
+#app .caca.mediaBlock{
+
+	@media screen and (max-width: $break-medium) {
+		display: block;
+		margin : 0 auto;
+		width : 80%;
+	}
+}
+
+#app .caca.mediaBlock>.scroller>span{
+
+	@media screen and (max-width: $break-medium) {
+		margin : 0 ;
+	}
+}
+
 /* *** Header - General *** */
 header {
 	width: 100%;

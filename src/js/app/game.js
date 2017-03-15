@@ -25,26 +25,11 @@ class GameComponent extends React.Component{
 		webGL.bg_anim.unMuteAll();
 		document.getElementById('analyser').style = 'width:3%';
 		TweenLite.fromTo(document.getElementById('analyser'), 1.3,{opacity:0},{opacity:1});
-		var links = document.getElementsByTagName("a");
-		var color;
-		color = webGL.bg_anim.getColor();
-		for(var i=0;i<links.length;i++)
-		{
-			if(links[i].href)
-			{
-				TweenLite.to(links[i], 0.5,{color:"rgb("+Math.floor(255*color[0]+30)+","+Math.floor(255*color[1]+30)+","+Math.floor(255*color[2]+30)+")"});
-			}
-		}
-		
-		links = document.getElementsByClassName("progress-bar");
-		for(var i=0;i<links.length;i++)
-		{
-			TweenLite.to(links[i], 0.5,{backgroundColor:"rgb("+Math.floor(255*color[0]+30)+","+Math.floor(255*color[1]+30)+","+Math.floor(255*color[2]+30)+")"});
-		}
 
 		// webGL.bg_anim.getColor();
 
 	}
+	
   }
   componentWillAppear(callback){
     this.componentWillEnter(callback);
@@ -57,6 +42,28 @@ class GameComponent extends React.Component{
   }
   render(){
     return <div className="game-component"></div>
+  }
+  
+  
+  updateColor(){
+	  if(webGL.bg_anim != null){
+		  var links = document.getElementsByTagName("a");
+			var color;
+			color = webGL.bg_anim.getColor();
+			for(var i=0;i<links.length;i++)
+			{
+				if(links[i].href)
+				{
+					TweenLite.to(links[i], 0.5,{color:"rgb("+Math.floor(255*color[0]+30)+","+Math.floor(255*color[1]+30)+","+Math.floor(255*color[2]+30)+")"});
+				}
+			}
+			
+			links = document.getElementsByClassName("progress-bar");
+			for(var i=0;i<links.length;i++)
+			{
+				TweenLite.to(links[i], 0.5,{backgroundColor:"rgb("+Math.floor(255*color[0]+30)+","+Math.floor(255*color[1]+30)+","+Math.floor(255*color[2]+30)+")"});
+			}
+	  }
   }
 }
 
@@ -78,17 +85,20 @@ class Decision extends GameComponent{
 
     let dom = ReactDOM.findDOMNode(this);
     if(this.childs == null)
-      this.childs = dom.getElementsByClassName('story-text');
+      this.childs = dom.getElementsByClassName('story-step');
     if(this.state.current >= this.childs.length){
-      dom.getElementsByClassName('skip')[0].style = "display:none";
+      
       let childs = dom.getElementsByTagName('button');
       for(let i = 0; i<childs.length; i++){
         TweenLite.fromTo(childs[i], 1, {opacity:0},{opacity:1});
+		childs[i].style="";
       }
+	  dom.getElementsByClassName('skip')[0].style = "display:none";
     }
     else{
-
-
+		if(this.state.current==0){
+			this.updateColor();
+		}
       this.animation = TweenLite.fromTo(this.childs[this.state.current], 2,
                                         {opacity:0},{opacity:1})
                                 .eventCallback("onComplete",this.nextText);
@@ -103,7 +113,7 @@ class Decision extends GameComponent{
   handleSkip(){
     let dom = ReactDOM.findDOMNode(this);
     if(this.childs == null)
-      this.childs = dom.getElementsByClassName('story-text');
+      this.childs = dom.getElementsByClassName('story-step');
     this.state.current = this.childs.length;
     this.animation.kill();
     for(let i=0; i<this.childs.length;i++){
@@ -123,7 +133,7 @@ class Decision extends GameComponent{
                     this.props.children.map((text, index) => {
                       if(text.props.className == "text")
                       {
-                        return <p key={index} className="story-text">
+                        return <p key={index} className="story-text story-step">
                                 { text.props.children }
                               </p>
                       }
@@ -132,7 +142,7 @@ class Decision extends GameComponent{
                     this.props.children.map((text, index) => {
                       if(text.props.className == "question")
                       {
-                        return <p key={index} className="story-text">
+                        return <p key={index} className="story-text story-step">
                               {text.props.children}
                               </p>
                       }
@@ -141,25 +151,191 @@ class Decision extends GameComponent{
                     this.props.children.map((text, index) => {
                       if(text.props.className == "answer")
                       {
-                        return <button key={index} className="button story-answer"
+                        return <button key={index} className="button story-answer" style={{display:"none"}}
                                       onClick={() => { this.selectAnswer(text.props.onClick());}}>
                                     { text.props.children }
                               </button>
                       }
                     }) : null;
+					
+	const imag = this.props.children ?
+                    this.props.children.map((text, index) =>{
+					  if(text.props.className == "img")
+                      {
+						return <img key={index} className="enigma-img story-step" src={config.imagePath(text.props.children)}/>
+					  }
+					}
+                    ) : null;	
     let superDom = super.render();
     return <div className="game-wrapper">
             <div {...superDom.props}>
-              {texts}
-              {question}
-              {answers}
-              <button id="skip" className="button small skip" onClick={this.handleSkip}>
-                Skip
-              </button>
+			
+			<div className="enigma">
+				<div className="enigma-left">
+					{imag}
+				</div>
+				<div className="enigma-right">
+					{texts}
+					{question}
+				</div>
+			</div>
+			<div className="enigma-bottom" >
+				<button id="skip" className="button small skip" onClick={this.handleSkip}>
+					Passer
+				  </button>
+				   {answers}
+				  
+			</div>
+			
+			
+              
+              
             </div>
           </div>
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class EnigmaComponent extends GameComponent{
+  constructor(props){
+    super(props);
+    this.state = {
+      current : 0
+    }
+    this.childs = null;
+    this.nextText = this.nextText.bind(this);
+    this.handleSkip = this.handleSkip.bind(this);
+    this.handleNext = this.handleNext.bind(this);
+  }
+
+  componentDidMount(){
+      setTimeout(this.nextText, 1000);
+  }
+
+  nextText(){
+    let dom = ReactDOM.findDOMNode(this);
+    if(this.childs == null){
+      this.childs = dom.getElementsByClassName('enigma-step');
+	}
+    if(this.state.current >= this.childs.length){
+      dom.getElementsByClassName('button')[0].style = "display:none";
+      dom.getElementsByClassName('form')[0].style = "";
+    }
+    else{
+		if(this.state.current==0){
+			this.updateColor();
+		}
+		if(webGL.bg_anim != null){
+			webGL.bg_anim.setLandscape(true);
+		 }
+      this.animation = TweenLite.fromTo(this.childs[this.state.current], 2,
+                                        {opacity:0},{opacity:1})
+                                .eventCallback("onComplete",this.nextText);
+      this.setState((prevState, props) => ({
+        current: prevState.current + 1
+      }));
+    }
+  }
+
+  handleSkip(){
+    if(this.childs == null)
+      this.childs = dom.getElementsByClassName('enigma-step');
+    this.state.current = this.childs.length;
+    this.animation.kill();
+    for(let i=0; i<this.childs.length; i++)
+      this.childs[i].style = "opacity: 1";
+
+    setTimeout(this.nextText, 10);
+  }
+  handleNext(){
+    if(this.props.callback)
+      this.props.callback();
+  }
+
+
+  render(){
+    const texts = this.props.children ?
+                    this.props.children.map((text, index) =>{
+					  if(text.props.className == "enigma-text")
+                      {
+                        return <p key={index} className="enigma-text enigma-step">
+                                { text.props.children }
+                              </p>
+                      }
+
+					}
+                    ) : null;
+	const imag = this.props.children ?
+                    this.props.children.map((text, index) =>{
+					  if(text.props.className == "enigma-img")
+                      {
+						return <img key={index} className="enigma-img enigma-step" src={config.imagePath(text.props.children)}/>
+					  }
+					}
+                    ) : null;	
+
+    let superDom = super.render();
+    return <div className="game-wrapper">
+            <div {...superDom.props}>
+			<div className="enigma">
+				<div className="enigma-left">
+					{imag}
+				</div>
+				<div className="enigma-right">
+					{texts}
+				</div>
+			</div>
+			<div className="enigma-bottom" >
+				   <button id="skip" className="button small" onClick={this.handleSkip}>
+					 Passer
+				   </button>
+				   <form className="form enigma-form" style={{display:"none"}}>
+					<span>
+						<input type="text" name="answer" placeholder="Votre réponse"/>
+					</span>
+					<span className="submit">
+						<input type="submit" onClick={this.handleNext} value="Entrer"/>
+					</span>
+				   </form>
+			</div>
+		  </div>
+          </div>
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class StoryComponent extends GameComponent{
   constructor(props){
@@ -184,8 +360,12 @@ class StoryComponent extends GameComponent{
     if(this.state.current >= this.childs.length){
       dom.getElementsByClassName('button')[0].style = "display:none";
       dom.getElementsByClassName('button')[1].style = "";
+	  //this.updateColor();
     }
     else{
+		if(this.state.current==1){
+			this.updateColor();
+		}
 		if(webGL.bg_anim != null){
 			webGL.bg_anim.setLandscape(true);
 		 }
@@ -234,6 +414,7 @@ class StoryComponent extends GameComponent{
           </div>
   }
 }
+
 
 export default RouteComponent({
   getInitialState(){
@@ -325,6 +506,9 @@ export default RouteComponent({
                           <p className="answer" onClick={() => 2}>
                             J’ouvre les yeux
                           </p>
+						  <p className="img">
+                            landscape_7_large.png
+                          </p>
                         </Decision>);
       this.setState({currentStep : component, currentStepID : 2.5});
      }
@@ -347,7 +531,6 @@ export default RouteComponent({
                         </StoryComponent>);
       this.setState({currentStep : component, currentStepID : 1});
     }
-
   },
 
   render(){

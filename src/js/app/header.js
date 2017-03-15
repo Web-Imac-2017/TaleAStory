@@ -65,7 +65,9 @@ class ProfileMenu extends React.Component{
 		this.disconnect = this.disconnect.bind(this)
 	}
 
-	disconnect(){
+	disconnect(e){
+		e.preventDefault();
+		this.context.router.push(config.path('home'));
 		this.context.unsetUser();
 	}
 
@@ -96,7 +98,7 @@ class ProfileMenu extends React.Component{
 						{adminCols}
 						<div className="cols">
 							<img src={config.imagePath('deco.svg')}/>
-							<a onClick={this.disconnect}>Déconnexion</a>
+							<a href="" onClick={this.disconnect}>Déconnexion</a>
 						</div>
 					</div>
 				</div>
