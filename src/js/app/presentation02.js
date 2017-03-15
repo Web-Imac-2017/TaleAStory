@@ -33,13 +33,13 @@ class Buttons extends React.Component{
       if(this.user.stepid){
         buttons = <div className={className}>
                     <button onClick={this.start} className="element button">Reprendre le jeu</button>
-                    <Link className="element button" to={config.path('sign/up')}>Inscription</Link>
+                    <Link className="element button" to={config.path('account')}>Compte</Link>
                   </div>
       }
       else{
         buttons = <div className={className}>
                       <button onClick={this.start} className="element button">Commencer le jeu</button>
-                      <Link className="element button" to={config.path('sign/up')}>Inscription</Link>
+                      <Link className="element button" to={config.path('account')}>Compte</Link>
                   </div>
       }
     }

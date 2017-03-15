@@ -125,7 +125,6 @@ class Player {
   static public function connectSession() {
     $id = Session::getCurrentUser();
     if($id){
-      //var_dump($id);
       $playerData = Database::instance()->query("Player", array("IDPlayer"=>$id, "*"=>""));
       $player = new Player(
         $playerData[0]["IDPlayer"],

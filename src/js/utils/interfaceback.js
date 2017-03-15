@@ -744,10 +744,6 @@ class Requester {
     static updatePlayerImage(image){
       return fetch(config.path('updateplayer/image'), {
                 method: 'post',
-                headers: {
-                  'Content-Type' : 'application/json'
-                 },
-                credentials: "same-origin",
                 body: new FormData(image)
       }).then(
         function(response){

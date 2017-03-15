@@ -424,6 +424,7 @@ export default RouteComponent({
 	  }
 
 	  TweenLite.fromTo(document.getElementById('analyser'), 1.3,{opacity:0},{opacity:1});
+    console.log(this.context);
     return {
       currentStats : [
         {label: 'Fatigue', value: 100},

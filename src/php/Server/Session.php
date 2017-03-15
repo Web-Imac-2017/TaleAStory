@@ -27,7 +27,6 @@ Class Session {
     if(isset($_SESSION["userid"]))
       return $_SESSION["userid"];
     else if (isset($_COOKIE["userid"]) && isset($_COOKIE["hash_id"])){
-        var_dump($_COOKIE);
         $userid = $_COOKIE["userid"];
         $userlogin = Database::instance()->query("Player",array("IDPlayer"=>$userid,"login"=>""));
         if($userlogin)

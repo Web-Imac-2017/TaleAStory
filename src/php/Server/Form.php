@@ -13,7 +13,7 @@ class Form {
   */
   static public function updatePOST(){
     if(!empty($FILES) && empty($_POST)){
-      $_POST = parse_raw_http_request($_POST);
+      parse_raw_http_request($_POST);
     }
     else if(empty($_POST))
       $_POST = json_decode(file_get_contents('php://input'), true);
@@ -210,8 +210,9 @@ class Form {
   static public function uploadFile($file_input){
     $whitelist = array('image/jpg', 'image/jpeg','image/png','image/gif','image/bmp');
     //on parse les data envoyées
+    self::updatePOST();
     if(empty($_FILES) || !isset($_FILES["$file_input"]) || empty($_FILES[$file_input]['tmp_name'])){
-      $filename = '../assets/images/default_image_tiny.png';
+      $filename = 'default_image_tiny.png';
       $e = $filename;
       return $e;
     }
@@ -230,11 +231,11 @@ class Form {
     //Nom du fichier
     $ext = strtolower(pathinfo($_FILES[$file_input]['name'],PATHINFO_EXTENSION));
     do{
-      $filename = sprintf('../assets/images/%s.%s',md5(uniqid(microtime(), true)),$ext);
+      $filename = sprintf('%s.%s',md5(uniqid(microtime(), true)),$ext);
       $filename = str_replace('\\','',$filename);
-    }while(file_exists($filename));
+    }while(file_exists('../assets/images/'.$filename));
     //Upload
-    if (!move_uploaded_file($_FILES["$file_input"]['tmp_name'], $filename))
+    if (!move_uploaded_file($_FILES["$file_input"]['tmp_name'], '../assets/images/'.$filename))
     {
       $e = new Error("Impossible d'uploader le fichier.");
       return $e;

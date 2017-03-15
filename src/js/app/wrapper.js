@@ -53,7 +53,7 @@ let WrapperSpec = {
 
   handleChange : function(){
     editPicture(this.refs.profilImg, this.refs.divImg);
-    //Requester
+    Requester.updatePlayerImage(this.refs.form);
   },
   handleConfirm : function(){
    let that = this;
@@ -317,9 +317,11 @@ let AccountWrapperSpec = Object.assign({}, WrapperSpec, {
                     <div onClick={()=>{this.refs.profilImg.click();}} className="roundProfil" ref="divImg">
                       <img className="bigProfil" src={config.imagePath(this.context.user.imgpath)}/>
                     </div>
-                    <input name="inputImage" type="file" accept='image/*' value={this.state.profilImg}
-                                   onChange={this.handleConfirm} ref="profilImg"
-                                   multiple={false} style={{display:"none"}}/>
+                    <form ref='form'>
+                      <input name="image" type="file" accept='image/*' value={this.state.profilImg}
+                                     onChange={this.handleConfirm} ref="profilImg"
+                                     multiple={false} style={{display:"none"}}/>
+                    </form>
                     <h2 className="userName">{this.context.user.pseudo}</h2>
                     <img className="element" src={config.imagePath('wave_large.png')}/>
                     <ul className="assideMenu">
