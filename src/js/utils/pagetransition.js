@@ -18,7 +18,7 @@ function _animation(animationFunc){
 						  var color;
 							for(var i=0;i<links.length;i++)
 							{
-								if(links[i].href)
+								if(links[i].href && links[i].className=="linkHeader")
 								{
 									color = webGL.bg_anim.getColor();
 									TweenLite.to(links[i], 0.5,{color:"rgb("+ Math.floor(255*color[0]+30)+

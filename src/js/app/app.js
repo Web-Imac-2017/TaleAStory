@@ -63,7 +63,7 @@ class App extends React.Component{
 			color = webGL.bg_anim.getColor();
 			for(var i=0;i<links.length;i++)
 			{
-				if(links[i].href)
+				if(links[i].href && links[i].className=="linkHeader")
 				{
 					TweenLite.to(links[i], 0.5,{color:"rgb("+Math.floor(255*color[0]+30)+","+Math.floor(255*color[1]+30)+","+Math.floor(255*color[2]+30)+")"});
 				}

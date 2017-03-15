@@ -24,10 +24,10 @@ class HeaderUnregistered extends React.Component{
 	render() {
 		return (
 			<header>
-				<Link to={config.path('home')}><h1>Tale A Story</h1></Link>
+				<Link to={config.path('home')} className="linkHeader"><h1>Tale A Story</h1></Link>
 				<div className="links">
-					<Link to={config.path('sign/up')}>Inscription</Link>
-					<Link to={config.path('sign/in')}>Connexion</Link>
+					<Link to={config.path('sign/up')} className="linkHeader">Inscription</Link>
+					<Link to={config.path('sign/in')} className="linkHeader">Connexion</Link>
 				</div>
 			</header>
 		);
@@ -47,9 +47,9 @@ class HeaderRegistered extends React.Component{
 	render() {
 		return (
 			<header>
-				<Link to={config.path('home')}><h1>Tale A Story</h1></Link>
+				<Link to={config.path('home')} className="linkHeader"><h1>Tale A Story</h1></Link>
 				<div className="links">
-					<Link className="profileLink" to={config.path('profils/account')} onMouseOver={this.onHover}>{this.props.pseudo}</Link>
+					<Link className="profileLink" to={config.path('profils/account')} onMouseOver={this.onHover} className="linkHeader">{this.props.pseudo}</Link>
 					<img className="rounded profilPic" src={config.imagePath(this.props.img)}/>
 				</div>
 				<ProfileMenu adminOpt={this.props.adminOpt}/>
@@ -81,7 +81,7 @@ class ProfileMenu extends React.Component{
 		if(this.props.adminOpt){
 			adminCols = <div className="cols">
 										<img src={config.imagePath('deco.svg')}/>
-										<Link to={config.path('admin')}>Edition</Link>
+										<Link to={config.path('admin')} className="linkHeader">Edition</Link>
 									</div>
 		}
 		return (
@@ -89,16 +89,16 @@ class ProfileMenu extends React.Component{
 					<div className="profileMenu rows" >
 						<div className="cols">
 							<img src={config.imagePath('profil.svg')}/>
-							<Link to={config.path('profils/account')}>Mon profil</Link>
+							<Link to={config.path('profils/account')} className="linkHeader">Mon profil</Link>
 						</div>
 						<div className="cols">
 							<img src={config.imagePath('trophy.svg')}/>
-							<Link to={config.path('profils/trophy')}>Mes Trophées</Link>
+							<Link to={config.path('profils/trophy')} className="linkHeader">Mes Trophées</Link>
 						</div>
 						{adminCols}
 						<div className="cols">
 							<img src={config.imagePath('deco.svg')}/>
-							<a href="" onClick={this.disconnect}>Déconnexion</a>
+							<a href="" onClick={this.disconnect} className="linkHeader">Déconnexion</a>
 						</div>
 					</div>
 				</div>

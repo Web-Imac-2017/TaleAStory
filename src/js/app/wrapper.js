@@ -7,7 +7,7 @@ import User from '../model/user';
 import {GlobalBack} from '../utils/interfaceback';
 import RouteComponent from '../utils/routecomponent';
 import TransitionGroup from 'react-addons-transition-group';
-
+import Dialog from '../utils/dialog'
 import editPicture from '../utils/ProfilePicture';
 
 class RightNavigation extends React.Component{
@@ -37,9 +37,36 @@ let WrapperSpec = {
     return {profilImg : ''};
   },
 
+
   handleChange : function(){
     this.setState({profilImg : this.refs.profilImg.value});
     editPicture(this.refs.profilImg, this.refs.divImg);
+  },
+
+   handleConfirm : function(){
+
+    let that = this;
+
+    this.refs.dialog.show({
+        title: 'Modifier photo de profil',
+        body: 'Voulez-vous actualiser votre photo de profil ?',
+        actions: [
+          Dialog.Action(
+            'Oui',
+            that.handleChange,
+            'button btn-confirm'
+          ),
+          Dialog.Action(
+            'Non',
+            () => {},
+            'button btn-cancel'
+          ),
+        ],
+        bsSize: 'medium',
+        onHide: (dialog) => {
+          dialog.hide()
+        }
+      });
   },
 
   updateChilds : function(){
@@ -193,10 +220,13 @@ let WrapperSpec = {
 };
 
 let AccountWrapperSpec = Object.assign({}, WrapperSpec, {
-  disconnect : function(){
+  disconnect : function(e){
+    e.preventDefault();
+    this.context.router.push(config.path('home'));
     this.context.unsetUser();
   },
-  contextTypes : {user: React.PropTypes.objectOf(User)},
+
+  contextTypes : {user: React.PropTypes.objectOf(User), unsetUser: React.PropTypes.func},
   render : function(){
     this.user = this.context.user;
     this.header = this.props.route.noheader ?
@@ -247,14 +277,16 @@ let AccountWrapperSpec = Object.assign({}, WrapperSpec, {
                     <div onClick={()=>{this.refs.profilImg.click();}} className="roundProfil" ref="divImg">
                       <img className="bigProfil" src={config.imagePath('patulacci_large.jpg')}/>
                     </div>
+                    <Dialog id="yolo" ref='dialog' className='yolo'/>
                     <input name="inputImage" type="file" accept='image/*' value={this.state.profilImg}
-                                   onChange={this.handleChange} ref="profilImg"
+                                   onChange={this.handleConfirm} ref="profilImg"
                                    multiple={false} style={{display:"none"}}/>
                     <h2 className="userName">Marcel Patullacci</h2>
                     <img className="element" src={config.imagePath('wave_large.png')}/>
                     <ul className="assideMenu">
                       { links }
-                      <li><Link to={config.path('')}>Déconnexion</Link></li>
+                      
+                      <li><a href="" onClick={this.disconnect}>Déconnexion</a></li>
                     </ul>
                     <Link to={config.path('game')} className="element button">Jouer</Link>
                   </div>
