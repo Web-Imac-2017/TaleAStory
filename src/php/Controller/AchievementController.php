@@ -12,7 +12,12 @@ use \View\Error;
 use \Controller\CurrentUserController;
 
 class AchievementController {
-
+  /*
+  @function addAchievement
+  @param  image,name,brief
+  @return Success si ok, Error avec array 'champ'=>'erreur' sinon
+  Ajoute un trophée
+  */
   public static function addAchievement() {
     CurrentUserController::isAdmin();
     $isError = false;
@@ -45,7 +50,12 @@ class AchievementController {
       $e = new Error(array("all"=>"Tu ne peux pas ajouter ce trophé!"));
     Response::jsonResponse($e);
   }
-
+  /*
+  @function updateAchievement
+  @param  image,name,brief,idachievement
+  @return Success si ok, Error avec array 'champ'=>'erreur' sinon
+  Modifie un trophée
+  */
   public static function updateAchievement() {
     CurrentUserController::isAdmin();
     $isError =false;
@@ -77,6 +87,7 @@ class AchievementController {
         $entries["imgpath"] = $imgpath;
         $oldimg =  Achievement::getAchievementImg($data["idachievement"]);
         if($oldimg != '../assets/images/default_image_tiny.png' && file_exists ($oldimg)){
+          try{
             unlink($oldimg);
         }
       }
@@ -91,7 +102,12 @@ class AchievementController {
     $e = new Success("Trophé modifié !");
     Response::jsonResponse($e);
   }
-
+  /*
+  @function deleteAchievement
+  @param  idachievement
+  @return Success si ok, Error avec array 'champ'=>'erreur' sinon
+  Supprime un trophée
+  */
   public static function deleteAchievement() {
     CurrentUserController::isAdmin();
     $id = Form::getField("idachievement");
@@ -117,8 +133,14 @@ class AchievementController {
       Response::jsonResponse($e);
     }
   }
-
+  /*
+  @function getAchievementList
+  @param  string search, $start id de départ, $count nombre de lignes à chercher
+  @return Success avec array d'objets achivement ou array vide, Error sinon
+  Cherche des trophées par rapport à un nom ou un brief
+  */
   public static function getAchievementList($start, $count) {
+    $search = Form::getField('search');
   	$start--;
   	if ($start < 0) {
   	  $error = new Error("Variable de départ incorrecte");
@@ -131,7 +153,13 @@ class AchievementController {
   	}
   	else {
       $limit = "LIMIT ".$count." OFFSET ".$start;
-  		$achievements = Database::instance()->query("Achievement", Array("*"=>""), $limit);
+      if ($search) {
+        $like = array("LIKE","Name",$search);
+        $like2 = array("LIKE","Brief",$search);
+    		$achievements = Database::instance()->query("Achievement", Array("*"=>""), array($like, " OR ", $like2, $limit));
+      } else {
+        $achievements = Database::instance()->query("Achievement", Array("*"=>""), array($limit));
+      }
       $achievements = Database::instance()->dataClean($achievements, true);
   		$success = new Success($achievements);
   		Response::jsonResponse($success);

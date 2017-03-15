@@ -83,6 +83,8 @@ class Database {
    * concaténer les informations dans une string au format query, puis sendQuery pour l'envoyer au serveur
    * @param  [array de strings] $tables  voir fonction processFROM
    * @param  [array de strings] $entries [ "champ" => "entrée utilisateur"/peut etre vide]
+   * @param  [array de strings et d'arrays] $addEndStatement [liste d'array et de string, si il y a une seule
+   *                                                           addition il faut tout de même la mettre dans un array ]
    * @return [array]          [contient toutes les données retournées par la requête]
    */
   public function query($tables, $entries, $addEndStatement = NULL){
@@ -90,29 +92,47 @@ class Database {
       $select = $this->processSELECT($entries);
       $from = $this->processFROM($tables);
       $where = $this->processWHERE($entries);
+      $where = (!$where)?"":$where;
       $statement=$select.$from;
-      $array_entries = null;
-      if($where && !is_array($addEndStatement)) {
+      $array_entries = array();
+
+      if(empty($addEndStatement)) {
         $statement .= $where;
         $array_entries = $this->processArrayEntries($entries);
+        return $this->sendQuery($statement, $array_entries);
       }
-      if($addEndStatement && !is_array($addEndStatement)) {
-        $statement .= " ".$addEndStatement;
-      } else if ($addEndStatement && is_array($addEndStatement) && current($addEndStatement) == "IN") {
-        $in = $this->processIN($addEndStatement);
-        $array_entries = $addEndStatement[2];
-        $statement .= $in;
-      } else if ($addEndStatement && is_array($addEndStatement) && current($addEndStatement) == "LIKE") {
-        $like = $this->processLIKE($addEndStatement);
-        $array_entries = array("%".$addEndStatement[2]."%");
-        $statement .= $like;
+      if (is_string($addEndStatement)){
+        $statement .= $where." ".$addEndStatement;
+        $array_entries = $this->processArrayEntries($entries);
+        return $this->sendQuery($statement, $array_entries);
       }
-      //echo $statement;
-    } catch(\PDOException $e){
-        throw new RouterException('Erreur lors de la requête',404);
-        $e->send();
+      if (is_array($addEndStatement)){
+        $additions = "";
+        foreach($addEndStatement as $addition){
+          if(is_string($addition)){
+            $additions .= " ".$addition;
+          }
+          else if (current($addition) == "IN"){
+            $in = $this->processIN($addition);
+            $array_entries = array_merge($array_entries,$addition[2]);
+            $additions .= $in;
+            $where = " WHERE ";
+          }
+          else if (current($addition) == "LIKE"){
+            $like = $this->processLIKE($addition);
+            array_push($array_entries, "%".$addition[2]."%");
+            //$array_entries = array_merge($array_entries,array("%".$addition[2]."%"));
+            $additions .= $like;
+            $where = " WHERE ";
+          }
+        }
+        $statement .= $where.$additions;
+      } catch(\PDOException $e){
+          throw new RouterException('Erreur lors de la requête',404);
+          $e->send();
+      }
+      return $this->sendQuery($statement, $array_entries);
     }
-    return $this->sendQuery($statement, $array_entries);
   }
 
 
@@ -138,6 +158,12 @@ class Database {
     return $data;
     }
 
+  /**
+   * Prépare une query pour insérer quelque chose dans la bdd.
+   * @param  [string] $table   [nom de la table]
+   * @param  [array] $entries [ champs => valeur à insérer]
+   * @return [int]          [id de la ligne insérée]
+   */
   public function insert($table, $entries) {
     try{
       $into = "INSERT INTO ".$table;
@@ -169,11 +195,11 @@ class Database {
   }
 
   /**
-   * [update description]
-   * @param  [type] $table          voir fonction processFROM
-   * @param  [type] $entries        [description]
-   * @param  [type] $identification [description]
-   * @return [type]                 [description]
+   * prépare une query pour faire un update dans la base de donnée
+   * @param  [array] $table          table, ou tables, voir fonction processFROM
+   * @param  [array] $entries        (champs => nouvelle_valeurs)
+   * @param  [array] $identification (champs => valeurs), pour identifier la ligne à modifier
+   * @return []                 []
    */
   public function update($table, $entries, $identification) {
     try{
@@ -205,6 +231,13 @@ class Database {
     //echo "update ok";
   }
 
+
+  /**
+   * Prépare une query pour supprimer une ligne de la base de donnée.
+   * @param  [string] $table          [table]
+   * @param  [array] $identification [(champs => valeurs), pour identifier la ligne à modifier]
+   * @return []                 []
+   */
   public function delete($table, $identification) {
     $delete = "DELETE ";
     try{
@@ -235,6 +268,14 @@ class Database {
     }
   }
 
+
+  /**
+   * Compte le nombre d'entrée distinctes dans une table de la bdd en fonction d'un champ
+   * @param  [string] $table   [nom de la table]
+   * @param  [string] $count   [champ]
+   * @param  [array] $entries [(champs=>valeurs), pour identifier les lignes concernées]
+   * @return [int]          [nombre d'entrées différentes]
+   */
   public function count($table, $count, $entries = NULL){
     try{
     $count = 'SELECT COUNT('.$count.')';
@@ -465,7 +506,7 @@ class Database {
   }
 
   private function processIN($entry) {
-    $process_in = " WHERE ".$entry[1]." IN ( ";
+    $process_in = $entry[1]." IN ( ";
     foreach($entry[2] as $key => $value){
       $process_in .= "?";
       if($key!= key(array_slice($entry[2], -1, 1, TRUE))){
@@ -477,7 +518,7 @@ class Database {
   }
 
   private function processLIKE($entry) {
-    $process_in = " WHERE ".$entry[1]." LIKE ?";
+    $process_in = $entry[1]." LIKE ?";
     return $process_in;
   }
 }

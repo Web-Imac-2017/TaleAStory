@@ -12,28 +12,38 @@ use \Server\Router;
 use \Server\RouterException;
 use \Server\Session;
 require_once("Server/Database.php");
+require_once("Server/Session.php");
 require_once("View/Success.php");
 require_once("View/Error.php");
 require_once("Controller/AchievementController.php");
+require_once("Model/Player.php");
 
-//$player = Player::signup("Louuuu", "Louuuuu", "Lou", "lou@gmailcom");
 
+$in = array("IN", "Login", array("lou", "Dori", "KASS5"));
+$like = array("LIKE", "Mail", "lou");
+$like2 = array("LIKE", "Login", "lou");
+$limit = "LIMIT 3 OFFSET 1";
 
-$in = array("IN", "Login", array("lou", "Dori", "kass"));
-$like = array("LIKE", "Login", "kass");
-
-//$test = Database::instance()->query("Player", array("IDPlayer"=>"", "Mail"=>"", "Login"=>"", "IDCurrentStep"=>""), GROUP);
-//echo "<pre>".var_export($test, true)."</pre>";
+$test = Database::instance()->query("Player", array("*"=>""),array($limit));
 /*
+$test = Database::instance()->query("Player", array("IDPlayer"=>"", "Mail"=>"", "Login"=>"", "IDCurrentStep"=>""), GROUP);
+echo "<pre>".var_export($test, true)."</pre>";
+
 $test = Database::instance()->insert("Player", array("Login"=>"KASS5", "mail"=>"gmalalaletetet"));
 echo "<pre>".var_export($test, true)."</pre>";
 $test = Database::instance()->update("Player", array("mail"=>"unvraimail@lol.com"), array("Login"=>"KASS5"));
 echo "<pre>".var_export($test, true)."</pre>";
 $test = Database::instance()->delete("PLayer", array("Login"=>"KASS4"));
 echo "<pre>".var_export($test, true)."</pre>";
+
 //$test = Database::instance()->query("Player", array("IDPlayer"=>1, "Mail"=>"", "Login"=>"", "IDCurrentStep"=>2), $in);
 
 //$test = Database::instance()->query("Player", array("IDPlayer"=>2, "Mail"=>"", "Login"=>"", "IDCurrentStep"=>2), $like);
+
+$test = Database::instance()->query("Player", array("IDPlayer"=>2, "Mail"=>"", "Login"=>"", "IDCurrentStep"=>2), $in);
+echo "<pre>".var_export($test, true)."</pre>";
+$test = Database::instance()->query("Player", array("IDPlayer"=>2, "Mail"=>"", "Login"=>"", "IDCurrentStep"=>2), $like);
+*/
 //$test = AchievementController::getAchievementList(1,4);
 //$player = Player::connect("login","pwd");
 //$test = Database::instance()->arrayMap($test, "Login", "IDPlayer");

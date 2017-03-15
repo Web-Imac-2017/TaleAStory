@@ -12,7 +12,11 @@ use \View\Success;
 const ERR_NOT_CONNECTED = -4;
 
 class CurrentUserController{
-
+  /*
+  @function stats
+  @return Success avec tableau vide si rien, tableau de stat 'name'=>'value' sinon
+  Retourne les stats  de l'user connecté
+  */
   static public function stats(){
     $player = CurrentUserController::isConnected();
     $stats = $player->stats();
@@ -21,7 +25,11 @@ class CurrentUserController{
     $success = new Success($stats);
     Response::jsonResponse($success);
   }
-
+  /*
+  @function item
+  @return Success avec tableau vide si rien, tableau de item 'name'=>'quantity' sinon
+  Retourne les item  de l'user connecté
+  */
   static public function items(){
     $player = CurrentUserController::isConnected();
       $items = $player->items();
@@ -31,7 +39,11 @@ class CurrentUserController{
       Response::jsonResponse($success);
 
   }
-
+  /*
+  @function currentstep
+  @return Success avec tableau vide si rien, objet Step sinon
+  Retourne la step courante de l'user connecté
+  */
   static public function currentStep(){
     $player = CurrentUserController::isConnected();
       $current_step = $player->currentStep();
@@ -41,7 +53,11 @@ class CurrentUserController{
       Response::jsonResponse($success);
 
   }
-
+  /*
+  @function story
+  @return Success avec tableau vide si rien, tableau d'objet Step sinon
+  Retourne les steps passées de l'user connecté
+  */
   static public function story(){
     $player = CurrentUserController::isConnected();
       $story = $player->pastSteps();
@@ -51,7 +67,11 @@ class CurrentUserController{
       Response::jsonResponse($success);
 
   }
-
+  /*
+  @function currentuser
+  @return Success avec tableau vide si rien, objet Player sinon
+  Retourne l'user connecté
+  */
   static public function currentUser() {
       $player = Player::connectSession();
       if($player){
@@ -61,7 +81,11 @@ class CurrentUserController{
       else
         return null;
   }
-
+  /*
+  @function achivements
+  @return Success avec tableau vide si rien, tableau de objet Achievement sinon
+  Retourne les trophées de l'user connecté
+  */
   static public function achievements(){
     $player = CurrentUserController::isConnected();
     $achievements = $player->achievements();
@@ -70,7 +94,11 @@ class CurrentUserController{
     $success = new Success($achievements);
     Response::jsonResponse($success);
   }
-
+  /*
+  @function unreadAchievements
+  @return Success avec tableau vide si rien, tableau de objet Achievement sinon
+  Retourne les trophées pas encore gagnés de l'user connecté
+  */
   static public function unreadAchievements(){
     $player = CurrentUserController::isConnected();
     $achievements = $player->unreadAchievements();
@@ -79,7 +107,11 @@ class CurrentUserController{
     $success = new Success($achievements);
     Response::jsonResponse($success);
   }
-
+  /*
+  @function isAdmin
+  @return Error si l'user courant n'est pas admin, objet Player sinon
+  Vérifie que l'user courant est admin
+  */
   static public function isAdmin(){
     $admin = Player::connectSession();
     if(!$admin || $admin->admin == 0 || $admin->isAdmin() == 0){
@@ -87,7 +119,11 @@ class CurrentUserController{
       Response::jsonResponse($e);
     }
   }
-
+  /*
+  @function isConnected
+  @return Error si aucun user est co, objet Player sinon
+  Vérifie qu'il y a un user connecté
+  */
   static public function isConnected(){
     $player = Player::connectSession();
     if(!$player) {
@@ -96,12 +132,17 @@ class CurrentUserController{
     }
     else return $player;
   }
-
+  /*
+  @function deletePlayer
+  @param  idplayer
+  @return Error avec array("champ"=>"message erreur"), Success sinon
+  Supprime l'user courant et ses attributs
+  */
   public static function deletePlayer() {
     CurrentUserController::isAdmin();
-    $id = Form::getField("IDPlayer");
+    $id = Form::getField("idplayer");
     if(!$id){
-      $e = new Error(array("IDPlayer"=>"ID Invalide ! Impossible de supprimer le joueur !"));
+      $e = new Error(array("idplayer"=>"ID Invalide ! Impossible de supprimer le joueur !"));
       Response::jsonResponse($e);
     }
     else{
@@ -121,35 +162,12 @@ class CurrentUserController{
       Response::jsonResponse($e);
     }
   }
-
-/*  public static function updatePlayer() {
-    $data = Form::getFullForm(); //si l'id n'est pas présent, on retourne null
-    if(!isset($data["IDPlayer"]) || $data["IDPlayer"]== null ){
-      $e = new Error(array("IDPlayer"=>"Id invalide ! Péripéthie invalide"));
-      Response::jsonResponse($e);
-    }
-
-    $entries = array();
-    $fields = array("ImgPath","Pwd","Pseudo");
-    foreach ($fields as $field) {
-      if(!isset($data[$field]) || $data[$field]=="") {
-        if(substr($field,0,2) != "ID") //les champs ID inchangés (donc initialisés à null dans data) ne doivent pas être précisés dans entries
-          $entries[$field]="";
-      }
-      else {
-        $entries[$field]=$data[$field];
-      }
-    }
-    $player = Player::getPlayer($data["IDPlayer"]);
-    if(!$player){
-      $e = new Error(array("IDPlayer"=>"Id non attribué!"));
-      Response::jsonResponse($e);
-    }
-    $player->update($entries);
-    $e = new Success("Joueur modifié !");
-    Response::jsonResponse($e);
-  }*/
-
+  /*
+  @function updatePseudo
+  @param pseudo
+  @return Error avec array("champ"=>"message erreur"), Success sinon
+  Modifie le pseudo de l'user courant
+  */
   public static function updatePseudo(){
     $pseudo = Form::getField('pseudo');
     $player = CurrentUserController::isConnected();
@@ -162,7 +180,12 @@ class CurrentUserController{
     $s = new Success("Pseudo modifié!");
     Response::jsonResponse($s);
   }
-
+  /*
+  @function updatePwd
+  @param currentPwd newPwd
+  @return Error avec array("champ"=>"message erreur"), Success sinon
+  Vérifie que le mot de passe courant est bon puis le modifie avec le nouveau mot de passe
+  */
   public static function updatePwd(){
     $current_pwd = Form::getField('currentPwd');
     $new_pwd = Form::getField('newPwd');
@@ -181,7 +204,12 @@ class CurrentUserController{
     $s = new Success("Password modifié!");
     Response::jsonResponse($s);
   }
-
+  /*
+  @function updateImage
+  @param image
+  @return Error avec array("champ"=>"message erreur"), Success sinon
+  Modifie l'image de l'user courant
+  */
   public static function updateImage(){
     $imgpath=Form::uploadFile("image");
     $player = CurrentUserController::isConnected();

@@ -16,11 +16,11 @@ Class Achievement {
     $this->brief=$brief;
   }
 
-  /*
-  @function save
-  @return $id de l'achievement créé, null si erreur
-  Insère un nouvel achievement en base de données
-  */
+/*
+@function save
+@return $id de l'achievement créé, null si erreur
+Insère un nouvel achievement en base de données
+*/
 
   public function save() {
     $entries = array(
@@ -37,11 +37,11 @@ Class Achievement {
     return null;
     }
 
-    /*
-    @function delete
-    @return $bool faux si erreur, vrai si ok
-    Supprime un achievement donné, ainsi que ses "mentions" dans la tables liée à l'achievement
-    */
+/*
+@function delete
+@return $bool faux si erreur, vrai si ok
+Supprime un achievement donné, ainsi que ses "mentions" dans la tables liée à l'achievement
+*/
 
     public function delete() {
       $entries = array(
@@ -58,17 +58,20 @@ Class Achievement {
       return true;
     }
 
-    /*
-    @function update
-    @param  $entries array de la forme : "Champ à modifier"=>"nouvelle valeur"
-    @return void
-    Maj un achievement
-    */
-
-    public function update($entries) {
+/*
+@function update
+@param  $entries array de la forme : "Champ à modifier"=>"nouvelle valeur"
+@return void
+Maj un achievement
+*/
+  public function update($entries) {
       Database::instance()->update(self::$table, $entries, array("IDAchievement"=>$this->id));
     }
-
+/*
+@function getAchievementImg
+@param  $id id de la step
+@return chemin de l'image, null si erreur
+*/
     static public function getAchievementImg($id) {
       $data = Database::instance()->query("Achievement", array("IDAchievement"=>$id, "*"=>""));
       if ($data != NULL) {

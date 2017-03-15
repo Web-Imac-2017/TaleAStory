@@ -17,7 +17,7 @@ class SignUpController{
     $pseudo = Form::getField('pseudo');
     $login = $mail;
     $player = Player::signUp($pseudo, $login, $pwd, $mail);
-    if (get_class($player)=="Player"){
+    if (get_class($player)=="Model\\Player"){
       //INIT STATS
       $statsQuery = Database::instance()->query("Stat",array("IDStat"=>""));
       $statsQuery = Database::instance()->arrayMap($statsQuery,0,'IDStat');
@@ -34,7 +34,7 @@ class SignUpController{
       $playerData['mail']= $player->mail;
       $success = new Success($playerData);
       Response::jsonResponse($success);
-    } else {
+    } else{
       Response::jsonResponse($player);
     }
   }

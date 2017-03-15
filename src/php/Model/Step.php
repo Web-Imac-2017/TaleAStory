@@ -24,11 +24,11 @@ Class Step {
     $this->idType=$idType;
     $this->title=$title;
   }
-  /*
-  @function save
-  @return $id du step créé, null si erreur
-  Insère un nouveau step en base de données
-  */
+/*
+@function save
+@return $id du step créé, null si erreur
+Insère un nouveau step en base de données
+*/
   public function save() {
      $entries = array(
        'ImgPath' => $this->imgpath,
@@ -45,20 +45,20 @@ Class Step {
      }
      return null;
    }
-   /*
-   @function update
-   @param  $entries array de la forme : "Champ à modifier"=>"nouvelle valeur"
-   @return void
-   Maj une step
-   */
+/*
+@function update
+@param  $entries array de la forme : "Champ à modifier"=>"nouvelle valeur"
+@return void
+Maj une step
+*/
    public function update($entries) {
      Database::instance()->update(self::$table, $entries, array("IDStep"=>$this->id));
    }
-   /*
-   @function delete
-   @return $bool faux si erreur, vrai si ok
-   Supprime une step, ainsi que ses "mentions" dans les tables qui sont liées
-   */
+/*
+@function delete
+@return $bool faux si erreur, vrai si ok
+Supprime une step, ainsi que ses "mentions" dans les tables qui sont liées - ATTENTION aux pb de dépendances
+*/
    public function delete() {
      $entries = array(
        "IDStep" => $this->id
@@ -66,7 +66,7 @@ Class Step {
     try {
        $table = "AdminWriting";
        Database::instance()->delete($table, array("IDStep"=>$this->id));
-       $table = "Player";
+       /*$table = "Player";
        Database::instance()->delete($table, array("IDCurrentStep"=>$this->id));
        $table = "Choice";
        $c = Choice::getChoiceByStep($this->id);
@@ -82,7 +82,7 @@ Class Step {
          }
        }
        $table = "PastStep";
-       Database::instance()->delete($table, array("IDStep"=>$this->id));
+       Database::instance()->delete($table, array("IDStep"=>$this->id));*/
        Database::instance()->delete(self::$table, array("IDStep"=>$this->id));
 
      }catch (RuntimeException $e) {
@@ -90,13 +90,13 @@ Class Step {
      }
      return true;
    }
-   /*
-   @function processAnswer
-   @param  $player courant
-   @param  $answer à vérifier
-   @return JSON Response 'error' si erreur, $player mis à jour sinon
-   Vérifie la réponse donnée, regarde si le joueur peut faire le choix correspondant, met à jour le joueur si oui
-   */
+ /*
+ @function processAnswer
+ @param  $player courant
+ @param  $answer à vérifier
+ @return JSON Response 'error' si erreur, $player mis à jour sinon
+ Vérifie la réponse donnée, regarde si le joueur peut faire le choix correspondant, met à jour le joueur si oui
+ */
    public function processAnswer($player, $answer) {
      /*pour chaque choix du step, vérifier checkanswer et prendre celle qui est vrai */
      $choiceArray = Database::instance()->query("Choice", array( 'IDStep' => $this->id, 'TransitionText'=>'', 'IDNextStep'=>'', 'IDChoice'=>'', 'Answer'=>''));
@@ -127,11 +127,18 @@ Class Step {
      }
    }
 
-
+/*
+@function countSteps
+@return le nb de steps présentes dans la database
+*/
    public static function countSteps(){
      return Database::instance()->count('Step','IDStep');
    }
-
+/*
+@function getStepImg
+@param  $id id de la step
+@return chemin de l'image, null si erreur
+*/
    static public function getStepImg($id) {
      $stepdata = Database::instance()->query("Step", array("IDStep"=>$id, "*"=>""));
      if ($stepdata != NULL) {
