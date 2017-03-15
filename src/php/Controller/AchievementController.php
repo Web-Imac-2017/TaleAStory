@@ -78,7 +78,6 @@ class AchievementController {
         $oldimg =  Achievement::getAchievementImg($data["idachievement"]);
         if($oldimg != '../assets/images/default_image_tiny.png' && file_exists ($oldimg)){
             unlink($oldimg);
-          } catch(Exception $e) { }
         }
       }
     }
@@ -106,11 +105,7 @@ class AchievementController {
       $a->id = $id;
       $a=$a->delete();
       if($a){
-<<<<<<< HEAD
         if($oldimg != '../assets/images/default_image_tiny.png' && file_exists ($oldimg)){
-=======
-        if($oldimg != '../assets/images/default_image_tiny.png'){
->>>>>>> da456742cca170791aec8fe21cb622894c59b129
           try {
             unlink($oldimg);
           } catch(Exception $e) { }

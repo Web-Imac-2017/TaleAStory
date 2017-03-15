@@ -46,7 +46,8 @@ class Database {
         $this->pdo = $pdo;
       }
       catch(PDOException $e){
-          die('Erreur : '.$e->getMessage());
+          throw new RouterException($e->getMessage(), (int)$e->getCode());
+          $e->send();
       }
     }
     //echo 'connexion bdd OK';
@@ -84,27 +85,32 @@ class Database {
    * @return [array]          [contient toutes les données retournées par la requête]
    */
   public function query($tables, $entries, $addEndStatement = NULL){
-    $select = $this->processSELECT($entries);
-    $from = $this->processFROM($tables);
-    $where = $this->processWHERE($entries);
-    $statement=$select.$from;
-    $array_entries = null;
-    if($where && !is_array($addEndStatement)) {
-      $statement .= $where;
-      $array_entries = $this->processArrayEntries($entries);
+    try{
+      $select = $this->processSELECT($entries);
+      $from = $this->processFROM($tables);
+      $where = $this->processWHERE($entries);
+      $statement=$select.$from;
+      $array_entries = null;
+      if($where && !is_array($addEndStatement)) {
+        $statement .= $where;
+        $array_entries = $this->processArrayEntries($entries);
+      }
+      if($addEndStatement && !is_array($addEndStatement)) {
+        $statement .= " ".$addEndStatement;
+      } else if ($addEndStatement && is_array($addEndStatement) && current($addEndStatement) == "IN") {
+        $in = $this->processIN($addEndStatement);
+        $array_entries = $addEndStatement[2];
+        $statement .= $in;
+      } else if ($addEndStatement && is_array($addEndStatement) && current($addEndStatement) == "LIKE") {
+        $like = $this->processLIKE($addEndStatement);
+        $array_entries = array("%".$addEndStatement[2]."%");
+        $statement .= $like;
+      }
+      //echo $statement;
+    } catch(PDOException $e){
+        throw new RouterException('Erreur lors de la requête',404);
+        $e->send();
     }
-    if($addEndStatement && !is_array($addEndStatement)) {
-      $statement .= " ".$addEndStatement;
-    } else if ($addEndStatement && is_array($addEndStatement) && current($addEndStatement) == "IN") {
-      $in = $this->processIN($addEndStatement);
-      $array_entries = $addEndStatement[2];
-      $statement .= $in;
-    } else if ($addEndStatement && is_array($addEndStatement) && current($addEndStatement) == "LIKE") {
-      $like = $this->processLIKE($addEndStatement);
-      $array_entries = array("%".$addEndStatement[2]."%");
-      $statement .= $like;
-    }
-    //echo $statement;
     return $this->sendQuery($statement, $array_entries);
   }
 
@@ -121,10 +127,9 @@ class Database {
     try {
       $qry = $this->getPDO()->prepare($statement);
       $qry->execute($array_entries) or die(print_r($qry->errorInfo()));
-    }
-    catch(PDOException $e){
-        die('Erreur : '.$e->getMessage());
-        return NULL;
+    } catch(PDOException $e){
+        throw new RouterException('Erreur lors de l\'envoi de la requête',404);
+        $e->send();
     }
     $data = array();
     while($d = $qry->fetch()) {array_push($data, $d);}
@@ -133,11 +138,16 @@ class Database {
     }
 
   public function insert($table, $entries) {
-    $into = "INSERT INTO ".$table;
-    $fields = $this->processFields($entries);
-    $values = $this->processValues($entries);
-    $statement = $into.$fields.$values;
-    //echo "\n".$statement."\n";
+    try{
+      $into = "INSERT INTO ".$table;
+      $fields = $this->processFields($entries);
+      $values = $this->processValues($entries);
+      $statement = $into.$fields.$values;
+      //echo "\n".$statement."\n";
+    } catch(PDOException $e){
+        throw new RouterException('Erreur lors de l\'insertion',404);
+        //$e->send();
+    }
     return $this->sendInsert($statement, $entries);
   }
 
@@ -149,7 +159,8 @@ class Database {
     $id = $this->getPDO()->lastInsertId();
     }
     catch(PDOException $e){
-        RouterException::send();
+      throw new RouterException('Erreur lors de l\'envoie de l\'insertion dans la BDD',404);
+      $e->send();
     }
     //echo "insert ok";
     return $id;
@@ -163,6 +174,7 @@ class Database {
    * @return [type]                 [description]
    */
   public function update($table, $entries, $identification) {
+    try{
     $update = "UPDATE ";
     $from = $this->processFROM($table);
     $from = str_replace("FROM ", "", $from);
@@ -171,6 +183,10 @@ class Database {
     $array_entries = array_merge($this->processArrayEntries($entries), $this->processArrayEntries($identification));
     $statement = $update.$from.$set.$where;
     //echo "\n".$statement."\n";
+    } catch(PDOException $e){
+      throw new RouterException('Erreur lors de la mise a jour de la table',404);
+      $e->send();
+    }
     return $this->sendUpdate($statement, $array_entries);
   }
 
@@ -180,23 +196,28 @@ class Database {
     try {
       $update = $this->getPDO()->prepare($statement);
       $update->execute($array_entries) or die(print_r($update->errorInfo()));
-    }
-    catch(PDOException $e){
-        throw('Erreur : '.$e->getMessage());
+    }catch(PDOException $e){
+      throw new RouterException('Erreur lors de l\'envoie de la mise a jour de la table',404);
+      $e->send();
     }
     //echo "update ok";
   }
 
   public function delete($table, $identification) {
     $delete = "DELETE ";
+    try{
     $from = $this->processFROM($table);
     $where = $this->processWHERE($identification);
     $statement = $delete.$from.$where;
     $array_entries = $this->processArrayEntries($identification);
     //echo $statement;
     if (strstr($statement, "WHERE") == FALSE) {
-      //echo "BUG DELETE";
+      //echo " bug DELETE";
       return 0;
+    }
+    } catch(PDOException $e){
+      throw new RouterException('Erreur lors de la suppression en table',404);
+      $e->send();
     }
     return $this->sendDelete($statement, $array_entries);
   }
@@ -207,11 +228,13 @@ class Database {
       $delete->execute($array_entries) or die(print_r($delete->errorInfo()));
     }
     catch(PDOException $e){
-        RouterException::send();
+      throw new RouterException('Erreur lors de l\'envoie de la suppression en table',404);
+      $e->send();
     }
   }
 
   public function count($table, $count, $entries = NULL){
+    try{
     $count = 'SELECT COUNT('.$count.')';
     $from = $this->processFROM($table);
     $statement = $count.$from;
@@ -223,6 +246,10 @@ class Database {
     }
     //echo $statement;
     $data = $this->sendQuery($statement, $array_entries);
+    }catch(PDOException $e){
+      throw new RouterException('Erreur lors du count de la requête',404);
+      $e->send();
+    }
     return $data[0][0];
   }
 
@@ -244,8 +271,6 @@ class Database {
     }
     return $map;
   }
-
-
 
   public function arrayClean($entries ,$key_alpha, $relevant=0){
     $array_clean = array();
@@ -299,17 +324,17 @@ class Database {
    * @return [string]          ["SELECT champs1,champ2"]
    */
   private function processSELECT($entries) {
-    $fields = array_keys($entries);
-    $process_select = "SELECT ";
-    foreach ($fields as $key => $field) {
-      $process_select .= $field;
-      if($key!= key(array_slice($fields, -1, 1, TRUE))) {
-        $process_select .=", ";
+      $fields = array_keys($entries);
+      $process_select = "SELECT ";
+      foreach ($fields as $key => $field) {
+        $process_select .= $field;
+        if($key!= key(array_slice($fields, -1, 1, TRUE))) {
+          $process_select .=", ";
+        }
+        if ($field == "*") {
+          return "SELECT *";
+        }
       }
-      if ($field == "*") {
-        return "SELECT *";
-      }
-    }
     return $process_select;
   }
 
@@ -322,24 +347,24 @@ class Database {
    * @return [string]         ["FROM table"]
    */
   private function processFROM($tables) {
-    $process_from = " FROM ";
-    //echo $tables;
-    if (!is_array($tables)) {
-      $process_from .= $tables;
-    } else if (count($tables) == 1 && !is_array(current($tables))){
-      if (is_int(key($tables))) {
-        $process_from .= current($tables);
-      } else {
-        $process_from .= key($tables);
+      $process_from = " FROM ";
+      //echo $tables;
+      if (!is_array($tables)) {
+        $process_from .= $tables;
+      } else if (count($tables) == 1 && !is_array(current($tables))){
+        if (is_int(key($tables))) {
+          $process_from .= current($tables);
+        } else {
+          $process_from .= key($tables);
+        }
+      } else if (count($tables) >= 1) {
+        $process_from .= key(current($tables));
+        foreach($tables as $joint) {
+          $left = each($joint);
+          $right = each($joint);
+          $process_from .= " LEFT JOIN ".$right[0]." ON ".$right[1]." = ".$left[1];
+        }
       }
-    } else if (count($tables) >= 1) {
-      $process_from .= key(current($tables));
-      foreach($tables as $joint) {
-        $left = each($joint);
-        $right = each($joint);
-        $process_from .= " LEFT JOIN ".$right[0]." ON ".$right[1]." = ".$left[1];
-      }
-    }
     return $process_from;
   }
 
@@ -350,17 +375,17 @@ class Database {
    * @return [string]          ["WHERE champs1 = ? AND champs2 = ?"]
    */
   private function processWHERE($entries) {
-    $process_where = " WHERE ";
-    $array_entries = $this->processArrayWhere($entries);
-    foreach ($array_entries as $field => $entry) {
-      $process_where .= $field." = ? ";
-      if($field != key(array_slice($array_entries, -1, 1, TRUE))) {
-        $process_where .="AND ";
+      $process_where = " WHERE ";
+      $array_entries = $this->processArrayWhere($entries);
+      foreach ($array_entries as $field => $entry) {
+        $process_where .= $field." = ? ";
+        if($field != key(array_slice($array_entries, -1, 1, TRUE))) {
+          $process_where .="AND ";
+        }
       }
-    }
-    if($process_where == " WHERE ") {
-      return 0;
-    }
+      if($process_where == " WHERE ") {
+        return 0;
+      }
     return $process_where;
   }
 
@@ -453,9 +478,6 @@ class Database {
     $process_in = " WHERE ".$entry[1]." LIKE ?";
     return $process_in;
   }
-
-
-
 }
 
 
