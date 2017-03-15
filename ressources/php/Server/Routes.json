@@ -7,8 +7,8 @@
   "/addchoice":"Controller\\ChoiceController::addChoice",
   "/deletechoice":"Controller\\ChoiceController::deleteChoice",
   "/updatechoice":"Controller\\ChoiceController::updateChoice",
+  "/choice/list/:start/:count":"Controller\\ChoiceController::getChoiceList",
   "/addstep":"Controller\\StepController::addStep",
-  "/deletestep":"Controller\\StepController::deleteStep",
   "/updatestep":"Controller\\StepController::updateStep",
   "/step/list/:start/:count":"Controller\\StepController::getStepsList",
   "step/count/":"Controller\\StepController::stepCount",
@@ -19,6 +19,7 @@
   "/additem":"Controller\\ItemController::addItem",
   "/updateitem":"Controller\\ItemController::updateItem",
   "/deleteitem":"Controller\\ItemController::deleteItem",
+    "/item/list/:start/:count":"Controller\\ItemController::getItemList",
   "/addachievement":"Controller\\AchievementController::addAchievement",
   "/deleteachievement":"Controller\\AchievementController::deleteAchievement",
   "/updateachievement":"Controller\\AchievementController::updateAchievement",
@@ -30,5 +31,7 @@
   "/signup":"Controller\\SignUpController::signUp",
   "/signout":"Controller\\SignOutController::signOut",
   "/deleteplayer":"Controller\\CurrentUserController::deletePlayer",
-  "/updateplayer":"Controller\\CurrentUserController::updatePlayer"
+  "/updateplayer/pseudo":"Controller\\CurrentUserController::updatePseudo",
+  "/updateplayer/pwd":"Controller\\CurrentUserController::updatePwd",
+  "/updateplayer/image":"Controller\\CurrentUserController::updateImage"
 }

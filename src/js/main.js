@@ -75,6 +75,10 @@ class Test extends React.Component{
             function(json){
                 console.log(json);
          });
+		Requester.stepList(1,3, "Brayan").then( 
+            function(json){
+                console.log(json);
+         });
 		Requester.stepList(1,3).then( 
             function(json){
                 console.log(json);
@@ -92,10 +96,6 @@ class Test extends React.Component{
                 console.log(json);
          });*/
 		Requester.deleteChoice(-1).then(
-            function(json){
-                console.log(json);
-         });
-		Requester.deleteStep(3).then(
             function(json){
                 console.log(json);
          });
@@ -123,6 +123,25 @@ class Test extends React.Component{
 		Requester.deletePlayer(6).then(
             function(json){
                 console.log(json);
+         });
+		/*Requester.updatePlayerPseudo("BABAR_LE_MAGNIFIQUE").then(
+            function(json){
+                console.log(json);
+         });*/
+		Requester.updatePlayerPass("newPassWord", "inconnus").then(
+            function(json){
+                console.log(json);
+         });
+		Requester.choiceList(1,3).then( 
+            function(json){
+                console.log(json);
+         });
+		Requester.itemList(1,3, "Brayan").then( 
+            function(items){
+                console.log(items[0].IDItem);
+                console.log(items[0].Name);
+                console.log(items[0].ImgPath);
+                console.log(items[0].Brief);
          });
 
 
