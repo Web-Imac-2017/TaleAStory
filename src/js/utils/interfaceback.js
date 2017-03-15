@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom';
 import {Achievement} from '../model/achievement'
 import {Item} from '../model/item'
 import {Step} from '../model/step'
+import {Choice} from '../model/choice'
 
 class GlobalBack{
   static get(field){
@@ -200,13 +201,19 @@ class Requester {
             });
     } 
 
-    static currentUserAchievements(){
+    /*
+    * (optional) filter :  ne renvoie que les resultats comportant le texte spécifié dans filter
+    */
+    static currentUserAchievements(filter){
       return fetch(config.path('currentuser/achievements/'), {
                 method: 'post',
                 headers: {
                   'Content-Type' : 'application/json'
                  },
-                credentials: "same-origin"
+                credentials: "same-origin",
+                body: JSON.stringify({
+                  search: filter
+                })
               }
             ).then(
               function(response){
@@ -293,19 +300,19 @@ class Requester {
     /* Renvoie une liste de 'count' steps, à partir de la step 'start'.
     * sinon count n'est pas précisé, il est fixé à 10
     */
-    static stepList(start, count){
-      let url = config.path('step/list/' + start);
-      if(typeof count !== "undefined") {
+    static stepList(start, count = 10, filter){
+      /*if(typeof count !== "undefined") {
         url += '/' + count;
-      } else {
-        url += '/' + 10;
-      }
-      return fetch(url, {
+      }*/
+      return fetch(config.path('step/list/' + start + '/' + count), {
                 method: 'post',
                 headers: {
                   'Content-Type' : 'application/json'
                  },
-                credentials: "same-origin"
+                credentials: "same-origin",
+                body: JSON.stringify({
+                  search: filter
+                })
               }
             ).then(
               function(response){
@@ -387,12 +394,18 @@ class Requester {
             });
     }*/
 
-
-    // A tester avec un form - il semble que le php n'attend pas un 'form' ?
-    static addStep(form){
+/*
+    // A tester avec un form
+    static addStep(image, body, zerty){
       return fetch(config.path('addstep'), {
         method: 'POST',
-        body: new FormData(form)
+        body: new FormData(form),
+              JSON.stringify({
+                body: _body,
+                IDChoice: _IDChoice,
+                IDChoice: _IDChoice,
+                IDChoice: _IDChoice
+              })
       }).then(
         function(response){
           return response.json();
@@ -404,6 +417,9 @@ class Requester {
        }
       );
     }
+*/
+
+
 
   static deleteChoice(_IDChoice){
       return fetch(config.path('deletechoice'), {
@@ -443,16 +459,18 @@ class Requester {
       );
     }
 
-  // hard crash
-  static deleteStep(_idstep){
-      return fetch(config.path('deletestep'), {
+    /* Renvoie une liste de 'count' steps, à partir de la step 'start'.
+    * sinon count n'est pas précisé, il est fixé à 10
+    */
+    static choiceList(start, count = 10, filter){
+      return fetch(config.path('choice/list/' + start + '/' + count), {
                 method: 'post',
                 headers: {
                   'Content-Type' : 'application/json'
                  },
                 credentials: "same-origin",
                 body: JSON.stringify({
-                  idstep: _idstep
+                  search: filter
                 })
               }
             ).then(
@@ -461,7 +479,13 @@ class Requester {
               }, Requester.requestError
             ).then(
               function(json){
-                return json;
+                let obj = JSON.parse(json.message);
+                let choices = [];
+                for (let i=0; i<obj.length; i++) {
+                    let ch = new Choice( obj[i].IDStep, obj[i].ImgPath, obj[i].Body, obj[i].Question, obj[i].IDType );
+                    choices[i] = ch;
+                }
+                return choices;
             });
     }
 
@@ -509,7 +533,7 @@ class Requester {
             });
     }
 
-    // A tester avec un form - Pas fini côté php
+    // A tester avec un form
     static addItem(form){
       return fetch(config.path('additem'), {
         method: 'POST',
@@ -603,7 +627,7 @@ class Requester {
             });
     }
 
-    // A tester avec un form - Pas fini côté php
+    // A tester avec un form
     static updateAchievement(form){
       return fetch(config.path('updateachievement'), {
         method: 'POST',
@@ -661,23 +685,6 @@ class Requester {
     } 
 
     // A tester avec un form
-    static updatePlayer(form){
-      return fetch(config.path('updateplayer'), {
-        method: 'POST',
-        body: new FormData(form)
-      }).then(
-        function(response){
-          return response.json();
-        }, Requester.requestError
-      ).then(
-        function(json){
-          return json;
-          //this.context.router.push(config.path('profils/admin/steps/' + json.result.id));
-       }
-      );
-    }
-
-    // A tester avec un form
     static addChoice(form){
       return fetch(config.path('addchoice'), {
         method: 'POST',
@@ -693,6 +700,70 @@ class Requester {
        }
       );
     }
+
+    static updatePlayerPseudo(newPseudo){
+      return fetch(config.path('updateplayer/pseudo'), {
+                method: 'post',
+                headers: {
+                  'Content-Type' : 'application/json'
+                 },
+                credentials: "same-origin",
+                body: JSON.stringify({
+                  pseudo: newPseudo
+                })
+      }).then(
+        function(response){
+          return response.json();
+        }, Requester.requestError
+      ).then(
+        function(json){
+          return json;
+       }
+      );
+    }
+
+    static updatePlayerPass(_currentPwd, _newPwd){
+      return fetch(config.path('updateplayer/pwd'), {
+                method: 'post',
+                headers: {
+                  'Content-Type' : 'application/json'
+                 },
+                credentials: "same-origin",
+                body: JSON.stringify({
+                  currentPwd: _currentPwd,
+                  newPwd: _newPwd
+                })
+      }).then(
+        function(response){
+          return response.json();
+        }, Requester.requestError
+      ).then(
+        function(json){
+          return json;
+       }
+      );
+    }
+
+    static updatePlayerImage(image){
+      return fetch(config.path('updateplayer/image'), {
+                method: 'post',
+                headers: {
+                  'Content-Type' : 'application/json'
+                 },
+                credentials: "same-origin",
+                body: new FormData(image)
+      }).then(
+        function(response){
+          return response.json();
+        }, Requester.requestError
+      ).then(
+        function(json){
+          return json;
+       }
+      );
+    }
+
+
 
 
 

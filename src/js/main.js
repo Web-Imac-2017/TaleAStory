@@ -67,11 +67,19 @@ class Test extends React.Component{
             function(achievements){
                 //console.log(achievements[0].isRead);
          });
+		Requester.currentUserAchievements("enigma").then(
+            function(achievements){
+                //console.log(achievements[0].isRead);
+         });
 		Requester.currentUserUnreadAchievements().then(
             function(json){
                 console.log(json);
          });
 		Requester.stepCount().then(
+            function(json){
+                console.log(json);
+         });
+		Requester.stepList(1,3, "Brayan").then( 
             function(json){
                 console.log(json);
          });
@@ -92,10 +100,6 @@ class Test extends React.Component{
                 console.log(json);
          });*/
 		Requester.deleteChoice(-1).then(
-            function(json){
-                console.log(json);
-         });
-		Requester.deleteStep(3).then(
             function(json){
                 console.log(json);
          });
@@ -121,6 +125,18 @@ class Test extends React.Component{
                 console.log(json);
          });
 		Requester.deletePlayer(6).then(
+            function(json){
+                console.log(json);
+         });
+		/*Requester.updatePlayerPseudo("BABAR_LE_MAGNIFIQUE").then(
+            function(json){
+                console.log(json);
+         });*/
+		Requester.updatePlayerPass("newPassWord", "inconnus").then(
+            function(json){
+                console.log(json);
+         });
+		Requester.choiceList(1,3).then( 
             function(json){
                 console.log(json);
          });

@@ -10,7 +10,7 @@ Class Session {
   Crée une session et génere un id de session
   */
   static public function setSession(){
-      session_start();
+    session_start();
   }
   /*
   @function closeSession
@@ -48,11 +48,12 @@ Class Session {
   */
   static public function connectUser($userid, $keepconnection, $userlogin){
     $_SESSION["userid"]=$userid;
-    if($keepconnection){
-      setcookie("userid",$userid);
+    if($keepconnection){;
       $userid=$userlogin.$userid;
       $hashed_id = password_hash($userid,PASSWORD_DEFAULT);
-      setcookie("hash_id",$hashed_id);
+      setcookie('userid',$userid,time()-3600,'/');
+      setcookie('hashed_id',$hashed_id,time()-3600,'/');
+
     }
   }
   /*
@@ -62,12 +63,13 @@ Class Session {
   Supprime l'id de l'user dans la session et les cookies
   */
   static public function disconnectUser(){
-    session_unset($_SESSION["userid"]);
+    if(isset($_SESSION["userid"]))
+      unset($_SESSION["userid"]);
     if (isset($_COOKIE["userid"]) && isset($_COOKIE["hash_id"])){
       unset($_COOKIE["userid"]);
       unset($_COOKIE["hash_id"]);
-      setcookie($_COOKIE["userid"],time()-3600);
-      setcookie($_COOKIE["hash_id"],time()-3600);
+      setcookie('userid',$_COOKIE["userid"],time()-3600,'/');
+      setcookie('hashed_id',$_COOKIE["hash_id"],time()-3600,'/');
     }
   }
   /*
@@ -85,7 +87,7 @@ Class Session {
       return null;
   }
   /*
-  @function setSessionAttribute
+  @function setSessionAttribut
   @param  $name nom de la variable à enregistrer
   @param  $value valeur de la variable à enregistrer
   @return void
@@ -104,7 +106,7 @@ Class Session {
   */
   static public function setCookieAttribute($name,$value,$cookie_time=null){
     $cookie_time==null?time() + 3600:$cookie_time;
-    setcookie("$name",$value,$cookie_time);
+    setcookie("$name",$value,$cookie_time,'/');
   }
 }
 ?>
