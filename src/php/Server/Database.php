@@ -91,7 +91,7 @@ class Database {
     $where = $this->processWHERE($entries);
     $where = (!$where)?"":$where;
     $statement=$select.$from;
-    $array_entries = null;
+    $array_entries = array();
 
     if(empty($addEndStatement)) {
       $statement .= $where;
@@ -104,7 +104,6 @@ class Database {
       return $this->sendQuery($statement, $array_entries);
     }
     if (is_array($addEndStatement)){
-      $array_entries = array();
       $additions = "";
       foreach($addEndStatement as $addition){
         if(is_string($addition)){
@@ -127,20 +126,6 @@ class Database {
       $statement .= $where.$additions;
       return $this->sendQuery($statement, $array_entries);
     }
-    /*
-    if (is_array($addEndStatement) && count($addEndStatement)>1 && current($addEndStatement) == "IN") {
-      $in = $this->processIN($addEndStatement);
-      $array_entries = $addEndStatement[2];
-      $statement .= $in;
-      return $this->sendQuery($statement, $array_entries);
-    }
-    if (is_array($addEndStatement) && count($addEndStatement)>1 && current($addEndStatement) == "LIKE") {
-      $like = $this->processLIKE($addEndStatement);
-      $array_entries = array("%".$addEndStatement[2]."%");
-      $statement .= " WHERE ".$like;
-      return $this->sendQuery($statement, $array_entries);
-    }
-    */
   }
 
 

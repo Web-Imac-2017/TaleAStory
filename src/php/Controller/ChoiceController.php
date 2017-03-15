@@ -121,7 +121,8 @@ class ChoiceController {
     return "";
   }
 
-  public static function getChoiceList($start, $count, $search) {
+  public static function getChoiceList($start, $count) {
+    $search = Form::getField('search');
   	$start--;
   	if ($start < 0) {
   	  $error = new Error("Variable de départ incorrecte");
@@ -134,9 +135,13 @@ class ChoiceController {
   	}
   	else {
       $limit = "LIMIT ".$count." OFFSET ".$start;
-      $like = array("LIKE","Answer",$search);
-      $like2 = array("LIKE","TransitionText",$search);
-  		$choices = Database::instance()->query("Choice", Array("*"=>""), array($like, " OR ", $like2, $limit));
+      if($search) {
+        $like = array("LIKE","Answer",$search);
+        $like2 = array("LIKE","TransitionText",$search);
+    		$choices = Database::instance()->query("Choice", Array("*"=>""), array($like, " OR ", $like2, $limit));
+      } else {
+        $choices = Database::instance()->query("Choice", Array("*"=>""), array($limit);
+      }
       $choices = Database::instance()->dataClean($choices, true);
   		$success = new Success($choices);
   		Response::jsonResponse($success);

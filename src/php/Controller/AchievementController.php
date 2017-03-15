@@ -120,7 +120,8 @@ class AchievementController {
     }
   }
 
-  public static function getAchievementList($start, $count, $search) {
+  public static function getAchievementList($start, $count) {
+    $search = Form::getField('search');
   	$start--;
   	if ($start < 0) {
   	  $error = new Error("Variable de départ incorrecte");
@@ -133,9 +134,13 @@ class AchievementController {
   	}
   	else {
       $limit = "LIMIT ".$count." OFFSET ".$start;
-      $like = array("LIKE","Name",$search);
-      $like2 = array("LIKE","Brief",$search);
-  		$achievements = Database::instance()->query("Achievement", Array("*"=>""), array($like, " OR ", $like2, $limit));
+      if ($search) {
+        $like = array("LIKE","Name",$search);
+        $like2 = array("LIKE","Brief",$search);
+    		$achievements = Database::instance()->query("Achievement", Array("*"=>""), array($like, " OR ", $like2, $limit));
+      } else {
+        $achievements = Database::instance()->query("Achievement", Array("*"=>""), array($limit));
+      }
       $achievements = Database::instance()->dataClean($achievements, true);
   		$success = new Success($achievements);
   		Response::jsonResponse($success);

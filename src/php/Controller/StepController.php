@@ -19,7 +19,8 @@ class StepController {
 
   }
 
-  public static function getStepsList($start, $count, $search) {
+  public static function getStepsList($start, $count) {
+  $search = Form::getField('search');
 	$start--;
 	if ($start < 0) {
 	  $error = new Error("Variable de départ incorrecte");
@@ -32,9 +33,13 @@ class StepController {
 	}
 	else {
     $limit = "LIMIT ".$count." OFFSET ".$start;
-    $like = array("LIKE","Body",$search);
-    $like2 = array("LIKE","Question",$search);
-		$stepParam = Database::instance()->query("Step", Array("*"=>""),array($like, " OR ", $like2, $limit));
+    if($search){
+      $like = array("LIKE","Body",$search);
+      $like2 = array("LIKE","Question",$search);
+  		$stepParam = Database::instance()->query("Step", Array("*"=>""),array($like, " OR ", $like2, $limit));
+    } else {
+      $stepParam = Database::instance()->query("Step", Array("*"=>""),array($limit));
+    }
     $stepParam = Database::instance()->dataClean($stepParam, true);
 		$success = new Success($stepParam);
 		Response::jsonResponse($success);
