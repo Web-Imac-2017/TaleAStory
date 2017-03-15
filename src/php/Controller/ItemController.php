@@ -76,7 +76,7 @@ class ItemController {
       else{
         $entries["imgpath"] = $imgpath;
         $oldimg =  Item::getItemImg($data["iditem"]);
-        if($oldimg != '../assets/images/default_image_tiny.png'){
+        if($oldimg != '../assets/images/default_image_tiny.png' && file_exists ($oldimg)){
           try {
             unlink($oldimg);
           } catch(Exception $e) { }
@@ -108,7 +108,7 @@ class ItemController {
       $item->id = $id;
       $item=$item->delete();
       if($item){
-        if($oldimg != '../assets/images/default_image_tiny.png'){
+        if($oldimg != '../assets/images/default_image_tiny.png' && file_exists ($oldimg)){
           try {
             unlink($oldimg);
           } catch(Exception $e) { }
@@ -121,7 +121,7 @@ class ItemController {
     }
   }
 
-  ublic static function getItemList($start, $count) {
+  public static function getItemList($start, $count) {
   	$start--;
   	if ($start < 0) {
   	  $error = new Error("Variable de départ incorrecte");
