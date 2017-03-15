@@ -167,7 +167,7 @@ class Choice {
 			return false;
 		}
 	}
-	
+
     $pItemsQuery =  $player->items();
     $player_items = Database::instance()->arrayMap($pItemsQuery, 'IDItem', 'quantity');
 
@@ -194,5 +194,31 @@ class Choice {
 	}
     return true;
   }
+
+  public static function getChoiceByStep($id){
+    $choiceQuery = Database::instance()->query(self::$table,array("IDStep"=>$id,"*"=>""));
+    $choices = array();
+    if($choiceQuery){
+      foreach ($choiceQuery as $key => $value) {
+        $c = new Choice($choiceQuery[$key]["Answer"],$id,$choiceQuery[$key]["TransitionText"],$choiceQuery[$key]["IDNextStep"]);
+        array_push($choices,$c);
+      }
+    }
+    return $choices;
+  }
+
+
+  public static function getChoiceByNextStep($id){
+    $choiceQuery = Database::instance()->query(self::$table,array("IDNextStep"=>$id,"*"=>""));
+    $choices = array();
+    if($choiceQuery){
+      foreach ($choiceQuery as $key => $value) {
+        $c = new Choice($choiceQuery[$key]["Answer"],$choiceQuery[$key]["IDStep"],$choiceQuery[$key]["TransitionText"],$id);
+        array_push($choices,$c);
+      }
+    }
+    return $choices;
+  }
+
 }
  ?>

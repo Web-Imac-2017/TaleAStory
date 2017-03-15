@@ -106,9 +106,16 @@ class CurrentUserController{
     }
     else{
       $player = Player::getPlayer($id);
-      $player = $player->delete();
-      if($player)
-        $e = new Success("Joueur supprimé !");
+      if($player){
+        $oldimg =  $player->imgpath;
+        $player = $player->delete();
+        if($oldimg != '../assets/images/default_image_tiny.png' && file_exists ($oldimg)){
+          try {
+            unlink($oldimg);
+          } catch(Exception $e) { }
+        }
+        $e = new Success("Player supprimé !");
+      }
       else
         $e = new Error(array("all"=>"Impossible de supprimer le joueur !"));
       Response::jsonResponse($e);
@@ -183,7 +190,7 @@ class CurrentUserController{
     }
     else{
       $oldimg =  $player->imgpath;
-      if($oldimg != '../assets/images/default_image_tiny.png'){
+      if($oldimg != '../assets/images/default_image_tiny.png' && file_exists ($oldimg)){
         try {
           unlink($oldimg);
         } catch(Exception $e) { }

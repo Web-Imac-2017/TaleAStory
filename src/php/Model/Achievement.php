@@ -68,6 +68,14 @@ Class Achievement {
     public function update($entries) {
       Database::instance()->update(self::$table, $entries, array("IDAchievement"=>$this->id));
     }
+
+    static public function getAchievementImg($id) {
+      $data = Database::instance()->query("Achievement", array("IDAchievement"=>$id, "*"=>""));
+      if ($data != NULL) {
+          return $data[0]["ImgPath"];
+      }
+      else return NULL;
+    }
   }
 
 ?>

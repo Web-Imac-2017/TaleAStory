@@ -121,6 +121,26 @@ class ChoiceController {
     return "";
   }
 
+  public static function getChoiceList($start, $count) {
+  	$start--;
+  	if ($start < 0) {
+  	  $error = new Error("Variable de départ incorrecte");
+  	  Response::jsonResponse($error);
+  	}
+  	else if ($count <= 0){
+  	  $empty = array();
+  	  $success = new Success($empty);
+  	  Response::jsonResponse($success);
+  	}
+  	else {
+      $limit = "LIMIT ".$count." OFFSET ".$start;
+  		$choices = Database::instance()->query("Choice", Array("*"=>""), $limit);
+      $choices = Database::instance()->dataClean($choices, true);
+  		$success = new Success($choices);
+  		Response::jsonResponse($success);
+  	}
+  }
+
 }
 
 ?>

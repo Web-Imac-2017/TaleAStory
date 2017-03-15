@@ -32,13 +32,8 @@ class StepController {
 	}
 	else {
     $limit = "LIMIT ".$count." OFFSET ".$start;
-		$stepParam = Database::instance()->query("Step", Array("IDStep"=> "",
-                                														"ImgPath"=>"",
-                                														"Body"=>"",
-                                														"Question"=>"",
-                                														"IDType"=>"",
-                                                            "Title"=>""),
-														                                 $limit);
+		$stepParam = Database::instance()->query("Step", Array("*"=>""),$limit);
+    $stepParam = Database::instance()->dataClean($stepParam, true);
 		$success = new Success($stepParam);
 		Response::jsonResponse($success);
 	}
@@ -188,7 +183,7 @@ class StepController {
       else{
         $entries["imgpath"] = $imgpath;
         $oldimg =  Step::getStepImg($data["idstep"]);
-        if($oldimg != '../assets/images/default_image_tiny.png'){
+        if($oldimg != '../assets/images/default_image_tiny.png' && file_exists ($oldimg)){
           try {
             unlink($oldimg);
           } catch(Exception $e) { }
@@ -208,30 +203,28 @@ class StepController {
   }
 
   public static function deleteStep() {
-    //CurrentUserController::isAdmin();
+    CurrentUserController::isAdmin();
     $id = Form::getField("idstep");
     if(!$id){
       $e = new Error(array("idstep"=>"Impossible de supprimer la péripéthie !"));
       Response::jsonResponse($e);
     }
-    else{
+    else if (Database::instance()->query("player",array("IDCurrentStep"=>$id))==NULL) {
       $oldimg =  Step::getStepImg($id);
       $step = new Step("", "", "", 0,"");
       $step->id = $id;
       $step = $step->delete();
       if($step){
-        //var_dump($oldimg);
-        if($oldimg != '../assets/images/default_image_tiny.png'){
+        if($oldimg != '../assets/images/default_image_tiny.png' && file_exists ($oldimg)){
           try {
             unlink($oldimg);
           } catch(Exception $e) { }
           $e = new Success("Péripéthie supprimée !");
         }
-      }
-      else
-        $e = new Error(array("all"=>"Impossible de supprimer la péripéthie !"));
-      Response::jsonResponse($e);
+      }else $e = new Error(array("all"=>"Impossible de supprimer la péripéthie !"));
     }
+    else $e = new Error(array("all"=>"Impossible de supprimer la péripéthie car elle est liée à au moins un player"));
+    Response::jsonResponse($e);
   }
 }
 ?>

@@ -69,8 +69,18 @@ Class Step {
        $table = "Player";
        Database::instance()->delete($table, array("IDCurrentStep"=>$this->id));
        $table = "Choice";
-       Database::instance()->delete($table, array("IDStep"=>$this->id));
-       Database::instance()->delete($table, array("IDNextStep"=>$this->id));
+       $c = Choice::getChoiceByStep($this->id);
+       if(!empty($c)){
+         foreach ($c as $key => $value) {
+           $c[$key]->delete();
+         }
+       }
+       $c = Choice::getChoiceByNextStep($this->id);
+       if(!empty($c)){
+         foreach ($c as $key => $value) {
+           $c[$key]->delete();
+         }
+       }
        $table = "PastStep";
        Database::instance()->delete($table, array("IDStep"=>$this->id));
        Database::instance()->delete(self::$table, array("IDStep"=>$this->id));
