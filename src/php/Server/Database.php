@@ -126,15 +126,14 @@ class Database {
             $where = " WHERE ";
           }
         }
+      }
         $statement .= $where.$additions;
       } catch(\PDOException $e){
           throw new RouterException('Erreur lors de la requête',404);
           $e->send();
       }
       return $this->sendQuery($statement, $array_entries);
-    }
   }
-
 
 
   /**
