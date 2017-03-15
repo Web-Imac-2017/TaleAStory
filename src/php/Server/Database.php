@@ -81,31 +81,66 @@ class Database {
    * concaténer les informations dans une string au format query, puis sendQuery pour l'envoyer au serveur
    * @param  [array de strings] $tables  voir fonction processFROM
    * @param  [array de strings] $entries [ "champ" => "entrée utilisateur"/peut etre vide]
+   * @param  [array de strings et d'arrays] $addEndStatement [liste d'array et de string, si il y a une seule
+   *                                                           addition il faut tout de même la mettre dans un array ]
    * @return [array]          [contient toutes les données retournées par la requête]
    */
   public function query($tables, $entries, $addEndStatement = NULL){
     $select = $this->processSELECT($entries);
     $from = $this->processFROM($tables);
     $where = $this->processWHERE($entries);
+    $where = (!$where)?"":$where;
     $statement=$select.$from;
     $array_entries = null;
-    if($where && !is_array($addEndStatement)) {
+
+    if(empty($addEndStatement)) {
       $statement .= $where;
       $array_entries = $this->processArrayEntries($entries);
+      return $this->sendQuery($statement, $array_entries);
     }
-    if($addEndStatement && !is_array($addEndStatement)) {
-      $statement .= " ".$addEndStatement;
-    } else if ($addEndStatement && is_array($addEndStatement) && current($addEndStatement) == "IN") {
+    if (is_string($addEndStatement)){
+      $statement .= $where." ".$addEndStatement;
+      $array_entries = $this->processArrayEntries($entries);
+      return $this->sendQuery($statement, $array_entries);
+    }
+    if (is_array($addEndStatement)){
+      $array_entries = array();
+      $additions = "";
+      foreach($addEndStatement as $addition){
+        if(is_string($addition)){
+          $additions .= " ".$addition;
+        }
+        else if (current($addition) == "IN"){
+          $in = $this->processIN($addition);
+          $array_entries = array_merge($array_entries,$addition[2]);
+          $additions .= $in;
+          $where = " WHERE ";
+        }
+        else if (current($addition) == "LIKE"){
+          $like = $this->processLIKE($addition);
+          array_push($array_entries, "%".$addition[2]."%");
+          //$array_entries = array_merge($array_entries,array("%".$addition[2]."%"));
+          $additions .= $like;
+          $where = " WHERE ";
+        }
+      }
+      $statement .= $where.$additions;
+      return $this->sendQuery($statement, $array_entries);
+    }
+    /*
+    if (is_array($addEndStatement) && count($addEndStatement)>1 && current($addEndStatement) == "IN") {
       $in = $this->processIN($addEndStatement);
       $array_entries = $addEndStatement[2];
       $statement .= $in;
-    } else if ($addEndStatement && is_array($addEndStatement) && current($addEndStatement) == "LIKE") {
+      return $this->sendQuery($statement, $array_entries);
+    }
+    if (is_array($addEndStatement) && count($addEndStatement)>1 && current($addEndStatement) == "LIKE") {
       $like = $this->processLIKE($addEndStatement);
       $array_entries = array("%".$addEndStatement[2]."%");
-      $statement .= $like;
+      $statement .= " WHERE ".$like;
+      return $this->sendQuery($statement, $array_entries);
     }
-    //echo $statement;
-    return $this->sendQuery($statement, $array_entries);
+    */
   }
 
 
@@ -117,6 +152,7 @@ class Database {
    * @return [array]          [contient toutes les données retournées par la requête]
    */
   private function sendQuery($statement, $array_entries) {
+    echo $statement;
     $data = array();
     try {
       $qry = $this->getPDO()->prepare($statement);
@@ -438,7 +474,7 @@ class Database {
   }
 
   private function processIN($entry) {
-    $process_in = " WHERE ".$entry[1]." IN ( ";
+    $process_in = $entry[1]." IN ( ";
     foreach($entry[2] as $key => $value){
       $process_in .= "?";
       if($key!= key(array_slice($entry[2], -1, 1, TRUE))){
@@ -450,7 +486,7 @@ class Database {
   }
 
   private function processLIKE($entry) {
-    $process_in = " WHERE ".$entry[1]." LIKE ?";
+    $process_in = $entry[1]." LIKE ?";
     return $process_in;
   }
 

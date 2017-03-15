@@ -8,14 +8,21 @@ use \View\Success;
 use \View\Error;
 use \Controller\AchievementController;
 require_once("Server/Database.php");
+require_once("Server/Session.php");
 require_once("View/Success.php");
 require_once("View/Error.php");
 require_once("Controller/AchievementController.php");
+require_once("Model/Player.php");
 
-//$player = Player::signup("Louuuu", "Louuuuu", "Lou", "lou@gmailcom");
+
+
+$in = array("IN", "Login", array("lou", "Dori", "KASS5"));
+$like = array("LIKE", "Mail", "lou");
+$like2 = array("LIKE", "Login", "lou");
+$limit = "LIMIT 3 OFFSET 1";
+
+$test = Database::instance()->query("Player", array("*"=>"", "Login" => "Dori"),array($like2, " OR ", $like));
 /*
-$in = array("IN", "Login", array("lou", "Dori", "kass"));
-$like = array("LIKE", "Login", "kass");
 $test = Database::instance()->query("Player", array("IDPlayer"=>"", "Mail"=>"", "Login"=>"", "IDCurrentStep"=>""), GROUP);
 echo "<pre>".var_export($test, true)."</pre>";
 $test = Database::instance()->insert("Player", array("Login"=>"KASS5", "mail"=>"gmalalaletetet"));
@@ -28,7 +35,7 @@ $test = Database::instance()->query("Player", array("IDPlayer"=>2, "Mail"=>"", "
 echo "<pre>".var_export($test, true)."</pre>";
 $test = Database::instance()->query("Player", array("IDPlayer"=>2, "Mail"=>"", "Login"=>"", "IDCurrentStep"=>2), $like);
 */
-$test = AchievementController::getAchievementList(1,4);
+//$test = AchievementController::getAchievementList(1,4);
 //$player = Player::connect("login","pwd");
 //$test = Database::instance()->query("Player", array("Login"=>"Dori", "IDPlayer"=>""));
 //$test = Database::instance()->arrayMap($test, "Login", "IDPlayer");

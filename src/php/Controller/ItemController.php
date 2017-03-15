@@ -121,7 +121,7 @@ class ItemController {
     }
   }
 
-  public static function getItemList($start, $count) {
+  public static function getItemList($start, $count, $search) {
   	$start--;
   	if ($start < 0) {
   	  $error = new Error("Variable de départ incorrecte");
@@ -134,7 +134,9 @@ class ItemController {
   	}
   	else {
       $limit = "LIMIT ".$count." OFFSET ".$start;
-  		$items = Database::instance()->query("Item", Array("*"=>""), $limit);
+      $like = array("LIKE","Name",$search);
+      $like2 = array("LIKE","Brief",$search);
+  		$items = Database::instance()->query("Item", Array("*"=>""),  array($like, " OR ", $like2, $limit));
       $items = Database::instance()->dataClean($items, true);
   		$success = new Success($items);
   		Response::jsonResponse($success);
