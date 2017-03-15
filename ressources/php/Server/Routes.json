@@ -7,6 +7,7 @@
   "/addchoice":"Controller\\ChoiceController::addChoice",
   "/deletechoice":"Controller\\ChoiceController::deleteChoice",
   "/updatechoice":"Controller\\ChoiceController::updateChoice",
+  "/choice/list/:start/:count":"Controller\\ChoiceController::getChoiceList",
   "/addstep":"Controller\\StepController::addStep",
   "/updatestep":"Controller\\StepController::updateStep",
   "/step/list/:start/:count":"Controller\\StepController::getStepsList",
@@ -29,7 +30,7 @@
   "/signup":"Controller\\SignUpController::signUp",
   "/signout":"Controller\\SignOutController::signOut",
   "/deleteplayer":"Controller\\CurrentUserController::deletePlayer",
-  "/updateplayerpseudo":"Controller\\CurrentUserController::updatePseudo",
-  "/updateplayerpwd":"Controller\\CurrentUserController::updatePwd",
-  "/updateplayerimage":"Controller\\CurrentUserController::updateImage"
+  "/updateplayer/pseudo":"Controller\\CurrentUserController::updatePseudo",
+  "/updateplayer/pwd":"Controller\\CurrentUserController::updatePwd",
+  "/updateplayer/image":"Controller\\CurrentUserController::updateImage"
 }

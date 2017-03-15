@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom';
 import {Achievement} from '../model/achievement'
 import {Item} from '../model/item'
 import {Step} from '../model/step'
+import {Choice} from '../model/choice'
 
 class GlobalBack{
   static get(field){
@@ -200,13 +201,19 @@ class Requester {
             });
     } 
 
-    static currentUserAchievements(){
+    /*
+    * (optional) filter :  ne renvoie que les resultats comportant le texte spécifié dans filter
+    */
+    static currentUserAchievements(filter){
       return fetch(config.path('currentuser/achievements/'), {
                 method: 'post',
                 headers: {
                   'Content-Type' : 'application/json'
                  },
-                credentials: "same-origin"
+                credentials: "same-origin",
+                body: JSON.stringify({
+                  search: filter
+                })
               }
             ).then(
               function(response){
@@ -293,19 +300,19 @@ class Requester {
     /* Renvoie une liste de 'count' steps, à partir de la step 'start'.
     * sinon count n'est pas précisé, il est fixé à 10
     */
-    static stepList(start, count){
-      let url = config.path('step/list/' + start);
-      if(typeof count !== "undefined") {
+    static stepList(start, count = 10, filter){
+      /*if(typeof count !== "undefined") {
         url += '/' + count;
-      } else {
-        url += '/' + 10;
-      }
-      return fetch(url, {
+      }*/
+      return fetch(config.path('step/list/' + start + '/' + count), {
                 method: 'post',
                 headers: {
                   'Content-Type' : 'application/json'
                  },
-                credentials: "same-origin"
+                credentials: "same-origin",
+                body: JSON.stringify({
+                  search: filter
+                })
               }
             ).then(
               function(response){
@@ -411,18 +418,6 @@ class Requester {
       );
     }
 */
-    function sendData(url, data) {
-    var formData  = new FormData();
-
-    for(name in data) {
-      formData.append(name, data[name]);
-    }
-
-    fetch(url, {
-      method: 'POST',
-      body: formData
-    });
-  }
 
 
 
@@ -462,6 +457,36 @@ class Requester {
           //this.context.router.push(config.path('profils/admin/steps/' + json.result.id));
        }
       );
+    }
+
+    /* Renvoie une liste de 'count' steps, à partir de la step 'start'.
+    * sinon count n'est pas précisé, il est fixé à 10
+    */
+    static choiceList(start, count = 10, filter){
+      return fetch(config.path('choice/list/' + start + '/' + count), {
+                method: 'post',
+                headers: {
+                  'Content-Type' : 'application/json'
+                 },
+                credentials: "same-origin",
+                body: JSON.stringify({
+                  search: filter
+                })
+              }
+            ).then(
+              function(response){
+                return response.json();
+              }, Requester.requestError
+            ).then(
+              function(json){
+                let obj = JSON.parse(json.message);
+                let choices = [];
+                for (let i=0; i<obj.length; i++) {
+                    let ch = new Choice( obj[i].IDStep, obj[i].ImgPath, obj[i].Body, obj[i].Question, obj[i].IDType );
+                    choices[i] = ch;
+                }
+                return choices;
+            });
     }
 
     // A tester avec un form
@@ -677,7 +702,7 @@ class Requester {
     }
 
     static updatePlayerPseudo(newPseudo){
-      return fetch(config.path('updateplayerpseudo'), {
+      return fetch(config.path('updateplayer/pseudo'), {
                 method: 'post',
                 headers: {
                   'Content-Type' : 'application/json'
@@ -698,7 +723,7 @@ class Requester {
     }
 
     static updatePlayerPass(_currentPwd, _newPwd){
-      return fetch(config.path('updateplayerpwd'), {
+      return fetch(config.path('updateplayer/pwd'), {
                 method: 'post',
                 headers: {
                   'Content-Type' : 'application/json'
@@ -720,7 +745,7 @@ class Requester {
     }
 
     static updatePlayerImage(image){
-      return fetch(config.path('updateplayerpwd'), {
+      return fetch(config.path('updateplayer/image'), {
                 method: 'post',
                 headers: {
                   'Content-Type' : 'application/json'

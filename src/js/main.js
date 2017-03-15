@@ -75,6 +75,10 @@ class Test extends React.Component{
             function(json){
                 console.log(json);
          });
+		Requester.stepList(1,3, "Brayan").then( 
+            function(json){
+                console.log(json);
+         });
 		Requester.stepList(1,3).then( 
             function(json){
                 console.log(json);
@@ -125,6 +129,10 @@ class Test extends React.Component{
                 console.log(json);
          });*/
 		Requester.updatePlayerPass("newPassWord", "inconnus").then(
+            function(json){
+                console.log(json);
+         });
+		Requester.choiceList(1,3).then( 
             function(json){
                 console.log(json);
          });
