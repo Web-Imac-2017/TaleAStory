@@ -120,7 +120,8 @@ class AchievementController {
     }
   }
 
-  public static function getAchievementList($start, $count, $search = 0) {
+  public static function getAchievementList($start, $count) {
+    $search = Form::getField('search');
   	$start--;
   	if ($start < 0) {
   	  $error = new Error("Variable de départ incorrecte");
