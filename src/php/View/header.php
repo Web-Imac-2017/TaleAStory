@@ -1,5 +1,3 @@
-<?php
-?>
 <head>
   <title>Tale A Story</title>
   <meta name="description" content="Soit le maitre de ta propre aventure dans Tale A Story" />

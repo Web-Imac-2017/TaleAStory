@@ -28,6 +28,7 @@ export default RouteComponent({
 		let that = this;
 		Requester.signIn(this.state.mail, this.state.pwd).then(
 			function(result){
+				console.log(result);
 				if(result.status == "error"){
 					Object.keys(result.message).map(function(key, index) {
 					    var value = result.message[key];

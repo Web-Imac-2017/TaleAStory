@@ -4,6 +4,7 @@ import config from '../config';
 import RouteComponent from '../utils/routecomponent';
 import {Link} from 'react-router';
 import Scroll from '../utils/scroll';
+import {AppInstance} from './app'
 import {RightNavigation} from './wrapper';
 import {AppContextTypes} from './app';
 import {User, Guest} from '../model/user';
@@ -11,7 +12,9 @@ import Dialog from '../utils/dialog'
 
 export default RouteComponent({
   contextTypes : AppContextTypes,
-
+  componentDidMount(){
+    AppInstance.update();
+  },
   guestStart(){
     this.context.setUser(new Guest());
     this.start();
@@ -56,6 +59,12 @@ export default RouteComponent({
     }
   },
   render(){
+    let text = "Commencer l'aventure";
+    if(this.context.user){
+      if(this.context.user.currentStep){
+        text = "Reprendre l'aventure";
+      }
+    }
     return  <div>
               <div className="columnsContainer">
                 <div className="content">
@@ -63,7 +72,7 @@ export default RouteComponent({
                   <img className="element wave" src={config.imagePath('wave_large.png')}/>
                   <h1 className="pageTitle element">Tale A Story</h1>
                   <button className="element button" onClick={this.handleStartBtn}>
-                    Commencer l'aventure
+                    {text}
                   </button>
                 </div>
               </div>

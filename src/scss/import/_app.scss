@@ -136,7 +136,8 @@ header {
   }
 
 	a, a:visited, p {
-
+		cursor : pointer;
+		text-decoration: none;
 		padding-left: 18px;
 		padding-right: 18px;
 		padding-bottom: 6px;
@@ -146,11 +147,12 @@ header {
 		vertical-align: middle;
 		transition: all 0.25s;
 		position: relative;
-		color: black;
+		color: #fff;
+		z-index : 100;
 	}
 
 	a:hover{
-		color: white !important;
+		color: #fff !important;
 	}
 
 	a:before{
@@ -189,7 +191,7 @@ header {
 	}
 
 	.profileMenu {
-		background-color: rgba(0,0,0,0.50);
+		background-color: rgba(0,0,0,0.70);
 		line-height: 2px;
 		padding: 5px;
 		margin: auto;

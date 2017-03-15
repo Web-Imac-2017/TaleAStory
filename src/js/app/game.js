@@ -29,7 +29,7 @@ class GameComponent extends React.Component{
 		// webGL.bg_anim.getColor();
 
 	}
-	
+
   }
   componentWillAppear(callback){
     this.componentWillEnter(callback);
@@ -43,8 +43,8 @@ class GameComponent extends React.Component{
   render(){
     return <div className="game-component"></div>
   }
-  
-  
+
+
   updateColor(){
 	  if(webGL.bg_anim != null){
 		  var links = document.getElementsByTagName("a");
@@ -57,7 +57,7 @@ class GameComponent extends React.Component{
 					TweenLite.to(links[i], 0.5,{color:"rgb("+Math.floor(255*color[0]+30)+","+Math.floor(255*color[1]+30)+","+Math.floor(255*color[2]+30)+")"});
 				}
 			}
-			
+
 			links = document.getElementsByClassName("progress-bar");
 			for(var i=0;i<links.length;i++)
 			{
@@ -87,7 +87,7 @@ class Decision extends GameComponent{
     if(this.childs == null)
       this.childs = dom.getElementsByClassName('story-step');
     if(this.state.current >= this.childs.length){
-      
+
       let childs = dom.getElementsByTagName('button');
       for(let i = 0; i<childs.length; i++){
         TweenLite.fromTo(childs[i], 1, {opacity:0},{opacity:1});
@@ -157,7 +157,7 @@ class Decision extends GameComponent{
                               </button>
                       }
                     }) : null;
-					
+
 	const imag = this.props.children ?
                     this.props.children.map((text, index) =>{
 					  if(text.props.className == "img")
@@ -165,11 +165,11 @@ class Decision extends GameComponent{
 						return <img key={index} className="enigma-img story-step" src={config.imagePath(text.props.children)}/>
 					  }
 					}
-                    ) : null;	
+                    ) : null;
     let superDom = super.render();
     return <div className="game-wrapper">
             <div {...superDom.props}>
-			
+
 			<div className="enigma">
 				<div className="enigma-left">
 					{imag}
@@ -184,12 +184,12 @@ class Decision extends GameComponent{
 					Passer
 				  </button>
 				   {answers}
-				  
+
 			</div>
-			
-			
-              
-              
+
+
+
+
             </div>
           </div>
   }
@@ -284,7 +284,7 @@ class EnigmaComponent extends GameComponent{
 						return <img key={index} className="enigma-img enigma-step" src={config.imagePath(text.props.children)}/>
 					  }
 					}
-                    ) : null;	
+                    ) : null;
 
     let superDom = super.render();
     return <div className="game-wrapper">
@@ -422,9 +422,8 @@ export default RouteComponent({
 	  if(webGL.bg_anim != null){
 		    webGL.bg_anim.unMuteAll();
 	  }
-	  
-	  TweenLite.fromTo(document.getElementById('analyser'), 1.3,{opacity:0},{opacity:1});
 
+	  TweenLite.fromTo(document.getElementById('analyser'), 1.3,{opacity:0},{opacity:1});
     return {
       currentStats : [
         {label: 'Fatigue', value: 100},
@@ -451,7 +450,7 @@ export default RouteComponent({
     this.setState({currentStep : component, currentStepID : 1});
   },
 
-  
+
 
   componentWillUnmount(){
 	  if(webGL.bg_anim != null){

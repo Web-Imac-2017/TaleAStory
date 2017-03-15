@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom';
 import {Achievement} from '../model/achievement'
 import {Item} from '../model/item'
 import {Step} from '../model/step'
+import {User} from '../model/user'
 
 class GlobalBack{
   static get(field){
@@ -47,7 +48,11 @@ class Requester {
             }, Requester.requestError
           ).then(
             function(json){
-              return json;
+              let user = JSON.parse(json.message);
+              if(user)
+                return new User(user.id, user.login, user.pseudo, user.imgpath, user.admin);
+              else
+                return null;
           });
   }
 
@@ -65,10 +70,12 @@ class Requester {
               }
             ).then(
               function(response){
+                console.log(response);
                 return response.json();
               }, Requester.requestError
             ).then(
               function(json){
+                console.log(result);
                 return json;
             });
     }
@@ -173,7 +180,11 @@ class Requester {
               }, Requester.requestError
             ).then(
               function(json){
-                return json;
+                let obj = JSON.parse(json.message);
+                if(obj.IDStep)
+                  return new Step( obj.IDStep, obj.ImgPath, obj.Body,
+                                    obj.Question, obj.IDType, obj.Title );
+                return null;
             });
     }
 

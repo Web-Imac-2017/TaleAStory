@@ -59,7 +59,7 @@ class CurrentUserController{
         Response::jsonResponse($e);
       }
       else
-        return null;
+        return Response::jsonResponse(new Success(null));
   }
 
   static public function achievements(){

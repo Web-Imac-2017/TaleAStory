@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import {Link} from 'react-router'
 import config from '../config';
 import Header from './header';
+import Dialog from '../utils/dialog'
+import {Requester} from '../utils/interfaceback'
 import User from '../model/user';
 import _ScrollListener from 'react-scroll-listener';
 import {GlobalBack} from '../utils/interfaceback';
@@ -26,7 +28,7 @@ class RightNavigation extends React.Component{
     let links = this.props.links ?
                     this.props.links.map((link, index) =>
                       <li key={index} data-content={link.label}>
-                        <Link to={config.path(link.path)}>0{index+1}</Link>
+                        <Link to={config.path(link.path)}>0{index}</Link>
                       </li>
                     ) : null;
     if(links == null)
@@ -45,13 +47,38 @@ let WrapperSpec = {
   contextTypes : {user: React.PropTypes.objectOf(User)},
 
   getInitialState : function(){
+    this.scroll = false;
     return {profilImg : ''};
   },
 
   handleChange : function(){
-    this.setState({profilImg : this.refs.profilImg.value});
     editPicture(this.refs.profilImg, this.refs.divImg);
+    //Requester
   },
+  handleConfirm : function(){
+   let that = this;
+   this.setState({profilImg : this.refs.profilImg.value});
+   this.refs.dialog.show({
+       title: 'Modifier photo de profil',
+       body: 'Voulez-vous actualiser votre photo de profil ?',
+       actions: [
+         Dialog.Action(
+           'Oui',
+           that.handleChange,
+           'button btn-confirm'
+         ),
+         Dialog.Action(
+           'Non',
+           () => {},
+           'button btn-cancel'
+         ),
+       ],
+       bsSize: 'medium',
+       onHide: (dialog) => {
+         dialog.hide()
+       }
+     });
+ },
 
   updateChilds : function(){
     let childProps = this.props.children.props;
@@ -74,7 +101,6 @@ let WrapperSpec = {
             i++;
           }
         }
-        console.log(this.childs);
       }
     }
   },
@@ -123,7 +149,8 @@ let WrapperSpec = {
     this.transitionGroup = ReactDOM.findDOMNode(this).getElementsByTagName('span')[0];
     this.scrollListener = new ScrollListener(this.transitionGroup);
     setTimeout(function(that) {
-      that.scrollListener.addScrollEndHandler('transition-scroll', that.handleScroll);
+      //that.scrollListener.addScrollEndHandler('transition-scroll', that.handleScroll);
+      that.onscroll = that.handleScroll;
     }, 60, this);
 
   },
@@ -146,11 +173,14 @@ let WrapperSpec = {
       }, 200, this);
       return true;
     }
-    let _return = this.user != nextContext.user || this.children.type != nextProps.children.type;
-    return _return;
+    let _return = this.user != nextContext.user ||
+                  this.children.type != nextProps.children.type
+                  this.state.profilImg != nextState.profilImg;
+    return true;
   },
 
   handleScroll(e) {
+    console.log(e);
     if(this.manualScroll){
       this.manualScroll = false;
       return;
@@ -228,10 +258,12 @@ let WrapperSpec = {
 };
 
 let AccountWrapperSpec = Object.assign({}, WrapperSpec, {
-  disconnect : function(){
+  disconnect : function(e){
+    e.preventDefault();
+    this.context.router.push(config.path('home'));
     this.context.unsetUser();
   },
-  contextTypes : {user: React.PropTypes.objectOf(User)},
+  contextTypes : {user: React.PropTypes.objectOf(User), unsetUser: React.PropTypes.func},
   render : function(){
     this.user = this.context.user;
     this.header = this.props.route.noheader ?
@@ -286,13 +318,13 @@ let AccountWrapperSpec = Object.assign({}, WrapperSpec, {
                       <img className="bigProfil" src={config.imagePath(this.context.user.imgpath)}/>
                     </div>
                     <input name="inputImage" type="file" accept='image/*' value={this.state.profilImg}
-                                   onChange={this.handleChange} ref="profilImg"
+                                   onChange={this.handleConfirm} ref="profilImg"
                                    multiple={false} style={{display:"none"}}/>
-                                 <h2 className="userName">{this.context.user.pseudo}</h2>
+                    <h2 className="userName">{this.context.user.pseudo}</h2>
                     <img className="element" src={config.imagePath('wave_large.png')}/>
                     <ul className="assideMenu">
                       { links }
-                      <li><Link to={config.path('')}>Déconnexion</Link></li>
+                      <li><a href="" onClick={this.disconnect}>Déconnexion</a></li>
                     </ul>
                     <Link to={config.path('game')} className="element button">Jouer</Link>
                   </div>
@@ -304,6 +336,7 @@ let AccountWrapperSpec = Object.assign({}, WrapperSpec, {
                 </div>
                 <RightNavigation links={this.props.route.links}/>
               </div>
+              <Dialog ref='dialog' className='yolo'/>
             </div>
   }
 });
