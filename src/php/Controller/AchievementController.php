@@ -15,37 +15,48 @@ class AchievementController {
 
   public static function addAchievement() {
     CurrentUserController::isAdmin();
-
-    $name = Form::getField("Name");
-    //$imgpath = Form::uploadFile("AchievementImg");
-    $imgpath="bidon";
-    $brief = Form::getField("Brief");
-    if ($name == NULL || $imgpath == NULL || $brief == NULL){
-      $e = new Error("Tu ne peux pas ajouter cet achievement !");
+    $isError = false;
+    $imgpath = Form::uploadFile("image");
+    if(is_object($imgpath)){ //error
+      $isError = true;
+      $errors["image"]=$imgpath->message;
+    }
+    else
+      $entries['imgpath'] = $imgpath;
+    $entries['name'] = Form::getField("name");
+    $entries['brief'] = Form::getField("brief");
+    foreach ($entries as $key => $value) {
+      if($value==NULL){
+        $errors[$key]="Champ invalide";
+        $isError = true;
+      }
+      else
+        $errors[$key]="";
+    }
+    if($isError){
+      $e = new Error($errors);
       Response::jsonResponse($e);
     }
     $a = new Achievement($name, $imgpath, $brief);
     $a = $a->save();
     if($a)
-      $e = new Success("L'achievement a été ajouté.");
-    else{
-      $e = new Error("Tu ne peux pas ajouter cet achievement !");
-      }
+      $e = new Success("Le trophé a été ajouté.");
+    else
+      $e = new Error(array("all"=>"Tu ne peux pas ajouter ce trophé!"));
     Response::jsonResponse($e);
   }
 
   public static function updateAchievement() {
     CurrentUserController::isAdmin();
-    //$tmp = $imgpath;
-    //$imgpath = Form::uploadFile("");
+    $isError =false;
     $data = Form::getFullForm();
-    if(!isset($data["IDAchievement"]) || $data["IDAchievement"]== null ){
-      $e = new Error("Achievement invalide");
-      Response::jsonResponse($e);
+    if(!isset($data["idachievement"]) || $data["idachievement"]== null ){
+      $errors["idachievement"]="id invalide !";
+      $isError = true;
     }
 
     $entries = array();
-    $fields = array("Name","ImgPath","Brief");
+    $fields = array("name","brief");
     foreach ($fields as $field) {
       if(!isset($data[$field]) || $data[$field]=="") {
         if(substr($field,0,2) != "ID") //les champs ID inchangés (donc initialisés à null dans data) ne doivent pas être précisés dans entries
@@ -54,31 +65,79 @@ class AchievementController {
       else {
         $entries[$field]=$data[$field];
       }
+      $errors[$field]="";
     }
-    $a = new Achievement ($entries["Name"],"bidon",$entries["Brief"]);
-    $a->id = $data["IDAchievement"];
+    if(!$isError){
+      $imgpath=Form::uploadFile("image");
+      if(is_object($imgpath)){
+        $isError = true;
+        $errors["image"]=$imgpath->message;
+      }
+      else{
+        $entries["imgpath"] = $imgpath;
+        $oldimg =  Achievement::getAchievementImg($data["idachievement"]);
+        if($oldimg != '../assets/images/default_image_tiny.png'){
+          try {
+            unlink($oldimg);
+          } catch(Exception $e) { }
+        }
+      }
+    }
+    if($isError){
+      $e = new Error($errors);
+      Response::jsonResponse($e);
+    }
+    $a = new Achievement ($entries["name"],$entries["brief"],$entries["brief"]);
+    $a->id = $data["idachievement"];
     $a->update($entries);
-    $e = new Success("Achievement modifié !");
+    $e = new Success("Trophé modifié !");
     Response::jsonResponse($e);
   }
 
   public static function deleteAchievement() {
     CurrentUserController::isAdmin();
-    $id = Form::getField("IDAchievement");
+    $id = Form::getField("idachievement");
     if(!$id){
-      $e = new Error("Impossible de supprimer l'achievement !");
+      $e = new Error(array("all"=>"Impossible de supprimer le trophé !"));
       Response::jsonResponse($e);
     }
     else{
+      $oldimg =  Achievement::getAchievementImg($data["idachievement"]);
       $a = new Achievement("", "", "");
       $a->id = $id;
       $a=$a->delete();
-      if($a)
-        $e = new Success("Achievement supprimé !");
+      if($a){
+        if($oldimg != '../assets/images/default_image_tiny.png'){
+          try {
+            unlink($oldimg);
+          } catch(Exception $e) { }
+          $e = new Success("Trophé supprimé !");
+        }
+      }
       else
-        $e = new Error("Impossible de supprimer l'achievement !");
+        $e = new Error(array("all"=>"Impossible de supprimer le trophé !"));
       Response::jsonResponse($e);
     }
+  }
+
+  public static function getAchievementList($start, $count) {
+  	$start--;
+  	if ($start < 0) {
+  	  $error = new Error("Variable de départ incorrecte");
+  	  Response::jsonResponse($error);
+  	}
+  	else if ($count <= 0){
+  	  $empty = array();
+  	  $success = new Success($empty);
+  	  Response::jsonResponse($success);
+  	}
+  	else {
+      $limit = "LIMIT ".$count." OFFSET ".$start;
+  		$achievements = Database::instance()->query("Achievement", Array("*"=>""), $limit);
+      $achievements = Database::instance()->dataClean($achievements, true);
+  		$success = new Success($achievements);
+  		Response::jsonResponse($success);
+  	}
   }
 
 }

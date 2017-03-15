@@ -32,13 +32,8 @@ class StepController {
 	}
 	else {
     $limit = "LIMIT ".$count." OFFSET ".$start;
-		$stepParam = Database::instance()->query("Step", Array("IDStep"=> "",
-                                														"ImgPath"=>"",
-                                														"Body"=>"",
-                                														"Question"=>"",
-                                														"IDType"=>"",
-                                                            "Title"=>""),
-														                                 $limit);
+		$stepParam = Database::instance()->query("Step", Array("*"=>""),$limit);
+    $stepParam = Database::instance()->dataClean($stepParam, true);
 		$success = new Success($stepParam);
 		Response::jsonResponse($success);
 	}

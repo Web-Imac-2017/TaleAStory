@@ -97,7 +97,7 @@ class ItemController {
   public static function deleteItem() {
     CurrentUserController::isAdmin();
 
-    $id = Form::getField("IDItem");
+    $id = Form::getField("iditem");
     if(!$id){
       $e = new Error(array("iditem"=>"Impossible de supprimer l'item !"));
       Response::jsonResponse($e);
@@ -119,6 +119,26 @@ class ItemController {
         $e = new Error(array("all"=>"Impossible de supprimer l'item !"));
       Response::jsonResponse($e);
     }
+  }
+
+  ublic static function getItemList($start, $count) {
+  	$start--;
+  	if ($start < 0) {
+  	  $error = new Error("Variable de départ incorrecte");
+  	  Response::jsonResponse($error);
+  	}
+  	else if ($count <= 0){
+  	  $empty = array();
+  	  $success = new Success($empty);
+  	  Response::jsonResponse($success);
+  	}
+  	else {
+      $limit = "LIMIT ".$count." OFFSET ".$start;
+  		$items = Database::instance()->query("Item", Array("*"=>""), $limit);
+      $items = Database::instance()->dataClean($items, true);
+  		$success = new Success($items);
+  		Response::jsonResponse($success);
+  	}
   }
 
 }
