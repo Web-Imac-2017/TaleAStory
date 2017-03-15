@@ -143,6 +143,7 @@ class ItemController {
         $items = Database::instance()->query("Item", Array("*"=>""),  array($limit));
       }
       $items = Database::instance()->dataClean($items, true);
+      if(!$item) {$item = array();}
   		$success = new Success($items);
   		Response::jsonResponse($success);
   	}

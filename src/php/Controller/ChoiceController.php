@@ -143,6 +143,7 @@ class ChoiceController {
         $choices = Database::instance()->query("Choice", Array("*"=>""), array($limit));
       }
       $choices = Database::instance()->dataClean($choices, true);
+      if(!$choices) {$choices = array();}
   		$success = new Success($choices);
   		Response::jsonResponse($success);
   	}

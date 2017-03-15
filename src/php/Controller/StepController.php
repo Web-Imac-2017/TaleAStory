@@ -41,6 +41,7 @@ class StepController {
       $stepParam = Database::instance()->query("Step", Array("*"=>""),array($limit));
     }
     $stepParam = Database::instance()->dataClean($stepParam, true);
+    if(!$stepParam) {$stepParam = array();}
 		$success = new Success($stepParam);
 		Response::jsonResponse($success);
 	}

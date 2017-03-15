@@ -142,6 +142,7 @@ class AchievementController {
         $achievements = Database::instance()->query("Achievement", Array("*"=>""), array($limit));
       }
       $achievements = Database::instance()->dataClean($achievements, true);
+      if(!$achievements) {$achievements = array();}
   		$success = new Success($achievements);
   		Response::jsonResponse($success);
   	}
