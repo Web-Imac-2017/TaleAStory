@@ -267,6 +267,9 @@ let AccountWrapperSpec = Object.assign({}, WrapperSpec, {
         ]);
       }
     }
+    else{
+      return <div></div>
+    }
 
     links = links.map((link, index) =>
       <li key={index}>
@@ -280,12 +283,12 @@ let AccountWrapperSpec = Object.assign({}, WrapperSpec, {
                 <div className="colGauche">
                   <div className="insideCol">
                     <div onClick={()=>{this.refs.profilImg.click();}} className="roundProfil" ref="divImg">
-                      <img className="bigProfil" src={config.imagePath('patulacci_large.jpg')}/>
+                      <img className="bigProfil" src={config.imagePath(this.context.user.imgpath)}/>
                     </div>
                     <input name="inputImage" type="file" accept='image/*' value={this.state.profilImg}
                                    onChange={this.handleChange} ref="profilImg"
                                    multiple={false} style={{display:"none"}}/>
-                    <h2 className="userName">Marcel Patullacci</h2>
+                                 <h2 className="userName">{this.context.user.pseudo}</h2>
                     <img className="element" src={config.imagePath('wave_large.png')}/>
                     <ul className="assideMenu">
                       { links }

@@ -36,7 +36,8 @@ function currentUser(){
   if(_currentuser == null){
     let id = GlobalBack.get('id');
     if(id){
-      _currentuser = new User(id, GlobalBack.get('pseudo'),
+      _currentuser = new User(id, GlobalBack.get('mail'),
+                                  GlobalBack.get('pseudo'),
                                   GlobalBack.get('imgpath'),
                                  GlobalBack.get('admin'));
       return new Promise((resolve, reject) =>
@@ -64,7 +65,7 @@ function updateCurrentUser(){
           return _currentuser;
           //return response.json()
         }).then(function(json){
-          _currentuser = new User(json.id, json.pseudo, json.imgpath);
+          _currentuser = new User(json.id, json.mail, json.pseudo, json.imgpath);
           return _currentuser;
         });
 }

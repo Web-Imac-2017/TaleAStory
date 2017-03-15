@@ -43,7 +43,7 @@ export default RouteComponent({
 					});
 				}
 				else{
-					that.context.setUser(new User(result.id,result.pseudo,result.imgpath,result.isAdmin));
+					that.context.setUser(new User(result.id, result.mail, result.pseudo,result.imgpath,result.isAdmin));
 					if (that.context.requestedPage == null || that.context.requestedPage == undefined ) {
 						that.context.requestedPage = config.path('home');
 					}
