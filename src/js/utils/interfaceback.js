@@ -201,19 +201,13 @@ class Requester {
             });
     } 
 
-    /*
-    * (optional) filter :  ne renvoie que les resultats comportant le texte spécifié dans filter
-    */
-    static currentUserAchievements(filter){
+    static currentUserAchievements(){
       return fetch(config.path('currentuser/achievements/'), {
                 method: 'post',
                 headers: {
                   'Content-Type' : 'application/json'
                  },
-                credentials: "same-origin",
-                body: JSON.stringify({
-                  search: filter
-                })
+                credentials: "same-origin"
               }
             ).then(
               function(response){
@@ -482,7 +476,7 @@ class Requester {
                 let obj = JSON.parse(json.message);
                 let choices = [];
                 for (let i=0; i<obj.length; i++) {
-                    let ch = new Choice( obj[i].IDStep, obj[i].ImgPath, obj[i].Body, obj[i].Question, obj[i].IDType );
+                    let ch = new Choice( obj[i].IDChoice, obj[i].Answer, obj[i].IDStep, obj[i].TransitionText, obj[i].IDNextStep );
                     choices[i] = ch;
                 }
                 return choices;
@@ -763,6 +757,35 @@ class Requester {
       );
     }
 
+    /* Renvoie une liste de 'count' steps, à partir de la step 'start'.
+    * sinon count n'est pas précisé, il est fixé à 10
+    */
+    static itemList(start, count = 10, filter){
+      return fetch(config.path('item/list/' + start + '/' + count), {
+                method: 'post',
+                headers: {
+                  'Content-Type' : 'application/json'
+                 },
+                credentials: "same-origin",
+                body: JSON.stringify({
+                  search: filter
+                })
+              }
+            ).then(
+              function(response){
+                return response.json();
+              }, Requester.requestError
+            ).then(
+              function(json){
+                let obj = JSON.parse(json.message);
+                let items = [];
+                for (let i=0; i<obj.length; i++) {
+                    let it = new Item( obj[i].IDItem, obj[i].Name, obj[i].ImgPath, obj[i].Brief );
+                    items[i] = it;
+                }
+                return items;
+            });
+    }
 
 
 

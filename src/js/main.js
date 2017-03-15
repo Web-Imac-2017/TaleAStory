@@ -67,10 +67,6 @@ class Test extends React.Component{
             function(achievements){
                 //console.log(achievements[0].isRead);
          });
-		Requester.currentUserAchievements("enigma").then(
-            function(achievements){
-                //console.log(achievements[0].isRead);
-         });
 		Requester.currentUserUnreadAchievements().then(
             function(json){
                 console.log(json);
@@ -139,6 +135,13 @@ class Test extends React.Component{
 		Requester.choiceList(1,3).then( 
             function(json){
                 console.log(json);
+         });
+		Requester.itemList(1,3, "Brayan").then( 
+            function(items){
+                console.log(items[0].IDItem);
+                console.log(items[0].Name);
+                console.log(items[0].ImgPath);
+                console.log(items[0].Brief);
          });
 
 
