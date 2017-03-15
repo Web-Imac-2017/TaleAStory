@@ -152,6 +152,12 @@ class Database {
     return $data;
     }
 
+  /**
+   * Prépare une query pour insérer quelque chose dans la bdd.
+   * @param  [string] $table   [nom de la table]
+   * @param  [array] $entries [ champs => valeur à insérer]
+   * @return [int]          [id de la ligne insérée]
+   */
   public function insert($table, $entries) {
     $into = "INSERT INTO ".$table;
     $fields = $this->processFields($entries);
@@ -176,11 +182,11 @@ class Database {
   }
 
   /**
-   * [update description]
-   * @param  [type] $table          voir fonction processFROM
-   * @param  [type] $entries        [description]
-   * @param  [type] $identification [description]
-   * @return [type]                 [description]
+   * prépare une query pour faire un update dans la base de donnée
+   * @param  [array] $table          table, ou tables, voir fonction processFROM
+   * @param  [array] $entries        (champs => nouvelle_valeurs)
+   * @param  [array] $identification (champs => valeurs), pour identifier la ligne à modifier
+   * @return []                 []
    */
   public function update($table, $entries, $identification) {
     $update = "UPDATE ";
@@ -207,6 +213,13 @@ class Database {
     //echo "update ok";
   }
 
+
+  /**
+   * Prépare une query pour supprimer une ligne de la base de donnée.
+   * @param  [string] $table          [table]
+   * @param  [array] $identification [(champs => valeurs), pour identifier la ligne à modifier]
+   * @return []                 []
+   */
   public function delete($table, $identification) {
     $delete = "DELETE ";
     $from = $this->processFROM($table);
@@ -231,6 +244,14 @@ class Database {
     }
   }
 
+
+  /**
+   * Compte le nombre d'entrée distinctes dans une table de la bdd en fonction d'un champ
+   * @param  [string] $table   [nom de la table]
+   * @param  [string] $count   [champ]
+   * @param  [array] $entries [(champs=>valeurs), pour identifier les lignes concernées]
+   * @return [int]          [nombre d'entrées différentes]
+   */
   public function count($table, $count, $entries = NULL){
     $count = 'SELECT COUNT('.$count.')';
     $from = $this->processFROM($table);

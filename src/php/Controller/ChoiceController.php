@@ -140,7 +140,7 @@ class ChoiceController {
         $like2 = array("LIKE","TransitionText",$search);
     		$choices = Database::instance()->query("Choice", Array("*"=>""), array($like, " OR ", $like2, $limit));
       } else {
-        $choices = Database::instance()->query("Choice", Array("*"=>""), array($limit);
+        $choices = Database::instance()->query("Choice", Array("*"=>""), array($limit));
       }
       $choices = Database::instance()->dataClean($choices, true);
   		$success = new Success($choices);
