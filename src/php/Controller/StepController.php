@@ -211,7 +211,12 @@ class StepController {
       $e = new Error(array("idstep"=>"Impossible de supprimer la péripéthie !"));
       Response::jsonResponse($e);
     }
-    else if (Database::instance()->query("player",array("IDCurrentStep"=>$id))==NULL) {
+    else if (
+      Database::instance()->query("player",array("IDCurrentStep"=>$id))==NULL ||
+      Database::instance()->query("choice",array("IDStep"=>$id))==NULL ||
+      Database::instance()->query("choice",array("IDNextStep"=>$id))==NULL ||
+      Database::instance()->query("paststep",array("IDStep"=>$id))==NULL)
+    {
       $oldimg =  Step::getStepImg($id);
       $step = new Step("", "", "", 0,"");
       $step->id = $id;
@@ -225,7 +230,7 @@ class StepController {
         }
       }else $e = new Error(array("all"=>"Impossible de supprimer la péripéthie !"));
     }
-    else $e = new Error(array("all"=>"Impossible de supprimer la péripéthie car elle est liée à au moins un player"));
+    else $e = new Error(array("all"=>"Impossible de supprimer la péripéthie car elle est liée à au moins un player ou un choix"));
     Response::jsonResponse($e);
   }
 }

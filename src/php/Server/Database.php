@@ -152,7 +152,7 @@ class Database {
    * @return [array]          [contient toutes les données retournées par la requête]
    */
   private function sendQuery($statement, $array_entries) {
-    echo $statement;
+    //echo $statement;
     $data = array();
     try {
       $qry = $this->getPDO()->prepare($statement);
