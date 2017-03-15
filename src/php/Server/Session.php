@@ -48,7 +48,7 @@ Class Session {
   */
   static public function connectUser($userid, $keepconnection, $userlogin){
     $_SESSION["userid"]=$userid;
-    if($keepconnection){;
+    if($keepconnection){
       $userid=$userlogin.$userid;
       $hashed_id = password_hash($userid,PASSWORD_DEFAULT);
       setcookie('userid',$userid,time()-3600,'/');

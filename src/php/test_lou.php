@@ -21,7 +21,7 @@ $like = array("LIKE", "Mail", "lou");
 $like2 = array("LIKE", "Login", "lou");
 $limit = "LIMIT 3 OFFSET 1";
 
-$test = Database::instance()->query("Player", array("*"=>"", "Login" => "Dori"),array($like2, " OR ", $like));
+$test = Database::instance()->query("Player", array("*"=>""),array($limit));
 /*
 $test = Database::instance()->query("Player", array("IDPlayer"=>"", "Mail"=>"", "Login"=>"", "IDCurrentStep"=>""), GROUP);
 echo "<pre>".var_export($test, true)."</pre>";

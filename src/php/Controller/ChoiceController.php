@@ -12,6 +12,12 @@ use \View\Error;
 use \Controller\CurrentUserController;
 
 class ChoiceController {
+  /*
+  @function addChoice
+  @param  answer, idstep, transitiontext, idnextstep
+  @return Success si ok, Error avec array 'champ'=>'erreur' sinon
+  Ajoute un choix
+  */
   public static function addChoice() {
     CurrentUserController::isAdmin();
     $isError = false;
@@ -47,7 +53,12 @@ class ChoiceController {
       $e = new Error(array("all"=>"Tu ne peux pas ajouter ce choix !"));
     Response::jsonResponse($e);
   }
-
+  /*
+  @function updateChoice
+  @param  idchoice, answer, idstep, transitiontext, idnextstep
+  @return Success si ok, Error avec array 'champ'=>'erreur' sinon
+  Modifie un choix
+  */
   public static function updateChoice() {
     CurrentUserController::isAdmin();
     $isError =false;
@@ -90,7 +101,12 @@ class ChoiceController {
     $e = new Success("Choix modifié !");
     Response::jsonResponse($e);
   }
-
+  /*
+  @function deleteChoice
+  @param  idchoice
+  @return Success si ok, Error avec array 'champ'=>'erreur' sinon
+  Supprime un choix
+  */
   public static function deleteChoice() {
     CurrentUserController::isAdmin();
     $id = Form::getField("idchoice");
@@ -109,7 +125,12 @@ class ChoiceController {
       Response::jsonResponse($e);
     }
   }
-
+  /*
+  @function setStats
+  @param  $entries = array "stat"=>"value" NON VIDE, $table "StatAlteration" ou "StatRequierement"
+  @return message de success ou erreur
+  Insère les stats correspondantes à un choix (requises et gagnées)
+  */
   public static function setStats($entries,$table){
     foreach ($entries as $key => $value) {
         if($value==NULL){
@@ -120,8 +141,14 @@ class ChoiceController {
     }
     return "";
   }
-
-  public static function getChoiceList($start, $count, $search) {
+  /*
+  @function getChoiceList
+  @param  search, start = id de début, count = nombre de ligne à parcourir
+  @return Success avec array d'objets achivement ou array vide, Error sinon
+  Cherche des choix par rapport à une answer ou un texte de transition
+  */
+  public static function getChoiceList($start, $count) {
+    $search = Form::getField('search');
   	$start--;
   	if ($start < 0) {
   	  $error = new Error("Variable de départ incorrecte");
@@ -134,9 +161,13 @@ class ChoiceController {
   	}
   	else {
       $limit = "LIMIT ".$count." OFFSET ".$start;
-      $like = array("LIKE","Answer",$search);
-      $like2 = array("LIKE","TransitionText",$search);
-  		$choices = Database::instance()->query("Choice", Array("*"=>""), array($like, " OR ", $like2, $limit));
+      if($search) {
+        $like = array("LIKE","Answer",$search);
+        $like2 = array("LIKE","TransitionText",$search);
+    		$choices = Database::instance()->query("Choice", Array("*"=>""), array($like, " OR ", $like2, $limit));
+      } else {
+        $choices = Database::instance()->query("Choice", Array("*"=>""), array($limit);
+      }
       $choices = Database::instance()->dataClean($choices, true);
   		$success = new Success($choices);
   		Response::jsonResponse($success);
