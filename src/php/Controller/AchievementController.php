@@ -12,7 +12,12 @@ use \View\Error;
 use \Controller\CurrentUserController;
 
 class AchievementController {
-
+  /*
+  @function addAchievement
+  @param  image,name,brief
+  @return Success si ok, Error avec array 'champ'=>'erreur' sinon
+  Ajoute un trophée
+  */
   public static function addAchievement() {
     CurrentUserController::isAdmin();
     $isError = false;
@@ -45,7 +50,12 @@ class AchievementController {
       $e = new Error(array("all"=>"Tu ne peux pas ajouter ce trophé!"));
     Response::jsonResponse($e);
   }
-
+  /*
+  @function updateAchievement
+  @param  image,name,brief,idachievement
+  @return Success si ok, Error avec array 'champ'=>'erreur' sinon
+  Modifie un trophée
+  */
   public static function updateAchievement() {
     CurrentUserController::isAdmin();
     $isError =false;
@@ -68,7 +78,7 @@ class AchievementController {
       $errors[$field]="";
     }
     if(!$isError){
-      $imgpath=Form::uploadFile("image");
+      $imgpath = Form::uploadFile("image");
       if(is_object($imgpath)){
         $isError = true;
         $errors["image"]=$imgpath->message;
@@ -79,7 +89,6 @@ class AchievementController {
         if($oldimg != '../assets/images/default_image_tiny.png' && file_exists ($oldimg)){
           try{
             unlink($oldimg);
-          } catch(Exception $e) { }
         }
       }
     }
@@ -93,7 +102,12 @@ class AchievementController {
     $e = new Success("Trophé modifié !");
     Response::jsonResponse($e);
   }
-
+  /*
+  @function deleteAchievement
+  @param  idachievement
+  @return Success si ok, Error avec array 'champ'=>'erreur' sinon
+  Supprime un trophée
+  */
   public static function deleteAchievement() {
     CurrentUserController::isAdmin();
     $id = Form::getField("idachievement");
@@ -105,7 +119,7 @@ class AchievementController {
       $oldimg =  Achievement::getAchievementImg($data["idachievement"]);
       $a = new Achievement("", "", "");
       $a->id = $id;
-      $a=$a->delete();
+      $a = $a->delete();
       if($a){
         if($oldimg != '../assets/images/default_image_tiny.png' && file_exists ($oldimg)){
           try {
@@ -119,7 +133,12 @@ class AchievementController {
       Response::jsonResponse($e);
     }
   }
-
+  /*
+  @function getAchievementList
+  @param  string search, $start id de départ, $count nombre de lignes à chercher
+  @return Success avec array d'objets achivement ou array vide, Error sinon
+  Cherche des trophées par rapport à un nom ou un brief
+  */
   public static function getAchievementList($start, $count) {
     $search = Form::getField('search');
   	$start--;

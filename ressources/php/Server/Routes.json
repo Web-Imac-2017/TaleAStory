@@ -19,6 +19,7 @@
   "/additem":"Controller\\ItemController::addItem",
   "/updateitem":"Controller\\ItemController::updateItem",
   "/deleteitem":"Controller\\ItemController::deleteItem",
+    "/item/list/:start/:count":"Controller\\ItemController::getItemList",
   "/addachievement":"Controller\\AchievementController::addAchievement",
   "/deleteachievement":"Controller\\AchievementController::deleteAchievement",
   "/updateachievement":"Controller\\AchievementController::updateAchievement",
