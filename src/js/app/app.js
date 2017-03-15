@@ -3,15 +3,22 @@ import config from '../config';
 import {currentUser} from '../model/user';
 import {User} from '../model/user';
 import TransitionGroup from 'react-addons-transition-group';
+import Dialog from '../utils/dialog'
+
+let AppInstance = null;
 
 class App extends React.Component{
   constructor(props) {
     super(props);
+    AppInstance = this;
     let that = this;
     this.resizeHandlers = [];
     this.state = {
       user: null,
       requestedPage: null,
+      dialog : function(options){
+        this.refs.dialog.show(options);
+      },
       setUser : function(user){
         that.setState({'user': user});
       },
@@ -70,6 +77,7 @@ class App extends React.Component{
               <TransitionGroup>
                 {children}
               </TransitionGroup>
+              <Dialog id="yolo" ref='dialog'/>
             </div>
   }
 };
@@ -81,6 +89,7 @@ App.contextTypes = {
 App.childContextTypes = {
   router: React.PropTypes.object,
   user: React.PropTypes.objectOf(User),
+  dialog : React.PropTypes.func,
   setUser: React.PropTypes.func,
   requestPage : React.PropTypes.func,
   goRequestedPage : React.PropTypes.func,
@@ -92,5 +101,5 @@ App.childContextTypes = {
 
 let AppContextTypes = App.childContextTypes;
 
-export {AppContextTypes};
+export {AppContextTypes, AppInstance};
 export default App;

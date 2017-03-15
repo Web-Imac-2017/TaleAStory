@@ -47,9 +47,9 @@ export default RouteComponent({
 	handleSubmit(event) {
 		event.preventDefault();
 
-    var form = ReactDOM.findDOMNode(this).getElementsByClassName('form')[0];
-
-    fetch('/users', {
+    var form = ReactDOM.findDOMNode(this).getElementsByTagName('form')[0];
+    console.log(form);
+    fetch(config.path('addstep'), {
       method: 'POST',
       body: new FormData(form)
     }).then(function(response){
@@ -94,6 +94,12 @@ export default RouteComponent({
                       <input name="image" type="file" accept='image/*' value={this.state.imgpath}
                                    onChange={this.handleChange} ref="imgpath"
                                    multiple={false} style={{display:"none"}}/>
+                     <span>
+                        <select name="idtype">
+                          <option value="2">Décision</option>
+                          <option value="4">Enigme</option>
+                        </select>
+                     </span>
                       <span><input name="title" type="text" placeholder="Titre de la péripétie"
                         value={this.state.title} onChange={this.handleChange} ref="title" /></span>
                      <textarea name="body" type="text" placeholder="Que fait le personnage ?" value={this.state.body}

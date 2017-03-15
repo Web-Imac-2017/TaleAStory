@@ -75,7 +75,7 @@
 	min-width: $width-index;
 	height: 70%;
     width: 10%;
-	margin: 0px 3% 0 0;
+	margin: 0 1% 0 0;
 
 	@media screen and (max-width: $break-small) {
     	display: none;
@@ -198,8 +198,9 @@
 	transition : all 0.3s;
 	color: rgba(255,255,255,0.75);
 
-	p {
+	a {
 		margin-bottom:12px;
+		display: block;
 	}
 }
 
@@ -534,7 +535,7 @@ div#landscape-activ{
 		img{
 			height:32px;
 			width:32px;
-	
+
 		}
 		position:fixed;
 		bottom:15%;
@@ -544,21 +545,21 @@ div#landscape-activ{
 			opacity:1;
 		}
 	}
-	
+
 div#swap{
 	img{
 		height:32px;
 		width:25px;
-		
+
 	}
 	position:fixed;
 	bottom:5%;
 	right:3.2%;
-	
+
 }
 
 .analysHover{
 	z-index:-3;
-	
+
 	opacity:0;
 }

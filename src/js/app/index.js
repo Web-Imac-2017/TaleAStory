@@ -67,8 +67,8 @@ export default RouteComponent({
                   </button>
                 </div>
               </div>
-              <Scroll/>
-              <Dialog id="yolo" ref='dialog' className='yolo'/>
+              <Scroll next={config.path('home/brief1')}/>
+              <Dialog id="yolo" ref='dialog'/>
             </div>
   }
 });

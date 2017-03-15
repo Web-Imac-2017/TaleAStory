@@ -4,9 +4,21 @@ import {Link} from 'react-router'
 import config from '../config';
 import Header from './header';
 import User from '../model/user';
+import _ScrollListener from 'react-scroll-listener';
 import {GlobalBack} from '../utils/interfaceback';
 import RouteComponent from '../utils/routecomponent';
 import TransitionGroup from 'react-addons-transition-group';
+
+class ScrollListener extends _ScrollListener {
+
+    constructor(dom){
+        // can pass config object to constructor
+        super({
+            host	: dom, 	// default host
+            delay   : 300 		// default scroll-end timeout
+        });
+    }
+}
 
 class RightNavigation extends React.Component{
   render(){
@@ -83,40 +95,50 @@ let WrapperSpec = {
       });
     }
   },
-
   componentDidMount : function(){
     this.transitionGroup = ReactDOM.findDOMNode(this).getElementsByTagName('span')[0];
-    this.transitionGroup.onscroll = this.handleScroll;
+    this.scrollListener = new ScrollListener(this.transitionGroup);
+    setTimeout(function(that) {
+      that.scrollListener.addScrollEndHandler('transition-scroll', that.handleScroll);
+    }, 60, this);
+
   },
 
   componentWillUnmount : function(){
+    this.scrollListener.removeScrollEndHandler('transition-scroll', that.handleScroll);
   },
 
   shouldComponentUpdate : function(nextProps, nextState, nextContext){
-    let childProps = this.props.children.props;
-    let _return = this.currentIndex != childProps.route.index || this.user != nextContext.user
-                  || this.children.type != nextProps.children.type;
-    this.currentIndex = childProps.route.index ? childProps.route.index : 0;
-
-    ReactDOM.findDOMNode(this).getElementsByTagName('span')[0].scrollTop = 5;
-    this.scrollTop = 5;
-    if(this.scroll){
+    let childProps = nextProps.children.props;
+    if(this.currentIndex != childProps.route.index){
+      this.currentIndex = childProps.route.index ? childProps.route.index : 0;
       setTimeout(function(that) {
-        that.scroll = false;
-      }, 50, this);
+        let dom = ReactDOM.findDOMNode(that).getElementsByTagName('span')[0];
+        that.manualScroll = true;
+        dom.scrollTop = 2;
+        setTimeout(function(that){
+          that.scroll = false;
+        },500,that);
+      }, 200, this);
+      return true;
     }
+    let _return = this.user != nextContext.user || this.children.type != nextProps.children.type;
     return _return;
   },
 
   handleScroll(e) {
-    let scrollTop = ReactDOM.findDOMNode(this).getElementsByTagName('span')[0].scrollTop;
-    e.preventDefault();
-    e.stopPropagation();
-    if(!this.scroll && this.scrollTop != scrollTop){
-      this.scroll = true;
-      this.scrollTop = scrollTop;
-      if(scrollTop<=4){
+    if(this.manualScroll){
+      this.manualScroll = false;
+      return;
+    }
+    let dom = ReactDOM.findDOMNode(this).getElementsByTagName('span')[0];
+    let scrollMax = dom.getElementsByClassName('route-component')[0].clientHeight - dom.clientHeight;
+    if(!this.scroll){
+      let scrollTop = dom.scrollTop;
+      console.log(scrollTop);
+      if(scrollTop<=1){
         if(this.previous){
+          this.scroll = true;
           let path = '';
           let last = this.props.routes.length + (this.children.key != "/" ? -1:-1);
           for(let i=0; i<last;i++){
@@ -125,11 +147,12 @@ let WrapperSpec = {
           path = path + (this.previous.path ? this.previous.path : '');
           path = path.replace('//','/').replace(/\(.*\)/,'');
           this.context.router.push(path);
-          return false;
+          return;
         }
       }
-      else if(scrollTop>=6){
+      else if(scrollTop>=scrollMax-1){
         if(this.next){
+          this.scroll = true;
           let path = '';
           let last = this.props.routes.length + (this.children.key != "/" ? -1:-1);
           for(let i=0; i<last;i++){
@@ -138,12 +161,12 @@ let WrapperSpec = {
           path = path + (this.next.path ? this.next.path : '');
           path = path.replace('//','/').replace(/\(.*\)/,'');
           this.context.router.push(path);
-          return false;
+          return;
         }
       }
       this.scroll = false;
     }
-    return false;
+    return;
   },
 
   render : function(){
@@ -167,7 +190,7 @@ let WrapperSpec = {
                       null;
     this.findNext();
     this.findPrevious();
-    return  <div id="wrapper" className={this.props.route.className}>
+    return  <div className={"wrapper "+this.props.route.className}>
               {this.header}
               <div className="caca">
                 <div className="scroller">

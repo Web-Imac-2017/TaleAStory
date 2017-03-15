@@ -128,6 +128,21 @@ export default RouteComponent({
   },
 
   render(){
+    let unavailable = true;
+    if(this.context.user)
+      if(this.context.user.isAdmin)
+        unavailable = false;
+
+    if(unavailable)
+      return <div onClick={this.unselect}>
+                <div className="columnsContainer">
+                  <div className="content contentProfil contentSteps">
+                    <div className="contentRight">
+                      unavailable
+                    </div>
+                  </div>
+                </div>
+              </div>
 		return  <div className="form-screen editing">
     				  <div className="content large">
                 <div className="block">

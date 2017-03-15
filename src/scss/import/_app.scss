@@ -1,4 +1,4 @@
-html, body, #root, #app, #app span, #wrapper {
+html, body, #root, #app, .wrapper {
   max-height: 100%;
   max-width: 100%;
   overflow: hidden;
@@ -7,6 +7,7 @@ html, body, #root, #app, #app span, #wrapper {
 html {
 	@include defaultFont();
 }
+
 
 .route-component{
   width:95%;
@@ -22,9 +23,10 @@ html, body, #root, #app{
   background-color: black;
 }
 
-#wrapper {
+.wrapper {
   display: flex;
   flex-direction: column;
+  transform: matrix(1, 0, 0, 1, 0, 0);
 }
 
 .scroller{
@@ -54,6 +56,10 @@ html, body, #root, #app{
   }
 }
 
+a {
+  text-decoration: none;
+  color: white;
+}
 /* *** Header - General *** */
 header {
 	width: 100%;
@@ -88,7 +94,7 @@ header {
   }
 
 	a, a:visited, p {
-		text-decoration: none;
+
 		padding-left: 18px;
 		padding-right: 18px;
 		padding-bottom: 6px;
@@ -97,7 +103,6 @@ header {
 		float: left;
 		vertical-align: middle;
 		transition: all 0.25s;
-		border-bottom: 0px solid rgba(255,255,255,0.75);
 		position: relative;
 		color: black;
 	}
@@ -186,9 +191,9 @@ header {
 
    		li {
         	position: relative;
-        	margin: auto 10px;
+        	margin: auto 2%;
         	transition : all 0.4s;
-        	padding: 8px;
+        	padding: 1%;
         	font-family: OpenSans;
         	font-weight: bold;
         	color: rgba(255,255,255,0.5);
