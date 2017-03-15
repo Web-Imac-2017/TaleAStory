@@ -68,7 +68,7 @@ class AchievementController {
       $errors[$field]="";
     }
     if(!$isError){
-      $imgpath=Form::uploadFile("image");
+      $imgpath = Form::uploadFile("image");
       if(is_object($imgpath)){
         $isError = true;
         $errors["image"]=$imgpath->message;
@@ -103,7 +103,7 @@ class AchievementController {
       $oldimg =  Achievement::getAchievementImg($data["idachievement"]);
       $a = new Achievement("", "", "");
       $a->id = $id;
-      $a=$a->delete();
+      $a = $a->delete();
       if($a){
         if($oldimg != '../assets/images/default_image_tiny.png' && file_exists ($oldimg)){
           try {

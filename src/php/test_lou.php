@@ -7,6 +7,10 @@ use \Server\Response;
 use \View\Success;
 use \View\Error;
 use \Controller\AchievementController;
+use \Server\Autoloader;
+use \Server\Router;
+use \Server\RouterException;
+use \Server\Session;
 require_once("Server/Database.php");
 require_once("View/Success.php");
 require_once("View/Error.php");
@@ -41,10 +45,13 @@ echo "<pre>".var_export($test, true)."</pre>";
 //echo "<pre>".var_export($player, true)."</pre>";
 //$user->changeImage("./lala.jpg");
 */
+define('DS', DIRECTORY_SEPARATOR); // meilleur portabilité sur les différents systèmes (pour l'Autoloader)
+define('ROOT', dirname(__FILE__).DS); // pour récupérer le chemin du dossier actuel (pour l'Autoloader)
 try{
-//$test = Database::instance()->query("Player", array("Login"=>"Dori", "IDPlayer"=>"3"));
-$test = Database::instance()->insert("step", array("IDStep"=>"1","Body" => "Lou","Question"=>"", "IDType"=>4));
-echo "<pre>".var_export($test, true)."</pre>";
+require 'Server/Autoloader.php';
+Autoloader::register();
+$test = Database::instance()->query("Player", array("Login"=>"Dori", "IDPlayer"=>"3"));
+//$test = Database::instance()->insert("step", array("IDStep"=>"1","Body" => "Lou","Question"=>"", "IDType"=>4));
 //$test = Database::instance()->insert("step", array("IDStep"=>"1","Body" => "Lou","Question"=>"", "IDType"=>4));
 //echo "<pre>".var_export($test, true)."</pre>";
 //$player->addItems(array(4=>3, 2=>2, 1=>1));

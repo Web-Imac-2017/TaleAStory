@@ -23,6 +23,7 @@ class Database {
     $this->dbName = $config_data['database']['name'];
     $this->options = array(
       \PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
+      \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
     );
   }
 
@@ -45,7 +46,7 @@ class Database {
         $pdo->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
         $this->pdo = $pdo;
       }
-      catch(PDOException $e){
+      catch(\PDOException $e){
           throw new RouterException($e->getMessage(), (int)$e->getCode());
           $e->send();
       }
@@ -107,7 +108,7 @@ class Database {
         $statement .= $like;
       }
       //echo $statement;
-    } catch(PDOException $e){
+    } catch(\PDOException $e){
         throw new RouterException('Erreur lors de la requête',404);
         $e->send();
     }
@@ -127,7 +128,7 @@ class Database {
     try {
       $qry = $this->getPDO()->prepare($statement);
       $qry->execute($array_entries) or die(print_r($qry->errorInfo()));
-    } catch(PDOException $e){
+    } catch(\PDOException $e){
         throw new RouterException('Erreur lors de l\'envoi de la requête',404);
         $e->send();
     }
@@ -144,9 +145,9 @@ class Database {
       $values = $this->processValues($entries);
       $statement = $into.$fields.$values;
       //echo "\n".$statement."\n";
-    } catch(PDOException $e){
+    } catch(\PDOException $e){
         throw new RouterException('Erreur lors de l\'insertion',404);
-        //$e->send();
+        $e->send();
     }
     return $this->sendInsert($statement, $entries);
   }
@@ -155,10 +156,11 @@ class Database {
     //echo '<pre>' . var_export($entries, true) . '</pre>';
     try {
     $insert = $this->getPDO()->prepare($statement);
+    var_dump($insert);
     $insert->execute($entries) or die(print_r($insert->errorInfo()));
     $id = $this->getPDO()->lastInsertId();
     }
-    catch(PDOException $e){
+    catch(\PDOException $e){
       throw new RouterException('Erreur lors de l\'envoie de l\'insertion dans la BDD',404);
       $e->send();
     }
@@ -183,7 +185,7 @@ class Database {
     $array_entries = array_merge($this->processArrayEntries($entries), $this->processArrayEntries($identification));
     $statement = $update.$from.$set.$where;
     //echo "\n".$statement."\n";
-    } catch(PDOException $e){
+    } catch(\PDOException $e){
       throw new RouterException('Erreur lors de la mise a jour de la table',404);
       $e->send();
     }
@@ -196,7 +198,7 @@ class Database {
     try {
       $update = $this->getPDO()->prepare($statement);
       $update->execute($array_entries) or die(print_r($update->errorInfo()));
-    }catch(PDOException $e){
+    }catch(\PDOException $e){
       throw new RouterException('Erreur lors de l\'envoie de la mise a jour de la table',404);
       $e->send();
     }
@@ -215,7 +217,7 @@ class Database {
       //echo " bug DELETE";
       return 0;
     }
-    } catch(PDOException $e){
+    } catch(\PDOException $e){
       throw new RouterException('Erreur lors de la suppression en table',404);
       $e->send();
     }
@@ -227,7 +229,7 @@ class Database {
       $delete = $this->getPDO()->prepare($statement);
       $delete->execute($array_entries) or die(print_r($delete->errorInfo()));
     }
-    catch(PDOException $e){
+    catch(\PDOException $e){
       throw new RouterException('Erreur lors de l\'envoie de la suppression en table',404);
       $e->send();
     }
@@ -246,7 +248,7 @@ class Database {
     }
     //echo $statement;
     $data = $this->sendQuery($statement, $array_entries);
-    }catch(PDOException $e){
+    }catch(\PDOException $e){
       throw new RouterException('Erreur lors du count de la requête',404);
       $e->send();
     }
