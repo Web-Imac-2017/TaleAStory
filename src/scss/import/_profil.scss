@@ -22,9 +22,10 @@
 		width : 100%;
 
 		.roundProfil{
+			border : 1px solid #fff;
 			width : 90px;
 			height : 90px;
-			background : #fff;
+			background : rgba(0,0,0,0);
 			border-radius : 50%;
 			margin : 0 auto 20px auto;
 			position : relative;
@@ -52,7 +53,7 @@
 		}
 
 		.roundProfil:hover::before{
-			background: rgba(0,0,0,0.80);
+			background: rgba(0,0,0,0.85);
 		}
 
 
@@ -146,7 +147,7 @@
 			}
 
 			@media screen and (max-width: $break-medium) {
-				display: inline-block;
+				display: block;
 			}
 		}
 
@@ -183,7 +184,7 @@
 
 .contentRight{
 	width : 93%;
-	height : 89%;
+	height : 85%;
 	display : flex;
 	align-items : center;
 

@@ -439,7 +439,7 @@ let webGL={
 		};
 		
 		add= document.createElement('div');
-		add.innerHTML =  '<img id="img2" src ="'+config.imagePath('swap_tiny.png')+'">';
+		add.innerHTML =  '<img id="img2" src ="'+config.imagePath('swap_sound_tiny.png')+'">';
 		document.getElementById("swap").appendChild(add);
 		
 		
