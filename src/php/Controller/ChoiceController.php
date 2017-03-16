@@ -12,6 +12,12 @@ use \View\Error;
 use \Controller\CurrentUserController;
 
 class ChoiceController {
+  /*
+  @function addChoice
+  @param  answer, idstep, transitiontext, idnextstep
+  @return Success si ok, Error avec array 'champ'=>'erreur' sinon
+  Ajoute un choix
+  */
   public static function addChoice() {
     CurrentUserController::isAdmin();
     $isError = false;
@@ -26,7 +32,7 @@ class ChoiceController {
       }
       else
         $errors[$key]="";
-    }
+    }/*
     $entries['statalteration'] = Form::getField('statalteration');
     if(!empty($entries['statalteration'])){
       $errors['statalteration']=ChoiceController::setStats($entries['statalteration'],"StatAlteration");
@@ -34,7 +40,7 @@ class ChoiceController {
     $entries['statrequirement'] = Form::getField('statrequirement');
     if(!empty($entries['statrequirement'])){
       $errors['statrequirement']=ChoiceController::setStats($entries['statrequirement'],'StatRequierement');
-    }
+    }*/
     if($isError){
       $e = new Error($errors);
       Response::jsonResponse($e);
@@ -47,7 +53,12 @@ class ChoiceController {
       $e = new Error(array("all"=>"Tu ne peux pas ajouter ce choix !"));
     Response::jsonResponse($e);
   }
-
+  /*
+  @function updateChoice
+  @param  idchoice, answer, idstep, transitiontext, idnextstep
+  @return Success si ok, Error avec array 'champ'=>'erreur' sinon
+  Modifie un choix
+  */
   public static function updateChoice() {
     CurrentUserController::isAdmin();
     $isError =false;
@@ -71,6 +82,7 @@ class ChoiceController {
       $errors[$field]="";
     }
     //STATS LIEES AU CHOIX - updatées si non vide
+    /*
     $entries['statalteration'] = Form::getField('statalteration');
     if(!empty($entries['statalteration'])){
       $errors['statalteration']=ChoiceController::setStats($entries['statalteration'],"StatAlteration");
@@ -78,7 +90,7 @@ class ChoiceController {
     $entries['statrequirement'] = Form::getField('statrequirement');
     if(!empty($entries['statrequirement'])){
       $errors['statrequirement']=ChoiceController::setStats($entries['statrequirement'],'StatRequierement');
-    }
+    }*/
     //si erreur, on arrête
     if($isError){
       $e = new Error($errors);
@@ -90,7 +102,12 @@ class ChoiceController {
     $e = new Success("Choix modifié !");
     Response::jsonResponse($e);
   }
-
+  /*
+  @function deleteChoice
+  @param  idchoice
+  @return Success si ok, Error avec array 'champ'=>'erreur' sinon
+  Supprime un choix
+  */
   public static function deleteChoice() {
     CurrentUserController::isAdmin();
     $id = Form::getField("idchoice");
@@ -109,7 +126,12 @@ class ChoiceController {
       Response::jsonResponse($e);
     }
   }
-
+  /*
+  @function setStats
+  @param  $entries = array "stat"=>"value" NON VIDE, $table "StatAlteration" ou "StatRequierement"
+  @return message de success ou erreur
+  Insère les stats correspondantes à un choix (requises et gagnées)
+  */
   public static function setStats($entries,$table){
     foreach ($entries as $key => $value) {
         if($value==NULL){
@@ -120,7 +142,12 @@ class ChoiceController {
     }
     return "";
   }
-
+  /*
+  @function getChoiceList
+  @param  search, start = id de début, count = nombre de ligne à parcourir
+  @return Success avec array d'objets achivement ou array vide, Error sinon
+  Cherche des choix par rapport à une answer ou un texte de transition
+  */
   public static function getChoiceList($start, $count) {
     $search = Form::getField('search');
   	$start--;
@@ -143,11 +170,12 @@ class ChoiceController {
         $choices = Database::instance()->query("Choice", Array("*"=>""), array($limit));
       }
       $choices = Database::instance()->dataClean($choices, true);
+      if(!$choices) {$choices = array();}
   		$success = new Success($choices);
   		Response::jsonResponse($success);
   	}
   }
-  
+
   public static function getChoice() {
     $id = Form::getField("id");
     $res =  Database::instance()->query("Choice", Array(        "IDChoice"=> $id,

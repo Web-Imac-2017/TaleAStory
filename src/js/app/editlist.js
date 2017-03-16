@@ -4,6 +4,7 @@ import config from '../config';
 import {AppContextTypes} from './app'
 import RouteComponent from '../utils/routecomponent';
 import TransitionGroup from 'react-addons-transition-group';
+import {Requester} from '../utils/interfaceback'
 
 class ListItem extends React.Component{
   constructor(props){
@@ -19,12 +20,8 @@ class ListItem extends React.Component{
 
   render(){
     return <div className="item" onClick={this.handleClick}>
-              <div className="insideItem">
-                <img className="picto element" src={config.imagePath('pictoMountains_large.png')}/>
-                <img className="element" src={config.imagePath('wave_large.png')}/>
-                <h3 className="userName">Un trophée</h3>
-              </div>
-            </div>
+              {this.props.item.display()}
+           </div>
   }
 }
 
@@ -53,7 +50,7 @@ class List extends React.Component{
   render(){
       let steps = this.props.steps ?
                     this.props.steps.map((step, index) =>
-                      <ListItem key={step} id={step}/>
+                      <ListItem key={step.id} id={step.id} item={step}/>
                     ) : null;
       return <div className="list">
               {steps}
@@ -76,7 +73,7 @@ let EditList = {
       _return -= Math.round(_return * 0.333);
     return _return;
   },
-  loadSteps(offset, count){
+  loadSteps(offset, count, filter){
     let steps = [];
     return steps;
   },
@@ -84,7 +81,7 @@ let EditList = {
     this.setState({count: this.stepCount()});
   },
   getInitialState(){
-    let offset = 0;
+    let offset = 1;
     if(this.props.params.id){
       offset = Math.round(this.props.params.id * 0.1) * 10;
     }
@@ -92,9 +89,15 @@ let EditList = {
               selectedItem:null,
               offset:offset,
               count:this.stepCount(),
-              search:''
+              search:'',
+              steps: []
            };
-    this.steps = this.loadSteps(state.offset, state.count);
+      let that = this;
+     this.loadSteps(state.offset, state.count, state.search).then(
+       function(steps){
+         that.setState({steps : steps});
+       }
+     );
     return state;
   },
   componentDidMount(){
@@ -104,8 +107,16 @@ let EditList = {
     this.context.removeResizeHandler(this.resizeHandle);
   },
   shouldComponentUpdate(nextProps, nextState){
-    if(this.state.offset != nextState.offset || this.state.count != nextState.count)
-      this.steps = this.loadSteps(nextState.offset, nextState.count);
+    if(this.state.offset != nextState.offset ||
+       this.state.count != nextState.count ||
+      this.state.search != nextState.search){
+        let that = this;
+      this.loadSteps(nextState.offset, nextState.count, nextState.search).then(
+        function(steps){
+          that.setState({steps : steps});
+        }
+      )
+    }
     return true;
   },
   getChildContext() {
@@ -156,13 +167,13 @@ let EditList = {
   },
 
   handleChange(event) {
-		this.state[name] = event.target.search.value;
 	},
   handleSubmit(event) {
+    this.setState({search: this.refs.search.value});
 		event.preventDefault();
 	},
   render(){
-    this.children = <List steps={this.steps} key={this.state.offset}/>
+    this.children = <List steps={this.state.steps} key={this.state.offset}/>
     let unavailable = true;
     if(this.context.user)
       if(this.context.user.isAdmin)
@@ -187,7 +198,8 @@ let EditList = {
                       <div>
                         <form className="element" onSubmit={this.handleSubmit}>
                             <input name="search" type="text" placeholder="Recherche"
-                                        value={this.state.search} onChange={this.handleChange} ref="username" />
+                                        value={this.state.search} onChange={this.handleChange}
+                                         ref="search" />
                             <button className="submit"/>
           							</form>
                       </div>

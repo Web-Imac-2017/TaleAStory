@@ -20,12 +20,8 @@ class ListItem extends React.Component{
 
   render(){
     return <div className="item" onClick={this.handleClick}>
-              <div className="insideItem">
-                <img className="picto element" src={config.imagePath('pictoMountains_large.png')}/>
-                <img className="element" src={config.imagePath('wave_large.png')}/>
-                <h3 className="userName">Un trophée</h3>
-              </div>
-            </div>
+              {this.props.item.display()}
+           </div>
   }
 }
 
@@ -52,13 +48,13 @@ class List extends React.Component{
   }
 
   render(){
-      let steps = this.props.steps ?
-                    this.props.steps.map((step, index) =>
-                      <ListItem key={step} id={step}/>
-                    ) : null;
-      return <div className="list">
-              {steps}
-             </div>
+    let steps = this.props.steps ?
+                  this.props.steps.map((step, index) =>
+                    <ListItem key={step.id} id={step.id} item={step}/>
+                  ) : null;
+    return <div className="list">
+            {steps}
+           </div>
   }
 
 }
@@ -70,27 +66,24 @@ class ItemNav extends React.Component{
     this.next = this.next.bind(this);
     this.previous = this.previous.bind(this);
     this.searchHandler = this.searchHandler.bind(this);
+    this.unselect = this.unselect.bind(this);
 
-
-    let offset = 0;
-    if(this.props.id){
-      offset = Math.round(this.props.id * 0.1) * 10;
-    }
-
+    let offset = 1;
     this.state = {
-      selectedItem:null,
-      offset:offset,
-      count:this.stepCount(),
-      search:''
-    };
-
+              selectedItem:null,
+              offset:offset,
+              count:this.stepCount(),
+              search:'',
+              steps: []
+           };
+    let that = this;
     if(this.props.loadSteps){
-      this.steps = this.props.loadSteps(this.state.offset, this.state.count);
+      this.props.loadSteps(this.state.offset, this.state.count, this.state.search).then(
+        function(steps){
+          that.setState({steps : steps});
+        }
+      );
     }
-    else {
-      this.steps = [];
-    }
-
   }
 
   componentDidMount(){
@@ -100,10 +93,18 @@ class ItemNav extends React.Component{
     this.context.removeResizeHandler(this.resizeHandle);
   }
   shouldComponentUpdate(nextProps, nextState){
-    if(!this.props.loadSteps)
-      return true;
-    if(this.state.offset != nextState.offset || this.state.count != nextState.count)
-      this.steps = this.props.loadSteps(nextState.offset, nextState.count);
+    if(this.state.offset != nextState.offset ||
+       this.state.count != nextState.count ||
+      this.state.search != nextState.search){
+        let that = this;
+        if(this.props.loadSteps){
+          this.props.loadSteps(nextState.offset, nextState.count, nextState.search).then(
+            function(steps){
+              that.setState({steps : steps});
+            }
+          )
+        }
+    }
     return true;
   }
 
@@ -136,6 +137,13 @@ class ItemNav extends React.Component{
     };
   }
 
+  unselect(e,p){
+    if(this.state.selectedItem){
+        ReactDOM.findDOMNode(this.state.selectedItem).classList.remove('selected');
+        this.setState({selectedItem:null});
+    }
+  }
+
   next(){
     this.setState((prevState) => ({offset: prevState.offset+prevState.count}));
   }
@@ -144,18 +152,19 @@ class ItemNav extends React.Component{
     this.setState((prevState) => ({offset: Math.max(prevState.offset-prevState.count,0)}));
   }
 
-  searchHandler(){
-    this.setState({search: this.refs.search});
+  searchHandler(event){
+    this.setState({search: this.refs.search.value});
+		event.preventDefault();
   }
 
   render(){
-    this.children = <List steps={this.steps} key={this.state.offset}/>
+    this.children = <List steps={this.state.steps} key={this.state.offset}/>
     return <div className="listNav">
               <div>
-                <form className="element">
+                <form className="element" onSubmit={this.searchHandler}>
                     <input name="search" type="text" placeholder="Recherche"
                             ref='search'
-                            value={this.state.search} onChange={this.searchHandler}/>
+                            value={this.state.search}/>
                     <button className="submit"/>
                 </form>
               </div>

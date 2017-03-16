@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Lun 13 Mars 2017 à 11:34
+-- Généré le :  Jeu 16 Mars 2017 à 22:52
 -- Version du serveur :  5.6.17
 -- Version de PHP :  5.5.12
 
@@ -19,9 +19,6 @@ SET time_zone = "+00:00";
 --
 -- Base de données :  `taleastory`
 --
-
-CREATE DATABASE `taleastory`;
-USE `taleastory`;
 
 -- --------------------------------------------------------
 
@@ -57,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `admin` (
   `IDPlayer` int(11) NOT NULL,
   PRIMARY KEY (`IDAdmin`),
   KEY `FK_Admin_IDPlayer` (`IDPlayer`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
 
 --
 -- Contenu de la table `admin`
@@ -65,7 +62,8 @@ CREATE TABLE IF NOT EXISTS `admin` (
 
 INSERT INTO `admin` (`IDAdmin`, `IDPlayer`) VALUES
 (10, 3),
-(11, 4);
+(11, 4),
+(12, 12);
 
 -- --------------------------------------------------------
 
@@ -96,7 +94,7 @@ CREATE TABLE IF NOT EXISTS `choice` (
   PRIMARY KEY (`IDChoice`),
   KEY `FK_Choice_IDStep` (`IDStep`),
   KEY `IDNextStep` (`IDNextStep`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
 
 --
 -- Contenu de la table `choice`
@@ -104,7 +102,10 @@ CREATE TABLE IF NOT EXISTS `choice` (
 
 INSERT INTO `choice` (`IDChoice`, `Answer`, `IDStep`, `TransitionText`, `IDNextStep`) VALUES
 (2, 'Encore quelques minutes', 2, 'Encore quelques minutes… Le jour ne partira pas sans moi… Et puis que pourrait-il arriver ? Le vent continue de me bercer.', 2),
-(3, 'J’ouvre les yeux', 2, 'Après quelques hésitations, j’ouvre finalement les yeux. C’est une belle journée. Je souris en regardant autour de moi. Je récupère mes affaires et me prépare à partir. Bizarrement, mon arc est resté armé toute la nuit. Je devrais faire plus attention à mes armes… Je le débande et utilise la branche en canne improvisée. Je noue la corde autour de ma taille à l’aide d’un faux noeud. Je pourrais donc m’armer facilement en cas de besoin.', 3);
+(3, 'J’ouvre les yeux', 2, 'Après quelques hésitations, j’ouvre finalement les yeux. C’est une belle journée. Je souris en regardant autour de moi. Je récupère mes affaires et me prépare à partir. Bizarrement, mon arc est resté armé toute la nuit. Je devrais faire plus attention à mes armes… Je le débande et utilise la branche en canne improvisée. Je noue la corde autour de ma taille à l’aide d’un faux noeud. Je pourrais donc m’armer facilement en cas de besoin.', 3),
+(6, 'Allons y', 3, 'Allons vers cette forêt', 5),
+(7, 'Je veux une enigme', 3, 'Je suis super malin donc je vais résoudre une énigme', 6),
+(8, 'oui', 2, 'Ah bon?', 5);
 
 -- --------------------------------------------------------
 
@@ -140,6 +141,17 @@ CREATE TABLE IF NOT EXISTS `inventory` (
   PRIMARY KEY (`IDPlayer`,`IDItem`),
   KEY `FK_Inventory_IDItem` (`IDItem`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Contenu de la table `inventory`
+--
+
+INSERT INTO `inventory` (`quantity`, `IDPlayer`, `IDItem`) VALUES
+('3', 5, 3),
+('1', 9, 3),
+('1', 10, 3),
+('1', 11, 3),
+('3', 12, 3);
 
 -- --------------------------------------------------------
 
@@ -208,6 +220,23 @@ CREATE TABLE IF NOT EXISTS `paststep` (
   KEY `FK_PastStep_IDStep` (`IDStep`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Contenu de la table `paststep`
+--
+
+INSERT INTO `paststep` (`EndDate`, `IDPlayer`, `IDStep`) VALUES
+('2017-03-16', 5, 2),
+('2017-03-16', 9, 2),
+('2017-03-16', 9, 3),
+('2017-03-16', 9, 6),
+('2017-03-16', 10, 2),
+('2017-03-16', 10, 3),
+('2017-03-16', 10, 6),
+('2017-03-16', 11, 2),
+('2017-03-16', 11, 3),
+('2017-03-16', 11, 6),
+('2017-03-16', 12, 2);
+
 -- --------------------------------------------------------
 
 --
@@ -225,7 +254,7 @@ CREATE TABLE IF NOT EXISTS `player` (
   PRIMARY KEY (`IDPlayer`),
   UNIQUE KEY `Login` (`Login`),
   KEY `FK_Player_IDStep` (`IDCurrentStep`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
 
 --
 -- Contenu de la table `player`
@@ -234,7 +263,15 @@ CREATE TABLE IF NOT EXISTS `player` (
 INSERT INTO `player` (`IDPlayer`, `ImgPath`, `Login`, `Pwd`, `Pseudo`, `Mail`, `IDCurrentStep`) VALUES
 (2, 'patulacci_tiny.jpg', 'marcel', 'inconnus', 'marcel patulacci', NULL, NULL),
 (3, 'default_tiny.jpg', 'white', 'heisenberg', 'Walter White', NULL, NULL),
-(4, 'default_tiny.jpg', 'blow', 'curry', 'Blow', NULL, NULL);
+(4, 'default_tiny.jpg', 'blow', 'curry', 'Blow', NULL, NULL),
+(5, 'defaultImg.png', 'steeve@lol.fr', '$2y$10$AGTq9bXjWDhX4G1jJfcBr.J9EiUjptrrLZtErOzng0ypfG11OQO7i', 'steeve', 'steeve@lol.fr', 2),
+(6, 'defaultImg.png', 'steeve@ouesh.fr', '$2y$10$EevXQPqnvZRdu5oUm.aO8uOvJltJtzZemm/M2FF.Awrjx8VF06dO.', 'ouesh', 'steeve@ouesh.fr', 0),
+(7, 'defaultImg.png', 'steeve@yolo.fr', '$2y$10$lsYmkJ29xmYWA4wuuh39N.L/icBEMUIoNCDMnjHdZKUtPcWzxQjU2', 'steeve', 'steeve@yolo.fr', 0),
+(8, 'defaultImg.png', 'ouesh@ouesh.fr', '$2y$10$u8x44peKCDb0o58BkyHkk.zLW2oSeCj.LzKQokqQGP05WXH1Plfs2', 'ouesh', 'ouesh@ouesh.fr', 0),
+(9, 'defaultImg.png', 'yolo@lol.fr', '$2y$10$mcn/ODscdsG5ABt9FQyP/Oalw3DPm.YmAtF5cVQ78/LUUA62fhmha', 'yolo', 'yolo@lol.fr', 5),
+(10, '16df8c06db359714865a08d8674ed91e.jpg', 'steeve@machin.com', '$2y$10$LEiXQY.MeQQk2ngFbUcte.fdDlVE7U9Npdsiv.udKwZbnrg.zHUGC', 'steeve', 'steeve@machin.com', 5),
+(11, 'defaultImg.png', 'steeve@carotte.fr', '$2y$10$fuFNdqzavrjQfrtiC.YAX.iTNzLTIR7DCORaubYMrs2fEMjlyyfzO', 'steeve', 'steeve@carotte.fr', 5),
+(12, 'defaultImg.png', 'lucas@jeami.fr', '$2y$10$bCGnaN4YTRoEiP89DWOR1OcNAcDo9sLuKN98saWB2jF.R2msGp71q', 'jeami', 'lucas@jeami.fr', 2);
 
 -- --------------------------------------------------------
 
@@ -263,6 +300,44 @@ CREATE TABLE IF NOT EXISTS `playerstat` (
   PRIMARY KEY (`IDPlayer`,`IDStat`),
   KEY `FK_PlayerStat_IDStat` (`IDStat`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Contenu de la table `playerstat`
+--
+
+INSERT INTO `playerstat` (`Value`, `IDPlayer`, `IDStat`) VALUES
+(0, 5, 1),
+(0, 5, 2),
+(0, 5, 3),
+(0, 5, 4),
+(0, 6, 1),
+(0, 6, 2),
+(0, 6, 3),
+(0, 6, 4),
+(0, 7, 1),
+(0, 7, 2),
+(0, 7, 3),
+(0, 7, 4),
+(0, 8, 1),
+(0, 8, 2),
+(0, 8, 3),
+(0, 8, 4),
+(0, 9, 1),
+(0, 9, 2),
+(0, 9, 3),
+(0, 9, 4),
+(0, 10, 1),
+(0, 10, 2),
+(0, 10, 3),
+(0, 10, 4),
+(0, 11, 1),
+(0, 11, 2),
+(0, 11, 3),
+(0, 11, 4),
+(0, 12, 1),
+(0, 12, 2),
+(0, 12, 3),
+(0, 12, 4);
 
 -- --------------------------------------------------------
 
@@ -330,7 +405,7 @@ CREATE TABLE IF NOT EXISTS `step` (
   `Title` text,
   PRIMARY KEY (`IDStep`),
   KEY `FK_Step_IDType` (`IDType`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
 
 --
 -- Contenu de la table `step`
@@ -338,8 +413,12 @@ CREATE TABLE IF NOT EXISTS `step` (
 
 INSERT INTO `step` (`IDStep`, `ImgPath`, `Body`, `Question`, `IDType`, `Title`) VALUES
 (1, 'blahblah', 'ceci est une étape step', 'Where is Brayan ?', 1, 'JeSuisUnTitre'),
-(2, NULL, 'Mes yeux sont fermés. Je reste là, couché. J’aimerais qu’il soit plus tard, avoir plus de temps pour me reposer. Mais je sens les rayons du soleil contre ma peau. Le vent se lève', '...', 4, NULL),
-(3, NULL, 'Il est temps de partir, le vent se lève. Mon voyage me mène vers l’est, contre le vent. Parfait pour chasser, les proies ne me sentiront pas venir.', '...', 4, NULL);
+(2, '667129f95ca180391e978f4dca67af6b.jpg', 'Mes yeux sont fermés. Je reste là, couché. J’aimerais qu’il soit plus tard, avoir plus de temps pour me reposer. Mais je sens les rayons du soleil contre ma peau. Le vent se couche', '...', 4, 'Ouesh'),
+(3, NULL, 'Il est temps de partir, le vent se lève. Mon voyage me mène vers l’est, contre le vent. Parfait pour chasser, les proies ne me sentiront pas venir.', '...', 4, NULL),
+(5, NULL, 'Vous êtes arrivé au bout de votre histoire, bien ouej', '.', 7, 'La Fin'),
+(6, '3d296b1cf8b0348f7bdd5cb1c3c48143.jpg', 'Répondez à cette question', 'On parle de moi?', 2, 'On parle de qui?'),
+(7, 'default_image_tiny.png', 'Mes yeux sont fermés. Je reste là, couché. J’aimerais qu’il soit plus tard, avoir plus de temps pour me reposer. Mais je sens les rayons du soleil contre ma peau. Le vent se lève au loin', '...', 4, 'Ouesh'),
+(8, 'default_image_tiny.png', 'Mes yeux sont fermés. Je reste là, couché. J’aimerais qu’il soit plus tard, avoir plus de temps pour me reposer. Mais je sens les rayons du soleil contre ma peau. Le vent se lève au loin', '...', 4, 'Ouesh');
 
 -- --------------------------------------------------------
 
@@ -352,7 +431,7 @@ CREATE TABLE IF NOT EXISTS `steptype` (
   `Name` varchar(64) NOT NULL,
   PRIMARY KEY (`IDType`),
   UNIQUE KEY `Name` (`Name`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
 
 --
 -- Contenu de la table `steptype`
@@ -360,9 +439,11 @@ CREATE TABLE IF NOT EXISTS `steptype` (
 
 INSERT INTO `steptype` (`IDType`, `Name`) VALUES
 (4, 'decision'),
+(7, 'end\r\n'),
 (2, 'enigma'),
 (5, 'game'),
 (3, 'illustrated_enigma'),
+(6, 'story'),
 (1, 'type de step yolo');
 
 --

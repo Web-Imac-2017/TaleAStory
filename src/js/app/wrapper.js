@@ -84,7 +84,7 @@ let WrapperSpec = {
           path = path.replace('//','/').replace(/\(.w*\)/,'');
           this.context.router.push(path);
           return;
-        }       
+        }
     }
   },
 
@@ -194,7 +194,8 @@ let WrapperSpec = {
   },
 
   componentWillUnmount : function(){
-    this.transitionGroup.onscroll= null;
+    if(this.transitionGroup)
+      this.transitionGroup.onscroll= null;
   },
 
   shouldComponentUpdate : function(nextProps, nextState, nextContext){
@@ -204,11 +205,11 @@ let WrapperSpec = {
       setTimeout(function(that) {
         let dom = ReactDOM.findDOMNode(that).getElementsByTagName('span')[0];
         that.manualScroll = true;
-        dom.scrollTop = 2;
+        dom.scrollTop = 3;
         setTimeout(function(that){
           that.scroll = false;
-        },100,that);
-      }, 600, this);
+        },400,that);
+      }, 100, this);
       return true;
     }
     let _return = this.user != nextContext.user ||
@@ -231,7 +232,7 @@ let WrapperSpec = {
           that.lock = false;
           let scrollTop = dom.scrollTop;
           let scrollMax = dom.getElementsByClassName('route-component')[0].clientHeight - dom.clientHeight;
-          if(scrollTop<=0){
+          if(scrollTop<=1){
             if(that.previous){
               that.scroll = true;
               let path = '';
@@ -245,7 +246,7 @@ let WrapperSpec = {
               return;
             }
           }
-          else if(scrollTop>=scrollMax){
+          else if(scrollTop>=scrollMax-1){
             if(that.next){
               that.scroll = true;
               let path = '';
@@ -262,6 +263,9 @@ let WrapperSpec = {
         });
       }
       let scrollTop = dom.scrollTop;
+    }
+    else {
+      e.preventDefault();
     }
     return;
   },*/

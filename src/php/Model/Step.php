@@ -24,11 +24,11 @@ Class Step {
     $this->idType=$idType;
     $this->title=$title;
   }
-  /*
-  @function save
-  @return $id du step créé, null si erreur
-  Insère un nouveau step en base de données
-  */
+/*
+@function save
+@return $id du step créé, null si erreur
+Insère un nouveau step en base de données
+*/
   public function save() {
      $entries = array(
        'ImgPath' => $this->imgpath,
@@ -45,20 +45,20 @@ Class Step {
      }
      return null;
    }
-   /*
-   @function update
-   @param  $entries array de la forme : "Champ à modifier"=>"nouvelle valeur"
-   @return void
-   Maj une step
-   */
+/*
+@function update
+@param  $entries array de la forme : "Champ à modifier"=>"nouvelle valeur"
+@return void
+Maj une step
+*/
    public function update($entries) {
      Database::instance()->update(self::$table, $entries, array("IDStep"=>$this->id));
    }
-   /*
-   @function delete
-   @return $bool faux si erreur, vrai si ok
-   Supprime une step, ainsi que ses "mentions" dans les tables qui sont liées
-   */
+/*
+@function delete
+@return $bool faux si erreur, vrai si ok
+Supprime une step, ainsi que ses "mentions" dans les tables qui sont liées - ATTENTION aux pb de dépendances
+*/
    public function delete() {
      $entries = array(
        "IDStep" => $this->id
@@ -130,11 +130,18 @@ Class Step {
       return "Mauvaise réponse ! Try again~";
    }
 
-
+/*
+@function countSteps
+@return le nb de steps présentes dans la database
+*/
    public static function countSteps(){
      return Database::instance()->count('Step','IDStep');
    }
-
+/*
+@function getStepImg
+@param  $id id de la step
+@return chemin de l'image, null si erreur
+*/
    static public function getStepImg($id) {
      $stepdata = Database::instance()->query("Step", array("IDStep"=>$id, "*"=>""));
      if ($stepdata != NULL) {

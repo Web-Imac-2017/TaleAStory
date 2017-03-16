@@ -3,15 +3,26 @@ import ReactDOM from 'react-dom';
 import config from '../config'
 import RouteComponent from '../utils/routecomponent';
 import {User} from '../model/user';
+import {Requester} from '../utils/interfaceback';
 
 export default RouteComponent({
   contextTypes : {user: React.PropTypes.objectOf(User)},
 
   getInitialState(){
-    if(this.props.params.stepid){
-
+    let that = this;
+    if(this.props.params.id){
+      Requester.getAchievement(this.props.params.id).then(
+        function(step){
+          that.setState({
+            id : step.id,
+            body : step.Brief,
+            title : step.Name
+          });
+        }
+      );
     }
     return {
+      id : null,
       imgpath : '',
       body : '',
       question : '',
@@ -27,39 +38,55 @@ export default RouteComponent({
     });
 
     //image
-    var file = this.refs.imgpath.files[0];
-    var reader = new FileReader();
-    let that = this;
-    reader.addEventListener("load", function () {
-      var image = new Image();
-        image.height = 100;
-        image.title = file.name;
-        image.src = this.result;
-        let divimg = ReactDOM.findDOMNode(that).getElementsByClassName('image')[0];
-        divimg.classList.remove('empty');
-        while (divimg.firstChild) {
-            divimg.removeChild(divimg.firstChild);
-        }
-        divimg.appendChild( image );
-    }, false);
-
-    reader.readAsDataURL(file);
+    if(this.refs.imgpath.files.length){
+      var file = this.refs.imgpath.files[0];
+      var reader = new FileReader();
+      let that = this;
+      reader.addEventListener("load", function () {
+        var image = new Image();
+          image.height = 100;
+          image.title = file.name;
+          image.src = this.result;
+          let divimg = ReactDOM.findDOMNode(that).getElementsByClassName('image')[0];
+          divimg.classList.remove('empty');
+          while (divimg.firstChild) {
+              divimg.removeChild(divimg.firstChild);
+          }
+          divimg.appendChild( image );
+      }, false);
+      reader.readAsDataURL(file);
+    }
 	},
 
 	handleSubmit(event) {
 		event.preventDefault();
 
-    var form = ReactDOM.findDOMNode(this).getElementsByClassName('form')[0];
+    var form = ReactDOM.findDOMNode(this).getElementsByTagName('form')[0];
+    let that = this;
+    if(!this.state.id){
+      fetch(config.path('addachievement'), {
+        method: 'POST',
+        body: new FormData(form),
+        credentials: "same-origin"
+      }).then(function(response){
+        return response.json()
+      }).then(function(json){
 
-    fetch('/users', {
-      method: 'POST',
-      body: new FormData(form)
-    }).then(function(response){
-      return response.json()
-    }).then(function(json){
+        that.context.router.push(config.path('profils/admin/achievements/'));
+      });
+    }
+    else{
+      fetch(config.path('updateachievement'), {
+        method: 'POST',
+        body: new FormData(form),
+        credentials: "same-origin"
+      }).then(function(response){
+        return response.json()
+      }).then(function(json){
 
-      this.context.router.push(config.path('profils/admin/steps/' + json.result.id));
-    });
+        that.context.router.push(config.path('profils/admin/achievements/'));
+      });
+    }
 
 	},
 
@@ -76,7 +103,7 @@ export default RouteComponent({
     if(this.context.user)
       if(this.context.user.isAdmin)
         unavailable = false;
-      
+
     if(unavailable)
       return <div onClick={this.unselect}>
                 <div className="columnsContainer">
@@ -109,6 +136,7 @@ export default RouteComponent({
                   <div>
                     {image}
                     <form className="element" onSubmit={this.handleSubmit} method="post" encType="multipart/form-data">
+                      <input name="idachievement" type="hidden" value={this.state.id}/>
                       <input name="image" type="file" accept='image/*' value={this.state.imgpath}
                                    onChange={this.handleChange} ref="imgpath"
                                    multiple={false} style={{display:"none"}}/>

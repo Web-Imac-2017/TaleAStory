@@ -140,6 +140,24 @@ class Requester {
             });
     }
 
+    static stepTypes(){
+      return fetch(config.path('step/types'), {
+                method: 'post',
+                headers: {
+                  'Content-Type' : 'application/json'
+                 },
+                credentials: "same-origin"
+              }
+            ).then(
+              function(response){
+                return response.json();
+              }, Requester.requestError
+            ).then(
+              function(json){
+                return json;
+            });
+    }
+
     static currentUserStart(){
       return fetch(config.path('currentuser/start'), {
                 method: 'post',
@@ -531,6 +549,23 @@ class Requester {
     }
 
     // A tester avec un form
+    static addStep(form){
+      return fetch(config.path('addstep'), {
+        method: 'POST',
+        credentials: "same-origin",
+        body: new FormData(form)
+      }).then(
+        function(response){
+          return response.json();
+        }, Requester.requestError
+      ).then(
+        function(json){
+          return json;
+       }
+      );
+    }
+
+    // A tester avec un form
     static updateItem(form){
       return fetch(config.path('updateitem'), {
         method: 'POST',
@@ -803,7 +838,7 @@ class Requester {
                 return achievements;
             });
     }
-    
+
     /* Renvoie une liste de 'count' steps, à partir de la step 'start'.
     * sinon count n'est pas précisé, il est fixé à 10
     */
@@ -825,7 +860,8 @@ class Requester {
             ).then(
               function(json){
                 let obj = JSON.parse(json.message);
-                let ret = new Achievement( obj[0].IDAchievement, obj[0].Name, obj[0].ImgPath, obj[0].Brief );
+                let ret = new Step( obj[0].IDStep, obj[0].ImgPath, obj[0].Body, obj[0].Question,
+                                    obj[0].IDType, obj[0].Title );
                 return ret;
             });
     }

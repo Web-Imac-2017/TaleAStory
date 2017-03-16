@@ -19,6 +19,14 @@ class StepController {
 
   }
 
+
+  public static function getStepTypes(){
+    $stepArray =  Database::instance()->query("StepType", Array("IDType"=> "",
+                                                                    "Name"=> ""));
+    $stepArray = Database::instance()->dataClean($stepArray, true);
+    Response::jsonResponse(new Success($stepArray));
+  }
+
   public static function getStepsList($start, $count) {
   $search = Form::getField('search');
 	$start--;
@@ -41,6 +49,7 @@ class StepController {
       $stepParam = Database::instance()->query("Step", Array("*"=>""),array($limit));
     }
     $stepParam = Database::instance()->dataClean($stepParam, true);
+    if(!$stepParam) {$stepParam = array();}
 		$success = new Success($stepParam);
 		Response::jsonResponse($success);
 	}
@@ -234,7 +243,8 @@ class StepController {
       Database::instance()->query("player",array("IDCurrentStep"=>$id))==NULL ||
       Database::instance()->query("choice",array("IDStep"=>$id))==NULL ||
       Database::instance()->query("choice",array("IDNextStep"=>$id))==NULL ||
-      Database::instance()->query("paststep",array("IDStep"=>$id))==NULL)
+      Database::instance()->query("paststep",array("IDStep"=>$id))==NULL
+      )
     {
       $oldimg =  Step::getStepImg($id);
       $step = new Step("", "", "", 0,"");
@@ -252,7 +262,7 @@ class StepController {
     else $e = new Error(array("all"=>"Impossible de supprimer la péripéthie car elle est liée à au moins un player ou un choix"));
     Response::jsonResponse($e);
   }
-  
+
   public static function getStep() {
     $id = Form::getField("id");
     $stepArray =  Database::instance()->query("Step", Array("Title"=> "",
@@ -271,6 +281,6 @@ class StepController {
       Response::jsonResponse($error);
     }
   }
-  
+
 }
 ?>

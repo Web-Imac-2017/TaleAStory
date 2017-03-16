@@ -98,7 +98,7 @@ class GameComponent extends React.Component{
                     if(text.props.className == "img")
                     {
                       return <div key={index}>
-                              <img key={index} className="story-img"
+                              <img key={index} className="story-img  story-step"
                                   src={config.imagePath(text.props.children)}/>
                              </div>;
                     }
@@ -242,15 +242,15 @@ class Decision extends GameComponent{
             <div {...superDom.props}>
 
 			<div className="decision">
-				<div className="left">
+				<div className="story-left">
 					{imag}
 				</div>
-				<div className="right">
+				<div className="story-right">
 					{texts}
 					{question}
 				</div>
 			</div>
-			<div className="bottom" >
+			<div className="story-bottom" >
 				<button id="skip" className="button small skip" onClick={this.handleSkip}>
 					Passer
 				  </button>
@@ -342,19 +342,19 @@ class EnigmaComponent extends GameComponent{
     return <div className="game-wrapper">
             <div {...superDom.props}>
 			<div className="enigma">
-				<div className="enigma-left">
+				<div className="story-left">
 					{imag}
 				</div>
-				<div className="enigma-right">
+				<div className="story-right">
 					{texts}
           {question}
 				</div>
 			</div>
-			<div className="enigma-bottom" >
+			<div className="story-bottom" >
 				   <button id="skip" className="button small" onClick={this.handleSkip}>
 					 Passer
 				   </button>
-				   <form className="form enigma-form" style={{display:"none"}} onSubmit={this.handleResponse}>
+				   <form className="form story-form" style={{display:"none"}} onSubmit={this.handleResponse}>
 					<span>
 						<input type="text" name="answer" placeholder="Votre réponse" onChange={this.handleChange}
                     value={this.state.answer} ref='answer'/>
