@@ -826,6 +826,36 @@ class Requester {
             });
     }
 
+    /* Renvoie une liste de 'count' achievements, à partir de la step 'start'.
+    * sinon count n'est pas précisé, il est fixé à 10
+    */
+    static achievementList(start, count = 10, filter){
+      return fetch(config.path('achievements/list/' + start + '/' + count), {
+                method: 'post',
+                headers: {
+                  'Content-Type' : 'application/json'
+                 },
+                credentials: "same-origin",
+                body: JSON.stringify({
+                  search: filter
+                })
+              }
+            ).then(
+              function(response){
+                return response.json();
+              }, Requester.requestError
+            ).then(
+              function(json){
+                let obj = JSON.parse(json.message);
+                let achievements = [];
+                for (let i=0; i<obj.length; i++) {
+                    let ach = new Achievement( obj[i].IDAchievement, obj[i].Name, obj[i].ImgPath, obj[i].Brief );
+                    achievements[i] = ach;
+                }
+                return achievements;
+            });
+    }
+
 
 
 
