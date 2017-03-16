@@ -493,7 +493,7 @@ canvas#analyser {
 	height:10%;
 	top:initial;
 	left: initial;
-	right : 5%;
+	right : 3%;
 	bottom : 5%;
 	z-index : 2;
 	opacity:0;
@@ -504,13 +504,13 @@ canvas#analyser {
 
 div#landscape-activ{
 		img{
-			height:32px;
-			width:32px;
+			height:40px;
+			width:40px;
 
 		}
 		position:fixed;
 		bottom:15%;
-		right:5.3%;
+		right:3%;
 	&:hover{
 			cursor: hand;
 			opacity:1;
@@ -520,12 +520,12 @@ div#landscape-activ{
 div#swap{
 	img{
 		height:32px;
-		width:25px;
+		width:32px;
 
 	}
 	position:fixed;
-	bottom:5%;
-	right:3.2%;
+	bottom: 5%;
+	right:7%;
 
 }
 
@@ -566,6 +566,7 @@ form {
 	}
 
 	.button {
+		cursor : pointer;
 		margin-top: 5% !important;
 		padding: 0px;
 		width: 250px;

@@ -17,7 +17,7 @@ class Player {
   public $mail;
   public $imgpath;
   public $admin;
-  public $defaultImgpath = "defaultImg.png";
+  public $defaultImgpath = "defaultImg_medium.png";
 
   private function __construct($id, $pseudo, $login, $pwd=NULL, $mail, $imgpath = NULL){
     $this->pseudo = $pseudo;

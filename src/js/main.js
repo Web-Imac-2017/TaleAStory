@@ -10,6 +10,6 @@ import webGL from './webgl/webgl.js';
 var bg_anim;
 
 domready(() => {
-		//webGL.runWebGL();
+		webGL.runWebGL();
 		ReactDOM.render(AppRouter, document.getElementById('root'));
 });
