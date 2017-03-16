@@ -20,7 +20,9 @@ export default RouteComponent({
     							<div className="sectionContent">
     								<img className="picto element" src={config.imagePath('pictoMountains_large.png')}/>
     								<img className="element" src={config.imagePath('wave_large.png')}/>
-    								<p>Lorem ipsum dolor sit amet consecteur nulla adispisin bacon ipsum jambon fromage poulet rotie j’ai pas internet donc je ne peux pas télécharger du lorem ipsum alors j’écris un petit peu n’importe quoi</p>
+    								<p>Bonjour et bienvenue sur TaleAStory, premier Site dont vous êtes le héros !
+                      Créez un compte et commencez à vivre l'histoire que nous vous avons concocté.
+                    </p>
     							</div>
     						</div>
               </div>

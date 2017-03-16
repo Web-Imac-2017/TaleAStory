@@ -1,7 +1,6 @@
 'use strict';
-
-import domready  from 'domready';
 import {GlobalBack} from './utils/interfaceback';
+import domready  from 'domready';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import AppRouter from './app/router';

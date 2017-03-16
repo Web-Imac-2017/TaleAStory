@@ -69,8 +69,8 @@ export default RouteComponent({
     							<div className="sectionContent rows">
     								<img className="picto element" src={config.imagePath('pictoMountains_large.png')}/>
     								<img className="element" src={config.imagePath('wave_large.png')}/>
-    								<p>Lorem ipsum dolor sit amet consecteur nulla adispisin bacon ipsum jambon fromage poulet rotie.
-                       Bon alors ici faut pas trop de text pour le responsive, hein, déso.</p>
+    								<p>Vous avez toujours rêvé d'être un aventurier ? Pourquoi ne pas commencer par ici ?
+                      Sinon vous pouvez créer un compte afin de vivre l'expérience complète</p>
     								<Media query="(max-width: 599px)">
                         {matches => matches ? (
                           <Buttons layout="rows"/>

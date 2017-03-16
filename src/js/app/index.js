@@ -32,27 +32,7 @@ export default RouteComponent({
   handleStartBtn(){
     let that = this;
     if(this.context.user == null){
-      this.refs.dialog.show({
-        title: 'Connexion',
-        body: 'The game save automatically your progress but if you want load \
-              your progress in another device, you must sign in',
-        actions: [
-          Dialog.Action(
-            'No matter!',
-            that.guestStart,
-            'button btn-cancel'
-          ),
-          Dialog.Action(
-            'Sign in',
-            that.signin,
-            'button btn-confirm'
-          ),
-        ],
-        bsSize: 'medium',
-        onHide: (dialog) => {
-          dialog.hide()
-        }
-      });
+      this.signin();
     }
     else{
       this.start();

@@ -68,7 +68,7 @@ function buildJS(jsSrc) {
 			path.extname = ".min.js";
 		}))
 		.pipe(sourcemaps.init({loadMaps: true})) // Extract the inline sourcemaps
-   // .pipe(uglify(minifyOption))                    // Minify the build file
+    .pipe(uglify(minifyOption))                    // Minify the build file
 		.pipe(sourcemaps.write('./'))            // Set folder for sourcemaps to output to
 		.pipe(gulp.dest(configJS.outputDir))       // Set the output folder
 		.pipe(notify({
