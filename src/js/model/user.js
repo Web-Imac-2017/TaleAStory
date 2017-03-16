@@ -11,18 +11,9 @@ class User{
     this.login = this.mail = mail;
     this.imgpath = imgpath;
     this.isAdmin = isAdmin;
-    this.stats = [
-      {label: 'fatigue', value: 100},
-      {label: 'force', value: 10},
-      {label: 'faim', value: 50}
-    ];
   }
 
   updateCurrentStep(){
-    let that = this;
-    return Requester.currentUserStep().then(function(result){
-      that.currentStep = result;
-    });
   }
 }
 

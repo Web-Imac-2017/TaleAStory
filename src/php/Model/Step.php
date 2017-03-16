@@ -97,7 +97,7 @@ Class Step {
    @return JSON Response 'error' si erreur, $player mis à jour sinon
    Vérifie la réponse donnée, regarde si le joueur peut faire le choix correspondant, met à jour le joueur si oui
    */
-   public function processAnswer($player, $answer) {
+   public function processAnswer($player, $answer, &$transition) {
      /*pour chaque choix du step, vérifier checkanswer et prendre celle qui est vrai */
      $choiceArray = Database::instance()->query("Choice", array( 'IDStep' => $this->id, 'TransitionText'=>'', 'IDNextStep'=>'', 'IDChoice'=>'', 'Answer'=>''));
      //var_dump($this);
@@ -107,6 +107,7 @@ Class Step {
      $true_choice = null;
      foreach ($choiceArray as $c) {
        $choice = new Choice($c['Answer'],$c['IDStep'],$c['TransitionText'],$c['IDNextStep']);
+       $transition = $c['TransitionText'];
        $choice->id = $c['IDChoice'];
        if( $choice->checkAnswer($answer)){
          $true_choice = $choice;

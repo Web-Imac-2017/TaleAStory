@@ -48,7 +48,10 @@ export default RouteComponent({
 					});
 				}
 				else{
-					that.context.setUser(new User(result.id, result.mail, result.pseudo,result.imgpath,result.isAdmin));
+					result = JSON.parse(result.message);
+					let user = new User(result.id, result.mail, result.pseudo,
+															result.imgpath,result.isAdmin);
+					that.context.setUser(user);
 					if (that.context.requestedPage == null || that.context.requestedPage == undefined ) {
 						that.context.requestedPage = config.path('home');
 					}
@@ -74,7 +77,7 @@ export default RouteComponent({
 								<p id="pwd-error" className="error empty"></p>
 								<span><input name="pwd" type="password" placeholder="Mot de passe"
 															value={this.state.pwd} onChange={this.handleChange} ref="pwd" /></span>
-								<p id="mail-confirmpwd" className="error empty"></p>
+								<p id="confirm-pwd" className="error empty"></p>
 								<span><input name="confirmpwd" type="password" placeholder="Confirmation mot de passe"
 									 						value={this.state.confirmpwd} onChange={this.handleChange} ref="confirmpwd" /></span>
 								<span className="button" ><input className="submit" type="submit" value="Inscription"/></span>

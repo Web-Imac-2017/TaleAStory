@@ -19,7 +19,7 @@ class App extends React.Component{
       user: null,
       requestedPage: null,
       dialog : function(options){
-        this.refs.dialog.show(options);
+        that.refs.dialog.show(options);
       },
       setUser : function(user){
         that.setState({'user': user});
