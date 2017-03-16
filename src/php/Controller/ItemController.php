@@ -147,6 +147,23 @@ class ItemController {
   		Response::jsonResponse($success);
   	}
   }
+  
+  public static function getItem() {
+    $id = Form::getField("id");
+    $res =  Database::instance()->query("Item", Array(        "IDItem"=> $id,
+                                                                    "Name"=>"",
+                                                                    "ImgPath"=>"",
+                                                                    "Brief"=>""));
+    if ($res != null) {
+      $success = New Success($res);
+      Response::jsonResponse($success);
+    }
+
+    else {
+      $error = new Error("Aucun item correspondant n'a été trouvé");
+      Response::jsonResponse($error);
+    }
+  }
 
 }
 

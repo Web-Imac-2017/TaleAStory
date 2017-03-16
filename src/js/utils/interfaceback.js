@@ -397,58 +397,6 @@ class Requester {
             });
     }
 
-    // En voie d'obsolecence
-    /*
-    static stepAdd(body, question, idType, title){
-      return fetch(config.path('addstep'), {
-                method: 'post',
-                headers: {
-                  'Content-Type' : 'application/json'
-                 },
-                credentials: "same-origin",
-                body: JSON.stringify({
-                  Body: body,
-                  Question: question,
-                  IDType: idType,
-                  Title: title
-                })
-              }
-            ).then(
-              function(response){
-                return response.json();
-              }, Requester.requestError
-            ).then(
-              function(json){
-                return json;
-            });
-    }*/
-
-/*
-    // A tester avec un form
-    static addStep(image, body, zerty){
-      return fetch(config.path('addstep'), {
-        method: 'POST',
-        body: new FormData(form),
-              JSON.stringify({
-                body: _body,
-                IDChoice: _IDChoice,
-                IDChoice: _IDChoice,
-                IDChoice: _IDChoice
-              })
-      }).then(
-        function(response){
-          return response.json();
-        }, Requester.requestError
-      ).then(
-        function(json){
-          return json;
-          //this.context.router.push(config.path('profils/admin/steps/' + json.result.id));
-       }
-      );
-    }
-*/
-
-
 
   static deleteChoice(_IDChoice){
       return fetch(config.path('deletechoice'), {
@@ -826,42 +774,148 @@ class Requester {
             });
     }
 
-
-
-
-
-
-
-
-
-
-    static test(that){ /* == ancien 'componentDidMount' )*/
-      fetch(config.path('connexion'), {
+    /* Renvoie une liste de 'count' achievements, à partir de la step 'start'.
+    * sinon count n'est pas précisé, il est fixé à 10
+    */
+    static achievementList(start, count = 10, filter){
+      return fetch(config.path('achievements/list/' + start + '/' + count), {
                 method: 'post',
                 headers: {
                   'Content-Type' : 'application/json'
                  },
                 credentials: "same-origin",
                 body: JSON.stringify({
-                  yolo : "bonjour",
-                  lol : 5
+                  search: filter
                 })
               }
             ).then(
               function(response){
                 return response.json();
-              },
-              function(error) {
-                that.setState({ text : error.message});
-              }
+              }, Requester.requestError
             ).then(
               function(json){
-                let dom = ReactDOM.findDOMNode(that);
-                dom.innerHTML = JSON.stringify(json);
-                that.setState({ text : JSON.stringify(json)});
-                console.log(json);
+                let obj = JSON.parse(json.message);
+                let achievements = [];
+                for (let i=0; i<obj.length; i++) {
+                    let ach = new Achievement( obj[i].IDAchievement, obj[i].Name, obj[i].ImgPath, obj[i].Brief );
+                    achievements[i] = ach;
+                }
+                return achievements;
             });
-      }
+    }
+    
+    /* Renvoie une liste de 'count' steps, à partir de la step 'start'.
+    * sinon count n'est pas précisé, il est fixé à 10
+    */
+    static getStep(_id){
+      return fetch(config.path('step/get/'), {
+                method: 'post',
+                headers: {
+                  'Content-Type' : 'application/json'
+                 },
+                credentials: "same-origin",
+                body: JSON.stringify({
+                  id: _id
+                })
+              }
+            ).then(
+              function(response){
+                return response.json();
+              }, Requester.requestError
+            ).then(
+              function(json){
+                let obj = JSON.parse(json.message);
+                let ret = new Achievement( obj[0].IDAchievement, obj[0].Name, obj[0].ImgPath, obj[0].Brief );
+                return ret;
+            });
+    }
+
+    /* Renvoie une liste de 'count' steps, à partir de la step 'start'.
+    * sinon count n'est pas précisé, il est fixé à 10
+    */
+    static getAchievement(_id){
+      return fetch(config.path('achievement/get/'), {
+                method: 'post',
+                headers: {
+                  'Content-Type' : 'application/json'
+                 },
+                credentials: "same-origin",
+                body: JSON.stringify({
+                  id: _id
+                })
+              }
+            ).then(
+              function(response){
+                return response.json();
+              }, Requester.requestError
+            ).then(
+              function(json){
+                let obj = JSON.parse(json.message);
+                let ret = new Achievement( obj[0].IDAchievement, obj[0].Name, obj[0].ImgPath, obj[0].Brief );
+                return ret;
+            });
+    }
+
+    /* Renvoie une liste de 'count' choice, à partir de la step 'start'.
+    * sinon count n'est pas précisé, il est fixé à 10
+    */
+    static getChoice(_id){
+      return fetch(config.path('choice/get/'), {
+                method: 'post',
+                headers: {
+                  'Content-Type' : 'application/json'
+                 },
+                credentials: "same-origin",
+                body: JSON.stringify({
+                  id: _id
+                })
+              }
+            ).then(
+              function(response){
+                return response.json();
+              }, Requester.requestError
+            ).then(
+              function(json){
+                let obj = JSON.parse(json.message);
+                let ret = new Choice( obj[0].IDChoice, obj[0].Answer, obj[0].IDStep, obj[0].TransitionText, obj[0].IDNextStep );
+                return ret;
+            });
+    }
+
+    /* Renvoie une liste de 'count' choice, à partir de la step 'start'.
+    * sinon count n'est pas précisé, il est fixé à 10
+    */
+    static getItem(_id){
+      return fetch(config.path('item/get/'), {
+                method: 'post',
+                headers: {
+                  'Content-Type' : 'application/json'
+                 },
+                credentials: "same-origin",
+                body: JSON.stringify({
+                  id: _id
+                })
+              }
+            ).then(
+              function(response){
+                return response.json();
+              }, Requester.requestError
+            ).then(
+              function(json){
+                let obj = JSON.parse(json.message);
+                let ret = new Item( obj[0].IDItem, obj[0].Name, obj[0].ImgPath, obj[0].Brief );
+                return ret;
+            });
+    }
+
+
+
+
+
+
+
+
+
 
 
 }

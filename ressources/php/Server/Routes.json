@@ -24,6 +24,7 @@
   "/addachievement":"Controller\\AchievementController::addAchievement",
   "/deleteachievement":"Controller\\AchievementController::deleteAchievement",
   "/updateachievement":"Controller\\AchievementController::updateAchievement",
+  "/achievements/list/:start/:count":"Controller\\AchievementController::getAchievementList",
   "currentuser/unreadachievements":"Controller\\CurrentUserController::unreadAchievements",
   "currentuser/currentstep":"Controller\\CurrentUserController::currentStep",
   "currentuser/start":"Controller\\CurrentUserController::start",
@@ -35,5 +36,9 @@
   "/deleteplayer":"Controller\\CurrentUserController::deletePlayer",
   "/updateplayer/pseudo":"Controller\\CurrentUserController::updatePseudo",
   "/updateplayer/pwd":"Controller\\CurrentUserController::updatePwd",
-  "/updateplayer/image":"Controller\\CurrentUserController::updateImage"
+  "/updateplayer/image":"Controller\\CurrentUserController::updateImage",
+  "step/get":"Controller\\StepController::getStep",
+  "choice/get":"Controller\\ChoiceController::getChoice",
+  "item/get":"Controller\\ItemController::getItem",
+  "achievement/get":"Controller\\AchievementController::getAchievement"
 }
