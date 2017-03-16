@@ -389,6 +389,10 @@ class Player {
     Database::instance()->update("Player", array("IDCurrentStep"=>$step->id), array("IDPlayer"=>$this->id));
   }
 
+  public function setStep($stepID){
+    Database::instance()->update("Player", array("IDCurrentStep"=>$stepID), array("IDPlayer"=>$this->id));
+  }
+
   ///////------IMAGE------//////
   public function changeImage($path){
     $this->imgpath = $path;

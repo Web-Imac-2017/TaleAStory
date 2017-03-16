@@ -140,6 +140,24 @@ class Requester {
             });
     }
 
+    static currentUserStart(){
+      return fetch(config.path('currentuser/start'), {
+                method: 'post',
+                headers: {
+                  'Content-Type' : 'application/json'
+                 },
+                credentials: "same-origin"
+              }
+            ).then(
+              function(response){
+                return response.json();
+              }, Requester.requestError
+            ).then(
+              function(json){
+                return json;
+            });
+    }
+
     static currentUserItems(){
       return fetch(config.path('currentuser/items/'), {
                 method: 'post',
@@ -178,7 +196,7 @@ class Requester {
               }, Requester.requestError
             ).then(
               function(json){
-                let obj = JSON.parse(json.message);
+                let obj = JSON.parse(json.message)[0];
                 if(obj.IDStep)
                   return new Step( obj.IDStep, obj.ImgPath, obj.Body,
                                     obj.Question, obj.IDType, obj.Title );
@@ -365,6 +383,20 @@ class Requester {
             });
     }
 
+    static currentStepAnswers(){
+      return fetch(config.path('currentstep/answers'), {
+                credentials: "same-origin"
+              }
+            ).then(
+              function(response){
+                return response.json();
+              }, Requester.requestError
+            ).then(
+              function(json){
+                return json;
+            });
+    }
+
     // En voie d'obsolecence
     /*
     static stepAdd(body, question, idType, title){
@@ -443,6 +475,7 @@ class Requester {
     static updateChoice(form){
       return fetch(config.path('updatechoice'), {
         method: 'POST',
+        credentials: "same-origin",
         body: new FormData(form)
       }).then(
         function(response){
@@ -490,6 +523,7 @@ class Requester {
     static updateStep(form){
       return fetch(config.path('updatestep'), {
         method: 'POST',
+        credentials: "same-origin",
         body: new FormData(form)
       }).then(
         function(response){
@@ -534,6 +568,7 @@ class Requester {
     static addItem(form){
       return fetch(config.path('additem'), {
         method: 'POST',
+        credentials: "same-origin",
         body: new FormData(form)
       }).then(
         function(response){
@@ -551,6 +586,7 @@ class Requester {
     static updateItem(form){
       return fetch(config.path('updateitem'), {
         method: 'POST',
+        credentials: "same-origin",
         body: new FormData(form)
       }).then(
         function(response){
@@ -590,6 +626,7 @@ class Requester {
     static addAchievement(form){
       return fetch(config.path('addachievement'), {
         method: 'POST',
+        credentials: "same-origin",
         body: new FormData(form)
       }).then(
         function(response){
@@ -628,6 +665,7 @@ class Requester {
     static updateAchievement(form){
       return fetch(config.path('updateachievement'), {
         method: 'POST',
+        credentials: "same-origin",
         body: new FormData(form)
       }).then(
         function(response){
@@ -685,6 +723,7 @@ class Requester {
     static addChoice(form){
       return fetch(config.path('addchoice'), {
         method: 'POST',
+        credentials: "same-origin",
         body: new FormData(form)
       }).then(
         function(response){
@@ -744,6 +783,7 @@ class Requester {
     static updatePlayerImage(image){
       return fetch(config.path('updateplayer/image'), {
                 method: 'post',
+                credentials: "same-origin",
                 body: new FormData(image)
       }).then(
         function(response){

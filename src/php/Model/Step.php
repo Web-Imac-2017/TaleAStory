@@ -97,7 +97,7 @@ Class Step {
    @return JSON Response 'error' si erreur, $player mis à jour sinon
    Vérifie la réponse donnée, regarde si le joueur peut faire le choix correspondant, met à jour le joueur si oui
    */
-   public function processAnswer($player, $answer) {
+   public function processAnswer($player, $answer, &$transition) {
      /*pour chaque choix du step, vérifier checkanswer et prendre celle qui est vrai */
      $choiceArray = Database::instance()->query("Choice", array( 'IDStep' => $this->id, 'TransitionText'=>'', 'IDNextStep'=>'', 'IDChoice'=>'', 'Answer'=>''));
      //var_dump($this);
@@ -107,6 +107,7 @@ Class Step {
      $true_choice = null;
      foreach ($choiceArray as $c) {
        $choice = new Choice($c['Answer'],$c['IDStep'],$c['TransitionText'],$c['IDNextStep']);
+       $transition = $c['TransitionText'];
        $choice->id = $c['IDChoice'];
        if( $choice->checkAnswer($answer)){
          $true_choice = $choice;
@@ -114,17 +115,19 @@ Class Step {
        }
      }
      //var_dump($true_choice);
-     if($true_choice && $true_choice->checkPlayerRequirements($player)) {
-       $true_choice->alterPlayer($player);
-       $nextStepArray = Database::instance()->query("Step", array('IDStep' => "$true_choice->idNextStep", 'ImgPath' => '', 'Question'=>'', 'Body'=>'', 'IDType'=>'', 'Title'=>''));
-       $nextStep = new Step($nextStepArray[0]['ImgPath'],$nextStepArray[0]['Body'],$nextStepArray[0]['Question'],1,$nextStepArray[0]['IDType'],$nextStepArray[0]['Title']);
-       $nextStep->id = $choice->idNextStep;
-       $player->passStep($nextStep);
-       return true;
+     if($true_choice) {
+       $message = $true_choice->checkPlayerRequirements($player); //true si ok, message d'erreur détaillé sinon
+       if($message == true){
+         $true_choice->alterPlayer($player);
+         $nextStepArray = Database::instance()->query("Step", array('IDStep' => "$true_choice->idNextStep", 'ImgPath' => '', 'Question'=>'', 'Body'=>'', 'IDType'=>'', 'Title'=>''));
+         $nextStep = new Step($nextStepArray[0]['ImgPath'],$nextStepArray[0]['Body'],$nextStepArray[0]['Question'],1,$nextStepArray[0]['IDType'],$nextStepArray[0]['Title']);
+         $nextStep->id = $choice->idNextStep;
+         $player->passStep($nextStep);
+       }
+       return $message;
      }
-     else {
-       return false;
-     }
+     else
+      return "Mauvaise réponse ! Try again~";
    }
 
 

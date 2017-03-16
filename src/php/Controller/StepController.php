@@ -87,6 +87,21 @@ class StepController {
     }
   }
 
+  public static function answers(){
+    $player = Player::connectSession();
+
+    if ($player == NULL) {
+      $error = new Error("Le joueur n'a pas pu être trouvé");
+      Response::jsonResponse($error);
+    }
+    else {
+        $Step = $player->currentStep();
+        $result = Database::instance()->query("choice",array("IDStep"=>$Step[0]['IDStep'],"*"=>""));
+        $result = Database::instance()->dataClean($result, true);
+        Response::jsonResponse(new Success(array($result)));
+    }
+  }
+
   public static function stepResponse(){
     $answer = Form::getField("answer");
     $player = Player::connectSession();
@@ -99,20 +114,19 @@ class StepController {
     }
     else {
         $Step = $player->currentStep();
-		//var_dump($Step);
-
+		    //var_dump($Step);
         $CurrentStep = new Step($Step[0]['ImgPath'], $Step[0]['Body'], $Step[0]['Question'], $Step[0]['IDType'], $Step[0]['Title']);
-		$CurrentStep->id = $Step[0]['IDStep'];
+		     $CurrentStep->id = $Step[0]['IDStep'];
 		//var_dump($CurrentStep);
-        $result = $CurrentStep->processAnswer($player,$answer);
+        $transition = '';
+        $result = $CurrentStep->processAnswer($player,$answer,$transition);
 		//var_dump($result);
         if ($result == true) {
-          $success = new Success("Le joueur a bien été modifié");
-          Response::jsonResponse($success);
+          $Step = $player->currentStep();
+          Response::jsonResponse(new Success((object)array('text' => $transition, 'id' => $Step[0]['IDStep'])));
         }
-
         else {
-          $error = new Error("Le joueur n'a pas pu être modifié");
+          $error = new Error($result);
           Response::jsonResponse($error);
         }
     }

@@ -48,18 +48,18 @@ let WrapperSpec = {
 
   getInitialState : function(){
     this.scroll = false;
-    return {profilImg : ''};
+    this.lock = false;
+    return {image : ''};
   },
 
   handleChange : function(){
-    editPicture(this.refs.profilImg, this.refs.divImg);
+    editPicture(this.refs.image, this.refs.divImg);
     Requester.updatePlayerImage(this.refs.form);
   },
 
    handleConfirm : function(){
-
     let that = this;
-
+    this.setState({image : this.refs.image.value});
     this.refs.dialog.show({
         title: 'Modification de la photo de profil',
         body: 'Voulez-vous actualiser votre photo de profil ?',
@@ -151,14 +151,14 @@ let WrapperSpec = {
     this.transitionGroup = ReactDOM.findDOMNode(this).getElementsByTagName('span')[0];
     this.scrollListener = new ScrollListener(this.transitionGroup);
     setTimeout(function(that) {
-      //that.scrollListener.addScrollEndHandler('transition-scroll', that.handleScroll);
-      that.onscroll = that.handleScroll;
+      that.scrollListener.addScrollEndHandler('transition-scroll', that.handleScroll);
+      //that.transitionGroup.onscroll = that.handleScroll;
     }, 60, this);
 
   },
 
   componentWillUnmount : function(){
-    this.scrollListener.removeScrollEndHandler('transition-scroll', this.handleScroll);
+    this.transitionGroup.onscroll= null;
   },
 
   shouldComponentUpdate : function(nextProps, nextState, nextContext){
@@ -171,55 +171,61 @@ let WrapperSpec = {
         dom.scrollTop = 2;
         setTimeout(function(that){
           that.scroll = false;
-        },500,that);
-      }, 200, this);
+        },100,that);
+      }, 600, this);
       return true;
     }
     let _return = this.user != nextContext.user ||
-                  this.children.type != nextProps.children.type
-                  this.state.profilImg != nextState.profilImg;
+                  this.children.type != nextProps.children.type ||
+                  this.state.image != nextState.image;
     return true;
   },
 
-  handleScroll(e) {
-    console.log(e);
+  handleScroll(e,p) {
     if(this.manualScroll){
       this.manualScroll = false;
       return;
     }
     let dom = ReactDOM.findDOMNode(this).getElementsByTagName('span')[0];
-    let scrollMax = dom.getElementsByClassName('route-component')[0].clientHeight - dom.clientHeight;
     if(!this.scroll){
+      if(!this.lock){
+        this.lock = true;
+        let that = this;
+        window.requestAnimationFrame(function() {
+          that.lock = false;
+          let scrollTop = dom.scrollTop;
+          let scrollMax = dom.getElementsByClassName('route-component')[0].clientHeight - dom.clientHeight;
+          if(scrollTop<=0){
+            if(that.previous){
+              that.scroll = true;
+              let path = '';
+              let last = that.props.routes.length + (that.children.key != "/" ? -1:-1);
+              for(let i=0; i<last;i++){
+                path += that.props.routes[i].path + '/';
+              }
+              path = path + (that.previous.path ? that.previous.path : '');
+              path = path.replace('//','/').replace(/\(.w*\)/,'');
+              that.context.router.push(path);
+              return;
+            }
+          }
+          else if(scrollTop>=scrollMax){
+            if(that.next){
+              that.scroll = true;
+              let path = '';
+              let last = that.props.routes.length + (that.children.key != "/" ? -1:-1);
+              for(let i=0; i<last;i++){
+                path += that.props.routes[i].path + '/';
+              }
+              path = path + (that.next.path ? that.next.path : '');
+              path = path.replace('//','/').replace(/\(.*\)/,'');
+              that.context.router.push(path);
+              return;
+            }
+          }
+        });
+      }
       let scrollTop = dom.scrollTop;
-      if(scrollTop<=0){
-        if(this.previous){
-          this.scroll = true;
-          let path = '';
-          let last = this.props.routes.length + (this.children.key != "/" ? -1:-1);
-          for(let i=0; i<last;i++){
-            path += this.props.routes[i].path + '/';
-          }
-          path = path + (this.previous.path ? this.previous.path : '');
-          path = path.replace('//','/').replace(/\(.w*\)/,'');
-          this.context.router.push(path);
-          return;
-        }
-      }
-      else if(scrollTop>=scrollMax){
-        if(this.next){
-          this.scroll = true;
-          let path = '';
-          let last = this.props.routes.length + (this.children.key != "/" ? -1:-1);
-          for(let i=0; i<last;i++){
-            path += this.props.routes[i].path + '/';
-          }
-          path = path + (this.next.path ? this.next.path : '');
-          path = path.replace('//','/').replace(/\(.*\)/,'');
-          this.context.router.push(path);
-          return;
-        }
-      }
-      this.scroll = false;
     }
     return;
   },
@@ -316,12 +322,12 @@ let AccountWrapperSpec = Object.assign({}, WrapperSpec, {
               <div className="caca mediaBlock">
                 <div className="colGauche">
                   <div className="insideCol">
-                    <div onClick={()=>{this.refs.profilImg.click();}} className="roundProfil" ref="divImg">
+                    <div onClick={()=>{this.refs.image.click();}} className="roundProfil" ref="divImg">
                       <img className="bigProfil" src={config.imagePath(this.context.user.imgpath)}/>
                     </div>
                     <form ref='form'>
-                      <input name="image" type="file" accept='image/*' value={this.state.profilImg}
-                                     onChange={this.handleConfirm} ref="profilImg"
+                      <input name="image" type="file" accept='image/*' value={this.state.image}
+                                     onChange={this.handleConfirm} ref="image"
                                      multiple={false} style={{display:"none"}}/>
                     </form>
                     <h2 className="userName">{this.context.user.pseudo}</h2>

@@ -11,7 +11,7 @@
 
 	.stats{
 		width : 100%;
-		height: 20%;
+		height: 25%;
 
 		span{
 			width: 100%;
@@ -27,10 +27,13 @@
 				border-radius: 0;
 				height: 70%;
 			}
+			.progress-bar{
+				height: 100%;
+			}
 			h4{
 				margin: 0 2%;
 				vertical-align: middle;
-				width: 11%;
+				width: 18%;
 				display: inline-block;
 				font-size : 9px;
 				letter-spacing: 2px;
@@ -113,11 +116,11 @@
 
 	flex-direction: column;
 	flex:1;
-	
+
 	&:empty{
 		display:none;
 	}
-	
+
 }
 .enigma-right{
 
@@ -129,7 +132,7 @@
 }
 
 .enigma{
-	
+
 	display : flex;
 	flex-direction: row;
 }
@@ -176,15 +179,15 @@ form.enigma-form{
 						display: block;
 						border: 1px solid #fff;
 						padding: 8px;
-					
+
 					}
-					
+
 					&.submit{
 						width:30%;
 						margin-left:0;
 						margin-right:10%;
 					}
-					
+
 					input[type="submit"]:after{
 						width: 104%;
 						height: 86%;
@@ -196,7 +199,7 @@ form.enigma-form{
 						bottom: 6%;
 						left: -2.25%;
 					}
-					
+
 					input[type="submit"]:before{
 						width: 100%;
 						height: 0%;
@@ -208,8 +211,8 @@ form.enigma-form{
 						bottom: 0;
 						left: 0;
 					}
-					
-					
+
+
 					input[type="submit"]:hover{
 						width: 100%;
 						height: 100%;
@@ -218,10 +221,10 @@ form.enigma-form{
 						position: absolute;
 						transition : all 0.3s;
 					}
-					
+
 					input[type="submit"]hover::after{
 						background: rgba(255,255,255,0.15);
 					}
 				}
-				
+
 }

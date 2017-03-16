@@ -42,6 +42,19 @@ class CurrentUserController{
 
   }
 
+  static public function start(){
+    $player = CurrentUserController::isConnected();
+    $current_step = $player->currentStep();
+    $current_step = Database::instance()->dataClean($current_step, true);
+    if($current_step[0]['IDStep']==0 || $current_step[0]['IDStep']==null){
+      $player->setStep(2); // 2 = first story
+      $current_step = $player->currentStep();
+      $current_step = Database::instance()->dataClean($current_step, true);
+      Response::jsonResponse(new Success($current_step));
+    }
+    Response::jsonResponse(new Error('Vous avez déjà une partie en cours'));
+  }
+
   static public function story(){
     $player = CurrentUserController::isConnected();
       $story = $player->pastSteps();

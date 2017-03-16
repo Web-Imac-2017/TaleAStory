@@ -164,7 +164,7 @@ class Choice {
 	if (!empty($requiried_stats)) {
 		foreach ($requiried_stats as $key => $value) {
 		  if(!isset($player_stats["$key"]) || $value>$player_stats["$key"])
-			return false;
+			return "Tu n'a pas les stats recquises ahahaha ";
 		}
 	}
 
@@ -189,7 +189,7 @@ class Choice {
 	if (!empty($requiried_items)) {
 		foreach ($requiried_items as $key => $value) {
 		  if(!isset($player_items["$key"]) || $value>$player_items["$key"])
-			return false;
+			   return "Tu n'as pas les items recquis ahahaha !";
 		}
 	}
     return true;
