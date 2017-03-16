@@ -174,6 +174,24 @@ class ChoiceController {
   		Response::jsonResponse($success);
   	}
   }
+  
+  public static function getChoice() {
+    $id = Form::getField("id");
+    $res =  Database::instance()->query("Choice", Array(        "IDChoice"=> $id,
+                                                                    "Answer"=>"",
+                                                                    "IDStep"=>"",
+                                                                    "TransitionText"=>"",
+                                                                    "IDNextStep"=>""));
+    if ($res != null) {
+      $success = New Success($res);
+      Response::jsonResponse($success);
+    }
+
+    else {
+      $error = new Error("Aucun choice correspondant n'a été trouvé");
+      Response::jsonResponse($error);
+    }
+  }
 
 }
 

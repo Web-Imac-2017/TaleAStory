@@ -254,5 +254,25 @@ class StepController {
     else $e = new Error(array("all"=>"Impossible de supprimer la péripéthie car elle est liée à au moins un player ou un choix"));
     Response::jsonResponse($e);
   }
+  
+  public static function getStep() {
+    $id = Form::getField("id");
+    $stepArray =  Database::instance()->query("Step", Array("Title"=> "",
+                                                                    "IDStep"=> $id,
+                                                                    "ImgPath"=>"",
+                                                                    "Body"=>"",
+                                                                    "Question"=>"",
+                                                                    "IDType"=>""));
+    if ($stepArray != null) {
+      $success = New Success($stepArray);
+      Response::jsonResponse($success);
+    }
+
+    else {
+      $error = new Error("Aucun step correspondant n'a été trouvé");
+      Response::jsonResponse($error);
+    }
+  }
+  
 }
 ?>

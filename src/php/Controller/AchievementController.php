@@ -166,7 +166,24 @@ class AchievementController {
   		Response::jsonResponse($success);
   	}
   }
+  
+  public static function getAchievement() {
+    $id = Form::getField("id");
+    $res =  Database::instance()->query("Achievement", Array(        "IDAchievement"=> $id,
+                                                                    "Name"=>"",
+                                                                    "ImgPath"=>"",
+                                                                    "Brief"=>""));
+    if ($res != null) {
+      $success = New Success($res);
+      Response::jsonResponse($success);
+    }
 
+    else {
+      $error = new Error("Aucun achievement correspondant n'a été trouvé");
+      Response::jsonResponse($error);
+    }
+  }
+  
 }
 
 ?>
