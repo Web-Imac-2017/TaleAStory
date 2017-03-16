@@ -63,6 +63,7 @@ function updateCurrentUser(){
           return _currentuser;
           //return response.json()
         }).then(function(json){
+          console.log(_currentuser);
           _currentuser = new User(json.id, json.mail, json.pseudo, json.imgpath);
           return _currentuser;
         });

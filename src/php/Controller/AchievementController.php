@@ -87,8 +87,9 @@ class AchievementController {
         $entries["imgpath"] = $imgpath;
         $oldimg =  Achievement::getAchievementImg($data["idachievement"]);
         if($oldimg != '../assets/images/default_image_tiny.png' && file_exists ($oldimg)){
-          try{
+          try {
             unlink($oldimg);
+          } catch(Exception $e) { }
         }
       }
     }
@@ -166,7 +167,7 @@ class AchievementController {
   		Response::jsonResponse($success);
   	}
   }
-  
+
   public static function getAchievement() {
     $id = Form::getField("id");
     $res =  Database::instance()->query("Achievement", Array(        "IDAchievement"=> $id,
@@ -183,7 +184,7 @@ class AchievementController {
       Response::jsonResponse($error);
     }
   }
-  
+
 }
 
 ?>

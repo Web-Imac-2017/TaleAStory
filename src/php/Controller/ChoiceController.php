@@ -32,7 +32,7 @@ class ChoiceController {
       }
       else
         $errors[$key]="";
-    }
+    }/*
     $entries['statalteration'] = Form::getField('statalteration');
     if(!empty($entries['statalteration'])){
       $errors['statalteration']=ChoiceController::setStats($entries['statalteration'],"StatAlteration");
@@ -40,7 +40,7 @@ class ChoiceController {
     $entries['statrequirement'] = Form::getField('statrequirement');
     if(!empty($entries['statrequirement'])){
       $errors['statrequirement']=ChoiceController::setStats($entries['statrequirement'],'StatRequierement');
-    }
+    }*/
     if($isError){
       $e = new Error($errors);
       Response::jsonResponse($e);
@@ -82,6 +82,7 @@ class ChoiceController {
       $errors[$field]="";
     }
     //STATS LIEES AU CHOIX - updatées si non vide
+    /*
     $entries['statalteration'] = Form::getField('statalteration');
     if(!empty($entries['statalteration'])){
       $errors['statalteration']=ChoiceController::setStats($entries['statalteration'],"StatAlteration");
@@ -89,7 +90,7 @@ class ChoiceController {
     $entries['statrequirement'] = Form::getField('statrequirement');
     if(!empty($entries['statrequirement'])){
       $errors['statrequirement']=ChoiceController::setStats($entries['statrequirement'],'StatRequierement');
-    }
+    }*/
     //si erreur, on arrête
     if($isError){
       $e = new Error($errors);
@@ -174,7 +175,7 @@ class ChoiceController {
   		Response::jsonResponse($success);
   	}
   }
-  
+
   public static function getChoice() {
     $id = Form::getField("id");
     $res =  Database::instance()->query("Choice", Array(        "IDChoice"=> $id,

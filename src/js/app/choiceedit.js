@@ -7,14 +7,36 @@ import ItemNav from './itemnav'
 import Dialog from '../utils/dialog'
 import TransitionGroup from 'react-addons-transition-group';
 import {User} from '../model/user';
+import {Step} from '../model/step';
+import {Requester} from '../utils/interfaceback';
 
 
 export default RouteComponent({
   contextTypes : {user: React.PropTypes.objectOf(User)},
 
   getInitialState(){
-    if(this.props.params.stepid){
+    let that = this;
+    if(this.props.params.id){
+      Requester.getChoice(this.props.params.id).then(
+        function(choice){
+          Requester.getStep(choice.IDStep).then(
+            function(step){
+              Requester.getStep(choice.IDNextStep).then(
+                function(nextStep){
+                  that.setState({
+                    id : choice.id,
+                    step : step,
+                    nextstep : nextStep,
+                    transitiontext : choice.TransitionText,
+                    answer : choice.Answer
+                  });
+                }
+              );
+            }
+          );
 
+        }
+      );
     }
     this.sliders = [1,2,3].map((slider, index) =>
                                   <span key={index}>
@@ -23,9 +45,10 @@ export default RouteComponent({
                                   </span>
                               );
     return {
-      imgpath : '',
+      id : null,
+      step : new Step(0,0,0,0,0,0),
+      nextstep : new Step(0,0,0,0,0,0),
       transitiontext : '',
-      question : '',
       answer : ''
     };
   },
@@ -41,17 +64,32 @@ export default RouteComponent({
 
 	handleSubmit(event) {
 		event.preventDefault();
+    var form = ReactDOM.findDOMNode(this).getElementsByTagName('form')[0];
+    let that = this;
+    if(!this.state.id){
+      fetch(config.path('addchoice'), {
+        method: 'POST',
+        body: new FormData(form),
+        credentials: "same-origin"
+      }).then(function(response){
+        return response.json()
+      }).then(function(json){
 
-    var form = ReactDOM.findDOMNode(this).getElementsByClassName('form')[0];
+        that.context.router.push(config.path('profils/admin/choices/'));
+      });
+    }
+    else{
+      fetch(config.path('updatechoice'), {
+        method: 'POST',
+        body: new FormData(form),
+        credentials: "same-origin"
+      }).then(function(response){
+        return response.json()
+      }).then(function(json){
 
-    fetch('/users', {
-      method: 'POST',
-      body: new FormData(form)
-    }).then(function(response){
-      return response.json()
-    }).then(function(json){
-      this.context.router.push(config.path('profils/admin/steps/' + json.result.id));
-    });
+        that.context.router.push(config.path('profils/admin/choices/'));
+      });
+    }
 
 	},
 
@@ -61,15 +99,14 @@ export default RouteComponent({
   returnSteps(){
     this.context.router.push(config.path('profils/admin/steps'));
   },
-  setStartStep(){
+  setStartStep(element){
+    this.setState({step: element.props.item});
   },
-  setEndStep(){
+  setEndStep(element){
+    this.setState({step: element.props.item});
   },
-  loadSteps(offset, count){
-    let steps = [];
-    for(let i=offset; i<offset + count; i++)
-      steps.push(i);
-    return steps;
+  loadSteps(offset, count, filter){
+    return Requester.stepList(offset, count, filter);
   },
   selectHandler(item){
     this.setState({selectedItem:item});
@@ -81,7 +118,7 @@ export default RouteComponent({
     let that = this;
     this.refs.startDialog.show({
       title: 'Depart',
-      body: <ItemNav loadSteps={that.loadSteps} selectHandler={that.selectHandler}/>,
+      body: <ItemNav loadSteps={that.loadSteps} selectHandler={that.setStartStep}/>,
       actions: [
         Dialog.Action(
           'Annuler',
@@ -90,7 +127,7 @@ export default RouteComponent({
         ),
         Dialog.Action(
           'OK',
-          that.setStartStep,
+          ()=>{},
           'button btn-confirm'
         ),
       ],
@@ -105,7 +142,7 @@ export default RouteComponent({
     let that = this;
     this.refs.endDialog.show({
       title: 'Arrivée',
-      body: <ItemNav/>,
+      body: <ItemNav loadSteps={that.loadSteps} selectHandler={that.setEndStep}/>,
       actions: [
         Dialog.Action(
           'Annuler',
@@ -114,7 +151,7 @@ export default RouteComponent({
         ),
         Dialog.Action(
           'OK',
-          that.setEndStep,
+          ()=>{},
           'button btn-confirm'
         ),
       ],
@@ -151,18 +188,18 @@ export default RouteComponent({
                   <div>
                     <div className="item" onClick={this.setStart}>
                       <h3>Péripétie Départ</h3>
-                      <div className="insideItem">
-                        <img className="picto element" src={config.imagePath('pictoMountains_large.png')}/>
-                        <img className="element" src={config.imagePath('wave_large.png')}/>
-                        <h3 className="userName">Un trophée</h3>
-                      </div>
+                      {this.state.step ? this.state.step.display() : null}
                     </div>
                     <div className="inputs">
                       <form className="element" onSubmit={this.handleSubmit} method="post" encType="multipart/form-data">
+                        <input name="idchoice" type="hidden" value={this.state.id}/>
+                        <input name="idstep" type="hidden" value={this.state.step.id}/>
+                        <input name="idnextstep" type="hidden" value={this.state.nextstep.id}/>
                         <span><input name="answer" type="text" placeholder="Réponse"
                           value={this.state.answer} onChange={this.handleChange} ref="answer" /></span>
                         <textarea name="transitiontext" type="text" placeholder="Texte de transition" value={this.state.transitiontext}
                           onChange={this.handleChange} ref="transitiontext" />
+                        <span className="button" ><input className="submit" type="submit" value="Enregistrer"/></span>
                       </form>
                       <div className="sliders">
                         {this.sliders}
@@ -170,11 +207,7 @@ export default RouteComponent({
                     </div>
                     <div className="item" onClick={this.setEnd}>
                       <h3>Péripétie Arrivée</h3>
-                      <div className="insideItem">
-                        <img className="picto element" src={config.imagePath('pictoMountains_large.png')}/>
-                        <img className="element" src={config.imagePath('wave_large.png')}/>
-                        <h3 className="userName">Un trophée</h3>
-                      </div>
+                      {this.state.nextstep ? this.state.nextstep.display() : null}
                     </div>
                   </div>
     						</div>

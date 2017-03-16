@@ -1,8 +1,6 @@
-import fetch from 'isomorphic-fetch';
-import Promise from 'es6-promise';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import config from '../config';
-import {GlobalBack} from '../utils/interfaceback';
-
 
 class Achievement{
   constructor(id, Name, ImgPath, Brief){
@@ -13,11 +11,9 @@ class Achievement{
   }
 
   display() {
-    return <div className="insideItem">
-                <img className="element" src={config.imagePath(this.ImgPath)}/>
-                <img className="element" src={config.imagePath('wave_large.png')}/>
-                <h3 className="userName">this.Name</h3>
-              </div>
+    return <div className="insideItem achievement no-image">
+                <h3 className="userName">{this.Name}</h3>
+            </div>
   }
 
 }
