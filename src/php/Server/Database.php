@@ -181,7 +181,6 @@ class Database {
     //echo '<pre>' . var_export($entries, true) . '</pre>';
     try {
     $insert = $this->getPDO()->prepare($statement);
-    var_dump($insert);
     $insert->execute($entries) or die(print_r($insert->errorInfo()));
     $id = $this->getPDO()->lastInsertId();
     }

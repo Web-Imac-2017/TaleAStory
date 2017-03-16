@@ -66,10 +66,10 @@ Class Session {
     if(isset($_SESSION["userid"]))
       unset($_SESSION["userid"]);
     if (isset($_COOKIE["userid"]) && isset($_COOKIE["hash_id"])){
-      unset($_COOKIE["userid"]);
-      unset($_COOKIE["hash_id"]);
       setcookie('userid',$_COOKIE["userid"],time()-3600,'/');
       setcookie('hashed_id',$_COOKIE["hash_id"],time()-3600,'/');
+      unset($_COOKIE["userid"]);
+      unset($_COOKIE["hash_id"]);  
     }
   }
   /*
