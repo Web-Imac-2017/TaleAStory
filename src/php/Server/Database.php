@@ -9,6 +9,16 @@ class Database {
   protected $options;
   static private $_instance = NULL;
 
+  //////////*****DATABASE******//////////
+  //class d'interaction avec la base de donnée
+  //encodage et decodage des données
+  //traitement des queries principales
+  //formatage des informations retournées
+
+
+
+  //////////*****CONFIGURATION******//////////
+
   /**
    * Constructeur : configure la connexion avec la base de donnée
    * @param [string] $path [chemin vers le fichier de configuration]
@@ -27,6 +37,10 @@ class Database {
     );
   }
 
+  /**
+   * Crée l'objet Database la première fois qu'elle est appelée puis le renvoie seulement les autres fois
+   * @return [objet Database] []
+   */
   static public function instance(){
     if(is_null(self::$_instance)){
       self::$_instance = new Database("Server/database_config.json");
@@ -35,7 +49,7 @@ class Database {
   }
 
   /**
-   * getPDO : fait la connexion a la base de données si elle n'a jamais été faite avant. Fonction utilisée par sendQuery()
+   * getPDO : fait la connexion a la base de données si elle n'a jamais été faite avant.
    * @return objet pdo
    */
   private function getPDO() {
@@ -55,26 +69,6 @@ class Database {
     return $this->pdo;
   }
 
-    //////////*****ENCODAGE DECODAGE******//////////
-
-  /**
-   * encode :
-   * @param  [string] $purestring [un mot lisible]
-   * @return [string]             [une chaine hashée avec un salt aléatoire et une clée de décryption]
-   */
-  public function encode($purestring) {
-     return password_hash($purestring, PASSWORD_BCRYPT);
-  }
-
-  /**
-   * [decode description]
-   * @param  [string] $pw     [un mot lisible]
-   * @param  [string] $hashed [la chaine hashée à comparer]
-   * @return [bool]         [true : les deux chaines correspondent, false non]
-   */
-  public function decode($pw, $hashed) {
-    return password_verify($pw, $hashed);
-  }
 
   //////////*****REQUETES******//////////
 
@@ -135,7 +129,6 @@ class Database {
       return $this->sendQuery($statement, $array_entries);
   }
 
-
   /**
    * sendQuery : prépare la query puis l'execute en utilisant un objet \PDO
    * @param  [string] $statement     [texte de la query: variables de type "?"]
@@ -158,7 +151,7 @@ class Database {
     }
 
   /**
-   * Prépare une query pour insérer quelque chose dans la bdd.
+   * insert: Prépare une query pour insérer quelque chose dans la bdd.
    * @param  [string] $table   [nom de la table]
    * @param  [array] $entries [ champs => valeur à insérer]
    * @return [int]          [id de la ligne insérée]
@@ -178,7 +171,6 @@ class Database {
   }
 
   private function sendInsert($statement, $entries) {
-    //echo '<pre>' . var_export($entries, true) . '</pre>';
     try {
     $insert = $this->getPDO()->prepare($statement);
     $insert->execute($entries) or die(print_r($insert->errorInfo()));
@@ -188,12 +180,11 @@ class Database {
       throw new RouterException('Erreur lors de l\'envoie de l\'insertion dans la BDD',404);
       $e->send();
     }
-    //echo "insert ok";
     return $id;
   }
 
   /**
-   * prépare une query pour faire un update dans la base de donnée
+   * update: prépare une query pour faire un update dans la base de donnée
    * @param  [array] $table          table, ou tables, voir fonction processFROM
    * @param  [array] $entries        (champs => nouvelle_valeurs)
    * @param  [array] $identification (champs => valeurs), pour identifier la ligne à modifier
@@ -208,7 +199,6 @@ class Database {
     $where = $this->processWHERE($identification);
     $array_entries = array_merge($this->processArrayEntries($entries), $this->processArrayEntries($identification));
     $statement = $update.$from.$set.$where;
-    //echo "\n".$statement."\n";
     } catch(\PDOException $e){
       throw new RouterException('Erreur lors de la mise a jour de la table',404);
       $e->send();
@@ -217,8 +207,6 @@ class Database {
   }
 
   private function sendUpdate($statement, $array_entries) {
-    //var_dump($statement);
-    //var_dump($array_entries);
     try {
       $update = $this->getPDO()->prepare($statement);
       $update->execute($array_entries) or die(print_r($update->errorInfo()));
@@ -226,12 +214,11 @@ class Database {
       throw new RouterException('Erreur lors de l\'envoie de la mise a jour de la table',404);
       $e->send();
     }
-    //echo "update ok";
   }
 
 
   /**
-   * Prépare une query pour supprimer une ligne de la base de donnée.
+   * delete: Prépare une query pour supprimer une ligne de la base de donnée.
    * @param  [string] $table          [table]
    * @param  [array] $identification [(champs => valeurs), pour identifier la ligne à modifier]
    * @return []                 []
@@ -268,7 +255,7 @@ class Database {
 
 
   /**
-   * Compte le nombre d'entrée distinctes dans une table de la bdd en fonction d'un champ
+   * count: Compte le nombre d'entrée distinctes dans une table de la bdd en fonction d'un champ
    * @param  [string] $table   [nom de la table]
    * @param  [string] $count   [champ]
    * @param  [array] $entries [(champs=>valeurs), pour identifier les lignes concernées]
@@ -294,12 +281,36 @@ class Database {
     return $data[0][0];
   }
 
+
+    //////////*****ENCODAGE DECODAGE******//////////
+
   /**
-   * [arrayMap description]
-   * @param  [type] $entry [description]
-   * @param  [string] $key   [champ de la table, si int le tableau retourné aura des index numériques incrémentés à partir de 0]
-   * @param  [type] $value [description]
-   * @return [type]        [description]
+   * encode : hash une chaine pure
+   * @param  [string] $purestring [un mot lisible]
+   * @return [string]             [une chaine hashée]
+   */
+  public function encode($purestring) {
+     return password_hash($purestring, PASSWORD_BCRYPT);
+  }
+
+  /**
+   * decode : compare une chaine hashée et un chaine pure
+   * @param  [string] $pw     [un mot lisible]
+   * @param  [string] $hashed [la chaine hashée à comparer]
+   * @return [bool]         [true : les deux chaines corresponden, false non]
+   */
+  public function decode($pw, $hashed) {
+    return password_verify($pw, $hashed);
+  }
+
+  //////////*****TRAITEMENT DES DONNÉES******//////////
+
+  /**
+   * arrayMap: Formate le resultat d'une query sous la forme d'un tableau associant deux des champs de la table concernée.
+   * @param  [arrays] $entry [resultat d'une query]
+   * @param  [string] $key   [champ de la table]
+   * @param  [string] $value [autre champ de la table]
+   * @return [array]        [array($key=>$value)]
    */
   public function arrayMap($entry, $key=0, $value) {
     if(!$entry){
@@ -313,6 +324,13 @@ class Database {
     return $map;
   }
 
+  /**
+   * arrayClean: Nettoie un array pour ne garder que les clés numériques, ou que les clé alphabétiques
+   * @param  [array]  $entries   [un array mixed]
+   * @param  [bool]  $key_alpha [true : garde les clés alphan, false : garde les clés num]
+   * @param  [array] $relevant  [facultatif, liste des clées à garder]
+   * @return [array]             [le tableau nettoyé]
+   */
   public function arrayClean($entries ,$key_alpha, $relevant=0){
     $array_clean = array();
     if($entries == NULL){
@@ -337,8 +355,9 @@ class Database {
     }
     return $array_clean;
   }
+
   /**
-   * [dataClean Nettoie la réponse d'une query]
+   * dataClean : Nettoie la réponse d'une query, utilise arrayClean()
    * @param  [array]  $query_response [réponse envoyée par la query]
    * @param  [booléen]  $key_alpha        [true : ne garde que les index alphabétiques, false : ne garde que les index numériques]
    * @param  [array] $relevant       [facultatif, liste des champs à conserver]
@@ -431,7 +450,7 @@ class Database {
   }
 
 /**
- * processArrayEntries: extrait les valeurs non nulles du tableau passé en param et en fait un nouveau tableau
+ * processArrayEntries: extrait les valeurs différentes "" du tableau passé en param et en fait un nouveau tableau associatif
  * @param  [array] $entries ["champ" => "entrée"]
  * @return [array]          [[champ] => "entrée différente de "" "]
  */
@@ -448,7 +467,7 @@ class Database {
 
 
 /**
- * processArrayEntries: extrait les valeurs non nulles du tableau passé en param et en fait un nouveau tableau
+ * processArrayEntries: extrait les valeurs différentes de "" du tableau passé en param et en fait un nouveau tableau à index numérique
  * @param  [array] $entries ["champ" => "entrée"]
  * @return [array]          [[0...n] => "entrée différente de """]
  */
@@ -462,6 +481,11 @@ class Database {
     return $tabEntries;
   }
 
+  /**
+   * processFields: extrait du tableau la liste des champs à insérer pour la query INSERT
+   * @param  [array] $entries [(champs => valeur)]
+   * @return [string]          ["(champ1, champ2, champ3,...)"]
+   */
   private function processFields($entries) {
     $fields = array_keys($entries);
     $process_fields = "(";
@@ -475,6 +499,11 @@ class Database {
     return $process_fields;
   }
 
+  /**
+   * processValues: extrait du tableau la liste des noms de variables associées aux valeurs à insérer pour la query INSERT
+   * @param  [array] $entries [(champs => valeur)]
+   * @return [string]          ["VALUES(:champ1, :champ2, :champ3,...)"]
+   */
   private function processValues($entries) {
     $fields = array_keys($entries);
     $process_values = " VALUES(";
@@ -489,6 +518,11 @@ class Database {
   }
 
 
+  /**
+   * processUPDATE: construit la partie SET de la query UPDATE à partir d'un tableau
+   * @param  [array] $entries [(champ => valeur)]
+   * @return [string]          ["champ1 = ?, champ2 = ?, champ3 = ?"]
+   */
   private function processUPDATE($entries) {
     $entries = $this->processArrayWhere($entries);
     $process_set= "";
@@ -503,6 +537,11 @@ class Database {
     return $process_set;
   }
 
+  /**
+   * processIN : construit la partie IN d'une query à partir le l'array passé en 3ème param de query()
+   * @param  [array] $entry [array("IN", champ, array(comparaison1, comparaison2))]
+   * @return [string]        ["champ IN(?,?)"]
+   */
   private function processIN($entry) {
     $process_in = $entry[1]." IN ( ";
     foreach($entry[2] as $key => $value){
@@ -515,10 +554,16 @@ class Database {
     return $process_in;
   }
 
+  /**
+   * processLIKE: construit la partie LIKE d'une query à partir le l'array passé en 3ème param de query()
+   * @param  [array] $entry [array("LIKE", champ, comparaison)]
+   * @return [string]        ["champs LIKE comparaison"]
+   */
   private function processLIKE($entry) {
     $process_in = $entry[1]." LIKE ?";
     return $process_in;
   }
+
 }
 
 
