@@ -99,20 +99,18 @@ class StepController {
     }
     else {
         $Step = $player->currentStep();
-		//var_dump($Step);
-
+		    //var_dump($Step);
         $CurrentStep = new Step($Step[0]['ImgPath'], $Step[0]['Body'], $Step[0]['Question'], $Step[0]['IDType'], $Step[0]['Title']);
-		$CurrentStep->id = $Step[0]['IDStep'];
-		//var_dump($CurrentStep);
-        $result = $CurrentStep->processAnswer($player,$answer);
-		//var_dump($result);
+    		$CurrentStep->id = $Step[0]['IDStep'];
+    		//var_dump($CurrentStep);
+        $result = $CurrentStep->processAnswer($player,$answer); //true si ok, message sinon
+		    //var_dump($result);
         if ($result == true) {
           $success = new Success("Le joueur a bien été modifié");
           Response::jsonResponse($success);
         }
-
         else {
-          $error = new Error("Le joueur n'a pas pu être modifié");
+          $error = new Error($result);
           Response::jsonResponse($error);
         }
     }

@@ -114,17 +114,19 @@ Class Step {
        }
      }
      //var_dump($true_choice);
-     if($true_choice && $true_choice->checkPlayerRequirements($player)) {
-       $true_choice->alterPlayer($player);
-       $nextStepArray = Database::instance()->query("Step", array('IDStep' => "$true_choice->idNextStep", 'ImgPath' => '', 'Question'=>'', 'Body'=>'', 'IDType'=>'', 'Title'=>''));
-       $nextStep = new Step($nextStepArray[0]['ImgPath'],$nextStepArray[0]['Body'],$nextStepArray[0]['Question'],1,$nextStepArray[0]['IDType'],$nextStepArray[0]['Title']);
-       $nextStep->id = $choice->idNextStep;
-       $player->passStep($nextStep);
-       return true;
+     if($true_choice) {
+       $message = $true_choice->checkPlayerRequirements($player); //true si ok, message d'erreur détaillé sinon
+       if($message == true){
+         $true_choice->alterPlayer($player);
+         $nextStepArray = Database::instance()->query("Step", array('IDStep' => "$true_choice->idNextStep", 'ImgPath' => '', 'Question'=>'', 'Body'=>'', 'IDType'=>'', 'Title'=>''));
+         $nextStep = new Step($nextStepArray[0]['ImgPath'],$nextStepArray[0]['Body'],$nextStepArray[0]['Question'],1,$nextStepArray[0]['IDType'],$nextStepArray[0]['Title']);
+         $nextStep->id = $choice->idNextStep;
+         $player->passStep($nextStep);
+       }
+       return $message;
      }
-     else {
-       return false;
-     }
+     else
+      return "Mauvaise réponse ! Try again~";
    }
 
 
