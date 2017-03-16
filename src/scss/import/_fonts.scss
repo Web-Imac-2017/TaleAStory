@@ -1,0 +1,33 @@
+@font-face {
+    font-family: 'Bjorn';
+    src: url('../fonts/Bjorn Light.otf');
+    font-weight: lighter;
+}
+
+@font-face {
+    font-family: 'Bjorn';
+    src: url('../fonts/Bjorn Regular.otf');
+}
+
+@font-face {
+    font-family: 'OpenSans';
+    src: url('../fonts/OpenSans-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'OpenSans';
+    src: url('../fonts/OpenSans-Bold.ttf');
+    font-weight: bold;
+}
+
+$default-font-size: 12px;
+
+@mixin defaultFont() {
+  font-family: 'Bjorn';
+  font-size: $default-font-size;
+}
+
+@mixin font($font-size) {
+  font-family: 'Bjorn';
+  font-size: $font-size;
+}

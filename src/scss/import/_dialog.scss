@@ -1,0 +1,54 @@
+.tas-dialog.modal{
+  display: flex;
+  align-items: center;
+  background-color: rgba(0,0,0,0.3);
+}
+
+.tas-dialog.modal-content{
+  background-color: rgba(0,0,0,0.55);
+  padding: 20px 0;
+  box-shadow: none ;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  color: white;
+  border: 1px solid white;
+  border-radius: 0;
+  @include defaultFont();
+}
+
+.tas-dialog.modal-dialog{
+  margin:auto;
+  width: 60%;
+}
+
+.modal-header{
+  text-align : center;
+  font-size: 14px;
+  letter-spacing: 5px;
+  border-bottom: 0;
+}
+
+.modal-body {
+	flex: 10;
+	text-align: center;
+	align-items: center;
+	display: flex;
+  padding: 40px 0;
+  >p {
+    font-size: 10px;
+    letter-spacing: 3px;
+    width: 100%;
+    margin: 17px 0;
+  }
+}
+
+.modal-footer{
+  border-top: 0;
+}
+
+.modal-footer .button{
+  padding: 15px 40px;
+  margin-left: 15px !important;
+}

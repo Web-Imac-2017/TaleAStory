@@ -1,0 +1,65 @@
+Todo PHP :
+
+Module Router (Gère la reception de requetes) : 
+	-> htaccess 
+			-> rediriger toutes les requetes http vers index.php et passez en parametre la "route"/l'adresse demandée
+				https://www.crucialhosting.com/knowledgebase/htaccess-apache-rewrites-examples (Regarder brièvement comment fonctionne l'instruction Rewrite)
+				https://httpd.apache.org/docs/2.4/rewrite/flags.html (Regarder surtout section QSA)
+				
+			-> définir des settings (notamment l'encodage)
+				https://httpd.apache.org/docs/current/mod/core.html (Regarder surtout section Directive AddDefaultCharset)
+	
+	-> Router
+			-> créer une classe avec des fonctions statiques qui : 
+				-> permet d'executer une action (classe + méthode) selon une "route"/adresse
+				-> permet de mapper les routes et les actions (charger un fichier JSON ou mapper un par un avec une fonction (Router::map(route, classe, action) 
+					On peut instancier une classe ou faire appel à la classe avec une variable contenant une string :
+						$className = 'User';
+						$user = $className();
+			
+			-> permet de récuperer différents chemins (emplacement actuel du server)
+				http://php.net/manual/en/reserved.variables.server.php
+				http://php.net/manual/en/function.dirname.php
+		
+		-> Autoloader
+				-> créer un autoloader : 
+					https://www.grafikart.fr/formations/programmation-objet-php/autoload
+		
+Module Global (Traite les variables globales de PHP) :
+	-> Form
+		-> créer une classe avec des fonctions statiques qui :
+			-> permet de récupérer les valeurs des formulaire en les testant (vérification injection sql/html, vérification champs vide, formulaire officiel ...) 
+				http://php.net/manual/en/reserved.variables.post.php
+				css-tricks.com/serious-form-security/
+			-> permet de traiter les fichiers uploadé
+				http://php.net/manual/en/features.file-upload.php
+	-> Session
+		-> créer une classe avec des fonctions statiques qui :
+			-> permet de créer une session
+			-> permet de récupérer des valeurs de session ou de cookie
+			-> permet de définir des valeurs de session ou de cookie
+			-> permet d'identifier l'utilisateur courant, de le connecter et le déconnecter
+			
+			http://php.net/manual/en/features.cookies.php
+			php.net/manual/en/book.session.php
+			
+Module Database (Gère la base de donnée et les requetes SQL):
+	-> Database
+		-> créer une classe avec des fonctions statiques qui :
+			-> permet d'instancier et de récupérer une connection PDO
+			-> permet d'executer des requêtes SQL sécurisées à partir de parametre (génère automatiquement la requête)
+				http://fr.php.net/manual/en/pdo.prepared-statements.php
+				http://stackoverflow.com/questions/60174/how-can-i-prevent-sql-injection-in-php
+			-> permet d'encoder et décoder une donnée sensible
+
+Module Response :
+	-> Response
+		-> créer une classe avec des fonctions statiques qui :
+			-> permet de génèrer des réponses aux requêtes (faire une fonction pour un type de contenu)
+				-> définis les headers selon le contenu
+				http://fr.php.net/manual/fr/function.header.php
+				-> écris le contenu (JSON, html, image, ...)
+				http://fr.php.net/manual/fr/function.echo.php
+			
+			-> permet de faire une redirection
+			-> permet de faire une page ou objet décrivant une erreur

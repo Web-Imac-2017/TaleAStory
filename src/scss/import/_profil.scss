@@ -1,0 +1,265 @@
+.contentProfil{
+	display : flex;
+	color : #fff;
+	height : 100%;
+	align-items : center;
+
+	@media screen and (max-width: $break-medium) {
+		padding : 0 !important;
+	}
+}
+
+.colGauche{
+	padding: 10px;
+	display : flex;
+	align-items : center;
+	border : 1px solid #fff;
+	min-height: 80%;
+	width: 30%;
+	margin-left: 7%;
+
+	.insideCol{
+		width : 100%;
+
+		.roundProfil{
+			border : 1px solid #fff;
+			width : 90px;
+			height : 90px;
+			background : rgba(0,0,0,0);
+			border-radius : 50%;
+			margin : 0 auto 20px auto;
+			position : relative;
+			cursor : pointer;
+			transition: all 0.25s;
+
+
+			.bigProfil{
+				width: 100%;
+  				height: 100%;
+  				border-radius: inherit;
+			}
+
+		}
+
+		.roundProfil:before{
+			border-radius : 50%;
+			content : '';
+			background: rgba(0,0,0,0);
+			width : 100%;
+			height : 100%;
+			position : absolute;
+			bottom : 0;
+			transition: all 0.25s;
+		}
+
+		.roundProfil:hover::before{
+			background: rgba(0,0,0,0.85);
+		}
+
+
+		.roundProfil:after{
+			bottom : 0;
+			left : 25px;
+			content : '';
+			background-image: url("../images/editPicture_large.png");
+			background-repeat:no-repeat;
+			width : 40px;
+			height : 40px;
+			position : absolute;
+			bottom : 0;
+			transition: all 0.25s;
+			opacity : 0;
+		}
+
+		.roundProfil:hover::after{
+			bottom : 25px;
+			opacity : 1;
+		}
+
+
+
+		img.element{
+			display : block ;
+			margin : 0 auto;
+			padding : 20px !important;
+		}
+
+		.userName{
+			font-weight : normal;
+			text-align : center;
+			font-size : 11px;
+			letter-spacing : 5px;
+			padding: 0 10px;
+		}
+
+		ul{
+			text-align : center;
+			font-size : 10px;
+			letter-spacing : 4px;
+
+			li{
+				padding : 14px 10px;
+				color : #fff;
+
+				a{
+					text-decoration : none;
+					color : #fff;
+				}
+
+				a, a:visited, p {
+					text-decoration: none;
+					padding-bottom: 6px;
+					vertical-align: middle;
+					transition: all 0.25s;
+					border-bottom: 0px solid rgba(255,255,255,0.75);
+					position: relative;
+				}
+
+				a:hover{
+					color: white !important;
+				}
+
+				a:before{
+					width: 0%;
+					height: 1px;
+					content: '';
+					background: rgba(255,255,255,0.75);
+					position: absolute;
+					transition : all 0.4s;
+					bottom: 0;
+					left: 20%;
+				}
+
+				a:hover::before{
+					width: 60%;
+					height: 1px;
+					content: '';
+					background: rgba(255,255,255,1);
+					position: absolute;
+					transition : all 0.3s;
+				}
+
+				@media screen and (max-width: $break-medium) {
+					min-width : 20%;
+					display : inline-block;
+				}
+
+			}
+
+			@media screen and (max-width: $break-medium) {
+				display: block;
+			}
+		}
+
+		.element.button{
+				margin : 15px auto 0 auto;
+			}
+
+		.button {
+			min-width : 100px;
+			width : 80%;
+			text-align: center;
+
+			@media screen and (max-width: $break-medium) {
+				margin-top : 10px !important;
+			}
+		}
+	}
+
+	@media screen and (max-width: $break-medium) {
+		display : block;
+		margin : 4% 0 !important;
+		min-height : auto;
+		width : 100%;
+		padding : 20px;
+
+		.insideCol .roundProfil{
+			margin: 0 auto 2%;
+		}
+		img.element {
+	    padding: 10px;
+		}
+	}
+}
+
+.contentRight{
+	width : 93%;
+	height : 85%;
+	display : flex;
+	align-items : center;
+
+	.insideContent{
+		margin : 0 auto !important;
+
+		p{
+			font-size : 11px;
+			letter-spacing : 4px;
+			padding : 20px 0;
+		}
+
+		span{
+			padding-left : 10px;
+		}
+
+		img{
+			padding-left : 10px;
+			cursor : pointer;
+		}
+
+		@media screen and (max-width: $break-medium) {
+			width : 80%;
+			margin : 0 auto;
+			text-align : center;
+			padding-bottom: 2%;
+		}
+	}
+
+	@media screen and (max-width: $break-medium) {
+		display : block;
+		height: 120%;
+		width : 100%;
+	}
+
+}
+
+.contentProfil .contentRight{
+	flex-wrap : wrap;
+}
+
+.item{
+	display : flex;
+	align-items : center ;
+	border : 1px solid #fff;
+	min-width : 30%;
+	height : 48%;
+	margin: 0 1%;
+	flex: 1;
+
+	.insideItem{
+		width : 100%;
+
+		img{
+			margin-top : 0;
+		}
+
+		@media screen and (max-width: $break-medium) {
+			display : block;
+			height : auto;
+			width : 100%;
+			margin: 0;
+		}
+
+		h3{
+			font-size : 11px;
+			text-align : center;
+			font-weight : normal;
+			letter-spacing : 4px;
+		}
+	}
+
+}
+
+.item.selected{
+	background: rgba(0,0,0,0.15);
+	transition : all 0.45s;
+}

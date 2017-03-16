@@ -1,0 +1,362 @@
+html, body, #root, #app, .wrapper {
+  max-height: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+html {
+	@include defaultFont();
+}
+
+
+.route-component{
+  width: 100%;
+  height : 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display : flex;
+  flex-direction : column;
+}
+
+html, body, #root, #app{
+  background-color: black;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  transform: matrix(1, 0, 0, 1, 0, 0);
+}
+
+.scroller{
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+}
+
+#app .caca{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 100%;
+  > .scroller > span {
+    	display: flex;
+    	position: relative;
+    	width : 100%;
+		overflow-x: hidden;
+		overflow-y: hidden;
+		max-height: 100%;
+		height: 100%;
+	.route-component {
+		height: 100%;
+      	padding: 1% 0;
+	}
+  }
+}
+
+a {
+  text-decoration: none;
+  color: white;
+}
+
+#app .caca.mediaBlock{
+
+	overflow-y: scroll;
+
+	@media screen and (max-width: $break-medium) {
+		display: flex;
+    	flex-direction: column;
+		margin : 0 auto;
+		width : 80%;
+
+		 > .scroller > span {
+			overflow-y: scroll;
+		}
+	}
+}
+
+#app .caca.mediaBlock>.scroller>span{
+
+	@media screen and (max-width: $break-medium) {
+		margin : 0 ;
+	}
+}
+
+/* *** Header - General *** */
+header {
+	width: 100%;
+	padding-left: 5%;
+	padding-right: 5%;
+	padding-top: 30px;
+	height: 10%;
+	font-size: 10px;
+	font-family: 'Bjorn';
+	font-weight: lighter;
+	position: relative;
+
+	h1 {
+		float: left;
+		font-size: 12px;
+		margin : 0 ;
+	}
+
+  .links {
+  		float: right;
+  		height: 100%;
+
+  		.profilPic {
+  			border : 1px solid #fff;
+  			width: 32px;
+  			height: 32px;
+  			margin: auto;
+  			float: left;
+  			top: -8px;
+  			left: 5px;
+  		}
+
+  }
+
+	a, a:visited, p {
+		cursor : pointer;
+		text-decoration: none;
+		padding-left: 18px;
+		padding-right: 18px;
+		padding-bottom: 6px;
+		margin-top: 10px;
+		display: block;
+		float: left;
+		vertical-align: middle;
+		transition: all 0.25s;
+		position: relative;
+		color: #fff;
+		z-index : 100;
+	}
+
+	a:hover{
+		color: #fff !important;
+	}
+
+	a:before{
+		width: 0%;
+		height: 1px;
+		content: '';
+		background: rgba(255,255,255,0.75);
+		position: absolute;
+		transition : all 0.4s;
+		bottom: 0;
+		left: 20%;
+	}
+
+	a:hover::before{
+		width: 60%;
+		height: 1px;
+		content: '';
+		background: rgba(255,255,255,1);
+		position: absolute;
+		transition : all 0.3s;
+	}
+
+	#profilePopup {
+		/*display: none;*/
+		position: absolute;
+		right: -250px;
+		top: 0px;
+		width: 300px;
+		padding-top: 80px;
+		padding-right: 100px;
+		padding-left: 40px;
+		transition : all 0.5s;
+		opacity: 0;
+		height: 250px;
+		z-index: 5;
+	}
+
+	.profileMenu {
+		background-color: rgba(0,0,0,0.70);
+		line-height: 2px;
+		padding: 5px;
+		margin: auto;
+		position: absolute;
+
+		div {
+			margin: 10px;
+		}
+
+		img {
+			width: 20px;
+			height: 20px;
+		}
+	}
+
+	.profileLink {
+		z-index: 10;
+	}
+
+
+}
+
+/** Right Navigation **/
+.index{
+	display: flex;
+	flex-direction: row;
+	max-width: $width-index;
+	min-width: $width-index;
+	height: 100%;
+    width: 10%;
+	margin: 0px 3%;
+
+	@media screen and (max-width: $break-small) {
+    	display: none;
+    }
+
+   .indexContent {
+   		display: flex;
+   		flex-direction: column;
+   		height: 100%;
+
+   		li {
+        	position: relative;
+        	margin: auto 2%;
+        	transition : all 0.4s;
+        	padding: 1%;
+        	font-family: OpenSans;
+        	font-weight: bold;
+        	color: rgba(255,255,255,0.5);
+        	list-style: none;
+
+        	a{
+          		text-decoration: none;
+        	}
+   		}
+
+
+		li:before{
+			color: rgba(255,255,255,0);
+			margin: auto;
+			transform: rotate(270deg);
+			width: 200px;
+			height: 30px;
+			text-align: center;
+			content: attr(data-content);
+			text-transform: uppercase;
+			position: absolute;
+			transition : all 0.4s;
+			left: -75px;
+   			letter-spacing: 3px;
+   			top : -20px;
+   			font-size: 10px;
+   			display : block;
+   			padding-bottom : 30px;
+		}
+
+		li:hover::before{
+			left: -92px;
+			color: rgba(255,255,255,0.9);
+		}
+
+		li:hover {
+			color: rgba(255,255,255,0.9);
+		}
+
+   }
+
+}
+
+
+/* *** Screens - General *** */
+
+.screen {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	height:100vh;
+	color: white;
+
+	a, p {
+		letter-spacing: 4px;
+	}
+
+	.button{
+		padding: 18px 22px;
+		border: 1px solid rgba(255,255,255,0.85);
+		background: rgba(255,255,255,0);
+		display: block;
+		position: relative;
+		color: #fff;
+    @include defaultFont();
+		text-transform: uppercase;
+		font-size: 10px;
+		letter-spacing: 5px;
+		text-decoration: none;
+		margin: 0px 20px 0px 0px;
+		border-bottom: 8px solid transparent;
+		transition : all 0.3s;
+		z-index: 10;
+		border: 1px solid #fff;
+		margin: auto;
+		transition : all 0.3s;
+
+		min-width: 220px;
+		max-width: 350px;
+
+		@media screen and (max-width: $break-small) {
+			padding: 12px 5.5px;
+			font-size: 10px;
+		}
+
+	}
+
+	.button:after{
+		width: 104%;
+		height: 86%;
+		content: '';
+		border: 1px solid #fff;
+		position: absolute;
+		transition : all 0.4s;
+		z-index: -1!important;
+		bottom: 6%;
+		left: -2.25%;
+	}
+
+	.button:before{
+		width: 100%;
+		height: 0%;
+		content: '';
+		background: rgba(255,255,255,0);
+		position: absolute;
+		transition : all 0.4s;
+		z-index: -1!important;
+		bottom: 0;
+		left: 0;
+	}
+
+	.button:hover::before{
+		width: 100%;
+		height: 100%;
+		content: '';
+		background: rgba(255,255,255,0.15);
+		position: absolute;
+		transition : all 0.3s;
+	}
+
+	.button:hover::after{
+		background: rgba(255,255,255,0.15);
+	}
+
+}
+
+.picto {
+	@media screen and (max-width: $break-small) {
+    	width: 50px;
+    }
+	@media screen and (max-width: $break-tiny) {
+    	display: none !important;
+    }
+}
+.wave {
+	@media screen and (max-width: $break-tiny) {
+    	display: none !important;
+    }
+}

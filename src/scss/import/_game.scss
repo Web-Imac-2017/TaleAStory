@@ -1,0 +1,237 @@
+#app .game-container {
+	transform: matrix(1, 0, 0, 1, 0, 0);
+	opacity: 1;
+	display: flex;
+	text-align: justify;
+	align-items: center;
+	flex-direction: column;
+	width: 100%;
+	margin : 0 auto;
+
+	.stats{
+		width : 100%;
+		height: 25%;
+
+		span{
+			width: 100%;
+			height: 30%;
+			display: inline-block;
+			.progress{
+				width: 150px;
+				vertical-align: middle;
+				margin : 0;
+				display: inline-block;
+				background-color: unset;
+				border: solid 1px white;
+				border-radius: 0;
+				height: 70%;
+			}
+			.progress-bar{
+				height: 100%;
+			}
+			h4{
+				margin: 0 2%;
+				vertical-align: middle;
+				width: 18%;
+				display: inline-block;
+				font-size : 9px;
+				letter-spacing: 2px;
+			}
+		}
+	}
+
+  > span{
+    position: relative;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-content: center;
+    flex-direction: column;
+    overflow: visible;
+  }
+  .game-component {
+    margin : 0 auto;
+    width : 70%;
+  }
+
+	.game-wrapper {
+		position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+	}
+
+  .button.story-answer{
+    margin: 10px auto;
+    opacity: 0;
+  }
+}
+
+.story-text{
+  margin: 15px 10px;
+  letter-spacing: 3px;
+  opacity: 0;
+  line-height : 20px;
+  font-size : 11px;
+  text-align : left;
+  padding : 0 40px;
+}
+
+.button.small{
+  	padding: 12px 60px;
+	margin-top: 20px;
+  	min-width: auto;
+}
+
+
+.story-text{
+  margin: 15px 10px;
+  letter-spacing: 3px;
+  opacity: 0;
+  line-height : 20px;
+  font-size : 11px;
+  text-align : left;
+  padding : 0 40px;
+}
+
+.story-img{
+	position: relative;
+	top:50%;
+	transform : translateY(-50%);
+	-webkit-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	opacity: 0;
+	width:100%;
+}
+
+.story-left{
+
+	display: flex;
+
+	flex-direction: column;
+	flex:1;
+
+	&:empty{
+		display:none;
+	}
+
+}
+.story-right{
+
+	float : right;
+	display: flex;
+
+	flex-direction: column;
+	flex:2;
+}
+
+.enigma, .decision{
+
+	display : flex;
+	flex-direction: row;
+}
+
+.gameButton{
+	display : flex;
+
+	@media screen and (max-width: $break-medium) {
+		display : block;
+	}
+}
+
+.enigma-bottom{
+	width:100%;
+	display:flex;
+	flex-direction:row;
+	justify-content: center;
+
+	.button{
+		min-width : 305px;
+		margin : 10px 25px 0 25px !important;
+
+		@media screen and (max-width: $break-medium) {
+			margin : 10px auto !important;
+		}
+	}
+
+	@media screen and (max-width: $break-medium) {
+		flex-direction : column;
+	}
+}
+
+
+
+.enigma-form{
+	display:flex;
+	flex-direction:row;
+	justify-content:center;
+	width:100%;
+}
+
+form.enigma-form{
+				span {
+					display: block;
+					position: relative;
+					margin : 0 5% 2% 5%;
+					width: 100%;
+					height: 50px;
+					input {
+						width: 100%;
+						height: 100%;
+						display: block;
+						border: 1px solid #fff;
+						padding: 8px;
+
+					}
+
+					&.submit{
+						width:30%;
+						margin-left:0;
+						margin-right:10%;
+					}
+
+					input[type="submit"]:after{
+						width: 104%;
+						height: 86%;
+						content: '';
+						border: 1px solid #fff;
+						position: absolute;
+						transition : all 0.4s;
+						z-index: -1!important;
+						bottom: 6%;
+						left: -2.25%;
+					}
+
+					input[type="submit"]:before{
+						width: 100%;
+						height: 0%;
+						content: '';
+						background: rgba(255,255,255,0);
+						position: absolute;
+						transition : all 0.4s;
+						z-index: -1!important;
+						bottom: 0;
+						left: 0;
+					}
+
+
+					input[type="submit"]:hover{
+						width: 100%;
+						height: 100%;
+						content: '';
+						background: rgba(255,255,255,0.15);
+						position: absolute;
+						transition : all 0.3s;
+					}
+
+					input[type="submit"]hover::after{
+						background: rgba(255,255,255,0.15);
+					}
+				}
+
+}
