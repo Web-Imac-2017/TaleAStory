@@ -5,9 +5,8 @@
 	text-align: justify;
 	align-items: center;
 	flex-direction: column;
-	width: 80%;
-	margin-left: 5%;
-	margin-right: 10%;
+	width: 100%;
+	margin : 0 auto;
 
 	.stats{
 		width : 100%;
@@ -53,8 +52,8 @@
     overflow: visible;
   }
   .game-component {
-    padding: 50px;
-    width : 100%;
+    margin : 0 auto;
+    width : 70%;
   }
 
 	.game-wrapper {
@@ -135,6 +134,14 @@
 
 	display : flex;
 	flex-direction: row;
+}
+
+.gameButton{
+	display : flex;
+
+	@media screen and (max-width: $break-medium) {
+		display : block;
+	}
 }
 
 .enigma-bottom{

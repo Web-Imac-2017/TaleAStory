@@ -6,7 +6,7 @@ class Scroll extends React.Component{
 	render() {
 		return (
 			<div className={"scroll " + this.props.className}>
-				<p>Scroll</p>
+				<Link to={this.props.next}>Scroll</Link>
 				<img src={config.imagePath('scrollArrow_large.png')}/>
 			</div>
 		);

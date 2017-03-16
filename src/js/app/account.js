@@ -15,13 +15,7 @@ export default RouteComponent({
                   <div className="contentRight">
                   	<div className="insideContent">
                       <p>Email :<span>{this.context.user.mail}</span></p>
-                  		<p>Pseudo :
-                        <span>{this.context.user.pseudo}</span>
-                        <img className="editElement" src={config.imagePath('pen_large.png')}/>
-                      </p>
-                  		<p>Changer de mot de passe
-                        <img className="editElement" src={config.imagePath('pen_large.png')}/>
-                      </p>
+                  		<p>Pseudo :<span>{this.context.user.pseudo}</span></p>
                   	</div>
                   </div>
                 </div>

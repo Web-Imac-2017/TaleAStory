@@ -11,6 +11,7 @@ import {GlobalBack} from '../utils/interfaceback';
 import RouteComponent from '../utils/routecomponent';
 import TransitionGroup from 'react-addons-transition-group';
 import editPicture from '../utils/ProfilePicture';
+import keydown from 'react-keydown';
 
 class ScrollListener extends _ScrollListener {
 
@@ -47,9 +48,44 @@ let WrapperSpec = {
   contextTypes : {user: React.PropTypes.objectOf(User)},
 
   getInitialState : function(){
+    window.onkeydown = this.handleKeyDown;
     this.scroll = false;
     this.lock = false;
     return {image : ''};
+  },
+
+  handleKeyDown : function(event) {
+
+    let dom = ReactDOM.findDOMNode(this).getElementsByTagName('span')[0];
+
+    if(event.keyCode == 40){
+
+       if(this.next){
+          let path = '';
+          let last = this.props.routes.length + (this.children.key != "/" ? -1:-1);
+          for(let i=0; i<last;i++){
+            path += this.props.routes[i].path + '/';
+          }
+          path = path + (this.next.path ? this.next.path : '');
+          path = path.replace('//','/').replace(/\(.*\)/,'');
+          this.context.router.push(path);
+          return;
+        }
+    }
+    else if(event.keyCode == 38){
+
+       if(this.previous){
+          let path = '';
+          let last = this.props.routes.length + (this.children.key != "/" ? -1:-1);
+          for(let i=0; i<last;i++){
+            path += this.props.routes[i].path + '/';
+          }
+          path = path + (this.previous.path ? this.previous.path : '');
+          path = path.replace('//','/').replace(/\(.w*\)/,'');
+          this.context.router.push(path);
+          return;
+        }       
+    }
   },
 
   handleChange : function(){
@@ -151,7 +187,7 @@ let WrapperSpec = {
     this.transitionGroup = ReactDOM.findDOMNode(this).getElementsByTagName('span')[0];
     this.scrollListener = new ScrollListener(this.transitionGroup);
     setTimeout(function(that) {
-      that.scrollListener.addScrollEndHandler('transition-scroll', that.handleScroll);
+      //that.scrollListener.addScrollEndHandler('transition-scroll', that.handleScroll);
       //that.transitionGroup.onscroll = that.handleScroll;
     }, 60, this);
 
@@ -181,7 +217,7 @@ let WrapperSpec = {
     return true;
   },
 
-  handleScroll(e,p) {
+  /*handleScroll(e,p) {
     if(this.manualScroll){
       this.manualScroll = false;
       return;
@@ -228,7 +264,7 @@ let WrapperSpec = {
       let scrollTop = dom.scrollTop;
     }
     return;
-  },
+  },*/
 
   render : function(){
     this.user = this.context.user;

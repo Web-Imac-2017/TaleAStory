@@ -79,7 +79,7 @@ class GameComponent extends React.Component{
                                       { text2.props.children }
                             </button>)
                         );
-                        return <div key={index}>
+                        return <div key={index} className="gameButton">
                                   {childs}
                                </div>;
                       }
