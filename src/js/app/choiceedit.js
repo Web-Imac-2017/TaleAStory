@@ -6,9 +6,11 @@ import Slider from 'rc-slider';
 import ItemNav from './itemnav'
 import Dialog from '../utils/dialog'
 import TransitionGroup from 'react-addons-transition-group';
+import {User} from '../model/user';
 
 
 export default RouteComponent({
+  contextTypes : {user: React.PropTypes.objectOf(User)},
 
   getInitialState(){
     if(this.props.params.stepid){
