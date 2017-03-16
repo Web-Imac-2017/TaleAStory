@@ -136,6 +136,17 @@ class Test extends React.Component{
             function(json){
                 console.log(json);
          });
+		Requester.choiceList(1,3, "Encore").then( 
+            function(json){
+                console.log(json);
+         });
+		Requester.itemList(1,3).then( 
+            function(items){
+                console.log(items[0].IDItem);
+                console.log(items[0].Name);
+                console.log(items[0].ImgPath);
+                console.log(items[0].Brief);
+         });
 		Requester.itemList(1,3, "Brayan").then( 
             function(items){
                 console.log(items[0].IDItem);
