@@ -1,6 +1,10 @@
 @import './import/reset';
-@import 'bootstrap';
-
+@import "bootstrap/variables";
+@import "bootstrap/mixins";
+@import "bootstrap/progress-bars";
+@import "bootstrap/modals";
+@import "bootstrap/utilities";
+@import "bootstrap/responsive-utilities";
 @import 'rc-slider/assets/index';
 @import './import/common';
 @import './import/profil';
@@ -11,6 +15,7 @@
 @import './import/form';
 @import './import/admin';
 @import './import/editing';
+
 
 /* *** Blue background *** */
 

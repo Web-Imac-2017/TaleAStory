@@ -10,10 +10,11 @@
 }
 
 .colGauche{
+	padding: 10px;
 	display : flex;
 	align-items : center;
 	border : 1px solid #fff;
-	height: 80%;
+	min-height: 80%;
 	width: 30%;
 	margin-left: 7%;
 
@@ -51,7 +52,7 @@
 		}
 
 		.roundProfil:hover::before{
-			background: rgba(0,0,0,0.70);
+			background: rgba(0,0,0,0.80);
 		}
 
 
@@ -79,7 +80,7 @@
 		img.element{
 			display : block ;
 			margin : 0 auto;
-			padding : 20px;
+			padding : 20px !important;
 		}
 
 		.userName{
@@ -96,7 +97,7 @@
 			letter-spacing : 4px;
 
 			li{
-				padding : 15px 10px;
+				padding : 14px 10px;
 				color : #fff;
 
 				a{
@@ -137,6 +138,15 @@
 					transition : all 0.3s;
 				}
 
+				@media screen and (max-width: $break-medium) {
+					min-width : 20%;
+					display : inline-block;
+				}
+
+			}
+
+			@media screen and (max-width: $break-medium) {
+				display: inline-block;
 			}
 		}
 
@@ -148,13 +158,17 @@
 			min-width : 100px;
 			width : 80%;
 			text-align: center;
+
+			@media screen and (max-width: $break-medium) {
+				margin-top : 10px !important;
+			}
 		}
 	}
 
 	@media screen and (max-width: $break-medium) {
 		display : block;
 		margin : 4% 0 !important;
-		height : auto;
+		min-height : auto;
 		width : 100%;
 		padding : 20px;
 
@@ -169,7 +183,7 @@
 
 .contentRight{
 	width : 93%;
-	height : 83%;
+	height : 89%;
 	display : flex;
 	align-items : center;
 
