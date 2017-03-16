@@ -24,6 +24,7 @@
   "/addachievement":"Controller\\AchievementController::addAchievement",
   "/deleteachievement":"Controller\\AchievementController::deleteAchievement",
   "/updateachievement":"Controller\\AchievementController::updateAchievement",
+  "/achievements/list/:start/:count":"Controller\\AchievementController::getAchievementList",
   "currentuser/unreadachievements":"Controller\\CurrentUserController::unreadAchievements",
   "currentuser/currentstep":"Controller\\CurrentUserController::currentStep",
   "currentuser/start":"Controller\\CurrentUserController::start",

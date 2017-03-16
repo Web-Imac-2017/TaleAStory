@@ -5,13 +5,20 @@ import {GlobalBack} from '../utils/interfaceback';
 
 
 class Choice{
-  constructor(IDChoice, Answer, IDStep, TransitionStep, IDNextStep){
-    this.IDChoice = IDChoice;
+  constructor(id, Answer, IDStep, TransitionStep, IDNextStep){
+    this.id = id;
     this.Answer = Answer;
     this.IDStep = IDStep;
     this.TransitionStep = TransitionStep;
     this.IDNextStep = IDNextStep;
   }
+
+  display() {
+    return <div className="insideItem">
+                <h3 className="userName">this.Answer</h3>
+              </div>
+  }
+
 }
 
 export {Choice};

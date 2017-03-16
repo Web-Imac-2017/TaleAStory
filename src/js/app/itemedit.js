@@ -2,8 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import config from '../config'
 import RouteComponent from '../utils/routecomponent';
+import {User} from '../model/user';
 
 export default RouteComponent({
+  contextTypes : {user: React.PropTypes.objectOf(User)},
 
   getInitialState(){
     if(this.props.params.stepid){
@@ -69,6 +71,23 @@ export default RouteComponent({
   },
 
   render(){
+    let unavailable = true;
+    if(this.context.user)
+      if(this.context.user.isAdmin)
+        unavailable = false;
+      
+    if(unavailable)
+      return <div onClick={this.unselect}>
+                <div className="columnsContainer">
+                  <div className="content contentProfil contentSteps">
+                    <div className="contentRight">
+                      unavailable
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
     let image;
     if(this.state.img){
       image = <div className="image" onClick={this.handleImage}>
