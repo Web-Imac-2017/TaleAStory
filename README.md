@@ -10,3 +10,5 @@ Additionnel :
 - Système de connexion pour les utilisateurs
 - Système de back-office pour créer ses propres péripéties
 - Ce système BO doit être accessible uniquement par des admins, etc... 
+- Un système de trophée sera disponible pour prendre note des fins qu'a eu l'utilisateur
+
