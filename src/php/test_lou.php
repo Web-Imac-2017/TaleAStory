@@ -7,13 +7,16 @@ use \Server\Response;
 use \View\Success;
 use \View\Error;
 use \Controller\AchievementController;
+use \Server\Autoloader;
+use \Server\Router;
+use \Server\RouterException;
+use \Server\Session;
 require_once("Server/Database.php");
 require_once("Server/Session.php");
 require_once("View/Success.php");
 require_once("View/Error.php");
 require_once("Controller/AchievementController.php");
 require_once("Model/Player.php");
-
 
 
 $in = array("IN", "Login", array("lou", "Dori", "KASS5"));
@@ -25,19 +28,24 @@ $test = Database::instance()->query("Player", array("*"=>""),array($limit));
 /*
 $test = Database::instance()->query("Player", array("IDPlayer"=>"", "Mail"=>"", "Login"=>"", "IDCurrentStep"=>""), GROUP);
 echo "<pre>".var_export($test, true)."</pre>";
+
 $test = Database::instance()->insert("Player", array("Login"=>"KASS5", "mail"=>"gmalalaletetet"));
 echo "<pre>".var_export($test, true)."</pre>";
 $test = Database::instance()->update("Player", array("mail"=>"unvraimail@lol.com"), array("Login"=>"KASS5"));
 echo "<pre>".var_export($test, true)."</pre>";
 $test = Database::instance()->delete("PLayer", array("Login"=>"KASS4"));
 echo "<pre>".var_export($test, true)."</pre>";
+
+//$test = Database::instance()->query("Player", array("IDPlayer"=>1, "Mail"=>"", "Login"=>"", "IDCurrentStep"=>2), $in);
+
+//$test = Database::instance()->query("Player", array("IDPlayer"=>2, "Mail"=>"", "Login"=>"", "IDCurrentStep"=>2), $like);
+
 $test = Database::instance()->query("Player", array("IDPlayer"=>2, "Mail"=>"", "Login"=>"", "IDCurrentStep"=>2), $in);
 echo "<pre>".var_export($test, true)."</pre>";
 $test = Database::instance()->query("Player", array("IDPlayer"=>2, "Mail"=>"", "Login"=>"", "IDCurrentStep"=>2), $like);
 */
 //$test = AchievementController::getAchievementList(1,4);
 //$player = Player::connect("login","pwd");
-//$test = Database::instance()->query("Player", array("Login"=>"Dori", "IDPlayer"=>""));
 //$test = Database::instance()->arrayMap($test, "Login", "IDPlayer");
 //$test = Database::instance();
 //$user = Player::connect("login", "pwd");
@@ -46,12 +54,24 @@ $test = Database::instance()->query("Player", array("IDPlayer"=>2, "Mail"=>"", "
 //$test = $user->items();
 //echo "<pre>".var_export($player, true)."</pre>";
 //$user->changeImage("./lala.jpg");
-//$test = Database::instance()->insert("step", array("IDStep"=>"","Body" => "Lou", "IDType"=>4));
+*/
+define('DS', DIRECTORY_SEPARATOR); // meilleur portabilité sur les différents systèmes (pour l'Autoloader)
+define('ROOT', dirname(__FILE__).DS); // pour récupérer le chemin du dossier actuel (pour l'Autoloader)
+try{
+require 'Server/Autoloader.php';
+Autoloader::register();
+$test = Database::instance()->query("Player", array("Login"=>"Dori", "IDPlayer"=>"3"));
+//$test = Database::instance()->insert("step", array("IDStep"=>"1","Body" => "Lou","Question"=>"", "IDType"=>4));
+//$test = Database::instance()->insert("step", array("IDStep"=>"1","Body" => "Lou","Question"=>"", "IDType"=>4));
+//echo "<pre>".var_export($test, true)."</pre>";
 //$player->addItems(array(4=>3, 2=>2, 1=>1));
 //$player->addAchievements(array($arg, $arc));
 //$test = $player->passStep($arc);
-echo "<pre>".var_export($test, true)."</pre>";
+//echo "<pre>".var_export($test, true)."</pre>";
 echo "TEST";
+} catch (RouterException $error) {
+  $error->send();
+}
 
 /*
 signup OK sauf verifier les champs

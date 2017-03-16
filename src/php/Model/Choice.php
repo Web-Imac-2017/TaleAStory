@@ -194,7 +194,12 @@ class Choice {
 	}
     return true;
   }
-
+  /*
+  @function getChoiceByStep
+  @param  $id id de la step
+  @return null si rien, tableau de Choice sinon
+  Retourne tous les choix d'une step donnée
+  */
   public static function getChoiceByStep($id){
     $choiceQuery = Database::instance()->query(self::$table,array("IDStep"=>$id,"*"=>""));
     $choices = array();
@@ -206,8 +211,12 @@ class Choice {
     }
     return $choices;
   }
-
-
+  /*
+  @function getChoiceByNextStep
+  @param  $id id de la step
+  @return null si rien, tableau de Choice sinon
+  Retourne tous les choix d'une step donnée
+  */
   public static function getChoiceByNextStep($id){
     $choiceQuery = Database::instance()->query(self::$table,array("IDNextStep"=>$id,"*"=>""));
     $choices = array();

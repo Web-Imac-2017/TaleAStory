@@ -16,12 +16,11 @@ Class Item {
     $this->brief=$brief;
   }
 
-  /*
-  @function save
-  @return $id de l'item créé, null si erreur
-  Insère un nouvel item en base de données
-  */
-
+/*
+@function save
+@return $id de l'item créé, null si erreur
+Insère un nouvel item en base de données
+*/
   public function save() {
     $entries = array(
       'Name' => $this->name,
@@ -36,12 +35,11 @@ Class Item {
     return null;
     }
 
-    /*
-    @function delete
-    @return $bool faux si erreur, vrai si ok
-    Supprime un item donné, ainsi que ses "mentions" dans les tables qui sont liées à l'item
-    */
-
+/*
+@function delete
+@return $bool faux si erreur, vrai si ok
+Supprime un item donné, ainsi que ses "mentions" dans les tables qui sont liées à l'item
+*/
     public function delete() {
       $entries = array(
         "IDItem" => $this->id
@@ -63,17 +61,20 @@ Class Item {
       return true;
       }
 
-      /*
-      @function update
-      @param  $entries array de la forme : "Champ à modifier"=>"nouvelle valeur"
-      @return void
-      Maj un item
-      */
-
+/*
+@function update
+@param  $entries array de la forme : "Champ à modifier"=>"nouvelle valeur"
+@return void
+Maj un item
+*/
     public function update($entries) {
       Database::instance()->update(self::$table, $entries, array("IDItem"=>$this->id));
     }
-
+/*
+@function getItemImg
+@param  $id id de la step
+@return chemin de l'image, null si erreur
+*/
     static public function getItemImg($id) {
       $data = Database::instance()->query("Item", array("IDItem"=>$id, "*"=>""));
       if ($data != NULL) {

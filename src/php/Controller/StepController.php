@@ -41,6 +41,7 @@ class StepController {
       $stepParam = Database::instance()->query("Step", Array("*"=>""),array($limit));
     }
     $stepParam = Database::instance()->dataClean($stepParam, true);
+    if(!$stepParam) {$stepParam = array();}
 		$success = new Success($stepParam);
 		Response::jsonResponse($success);
 	}
@@ -234,7 +235,8 @@ class StepController {
       Database::instance()->query("player",array("IDCurrentStep"=>$id))==NULL ||
       Database::instance()->query("choice",array("IDStep"=>$id))==NULL ||
       Database::instance()->query("choice",array("IDNextStep"=>$id))==NULL ||
-      Database::instance()->query("paststep",array("IDStep"=>$id))==NULL)
+      Database::instance()->query("paststep",array("IDStep"=>$id))==NULL
+      )
     {
       $oldimg =  Step::getStepImg($id);
       $step = new Step("", "", "", 0,"");

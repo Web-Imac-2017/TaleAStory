@@ -97,7 +97,7 @@ class Player {
     }
   }
 
-  static public function connect($login, $pwd) {
+  static public function connect($login, $pwd){
     //echo "CONNECT!";
     $login = Player::checkLogin($login);
     if(!$login){return ERR_LOGIN;}
@@ -122,7 +122,7 @@ class Player {
     }*/
   }
 
-  static public function connectSession() {
+  static public function connectSession(){
     $id = Session::getCurrentUser();
     if($id){
       $playerData = Database::instance()->query("Player", array("IDPlayer"=>$id, "*"=>""));
