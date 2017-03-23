@@ -1,7 +1,7 @@
 import {GlobalBack} from './utils/interfaceback';
 
 let config = {
-  baseURL : '/taleastory',
+  baseURL : 'http://taleastoryv1.anfraylapeyre.com',
   path : function(path){
     return this.baseURL + '/' + path;
   },

@@ -19,7 +19,7 @@ class GameComponent extends React.Component{
     }
     let dom = ReactDOM.findDOMNode(this);
     let that = this;
-    this.animation = TweenLite.fromTo(dom, 1.3,{opacity:0, scale:0},{opacity:1,scale:1})
+    this.animation = TweenLite.fromTo(dom, 0.7,{opacity:0, scale:0},{opacity:1,scale:1})
                               .eventCallback("onComplete", callback);
   }
 
@@ -27,7 +27,7 @@ class GameComponent extends React.Component{
 	  if(webGL.bg_anim != null){
   		webGL.bg_anim.unMuteAll();
   		document.getElementById('analyser').style = 'width:3%';
-  		TweenLite.fromTo(document.getElementById('analyser'), 1.3,{opacity:0},{opacity:1});
+  		TweenLite.fromTo(document.getElementById('analyser'), 0.7,{opacity:0},{opacity:1});
 
   		// webGL.bg_anim.getColor();
 
@@ -193,7 +193,7 @@ class Decision extends GameComponent{
 
       let childs = dom.getElementsByTagName('button');
       for(let i = 0; i<childs.length; i++){
-        TweenLite.fromTo(childs[i], 1, {opacity:0},{opacity:1});
+        TweenLite.fromTo(childs[i], 0.7, {opacity:0},{opacity:1});
 		childs[i].style="";
       }
 	  dom.getElementsByClassName('skip')[0].style = "display:none";
@@ -202,7 +202,7 @@ class Decision extends GameComponent{
 		if(this.state.current==0){
 			this.updateColor();
 		}
-      this.animation = TweenLite.fromTo(this.childs[this.state.current], 2,
+      this.animation = TweenLite.fromTo(this.childs[this.state.current], 0.7,
                                         {opacity:0},{opacity:1})
                                 .eventCallback("onComplete",this.nextText);
 
@@ -584,13 +584,9 @@ export default RouteComponent({
 
       if(!result){
         let childs = [
-            "Bienvenue dans TaleAstory, vous allez bientôt écrire une histoire, \
-            votre histoire... Vous allez être confronté à des décisions, \
-            cliquez simplement sur l'action qui vous aimeriez effectuer pour \
-            passer à l'étape suivante. Vous serez aussi amené à résoudre des \
-            enigmes, resolvez-les pour vous débloquer d'une situation."
-          ,
-          "Bien... il est temps pour vous de commencer votre journée..."
+            "Tale A Story est un Site Dont Vous Êtes le Héros.",
+			"Au fil du jeu vous pourrez faire des choix et impacter le scénario.",
+			"Vous aurez aussi des énigmes à résoudre, potentiellement mortelles pour votre personnage. "
         ];
         childs = childs.map((text,index)=> (<p className="text" key={index}>
                                             {text}
